@@ -7,4 +7,11 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     console.log('ECHO', options);
     return options;
   }
+
+  async getWallet(): Promise<{ cards: any[] }> {
+    console.log("Inside of getWallet in cap plugin...")
+    return {
+      cards: []
+    }
+  }
 }
