@@ -14,9 +14,6 @@ import PassKit
 public class WalletAccessPlugin: CAPPlugin {
     // Name of Plugin
     private let implementation = WalletAccess()
-    
-    // Creates Reference to PassLibrary (User Wallet)
-    let passLibrary = PKPassLibrary()
 
     // This Obejctive-C Wrapped Function is still in Swift. It, however,
     // is doing a lot of work behind the scenes to get this ready to be converted
@@ -29,9 +26,20 @@ public class WalletAccessPlugin: CAPPlugin {
         // Had we uncommented this line below, inputValues would equal whatever value was
         // input for the exampleParamName value
         // let inputValues = call.getString("exampleParamName")
-        
+    
+
+        // If Pass Library is Available
         if PKPassLibrary.isPassLibraryAvailable() {
-            let userPasses = PKPassLibrary.passes()
+            // Creates Reference to PassLibrary (User Wallet)
+            let passLibrary = PKPassLibrary()
+            let userPasses = passLibrary.passes()
+            print(userPasses)
+
+            // There will be no `return` in a CAAPlugin, rather we utilize the call
+            // and its unique methods
+            call.success([
+                cards: userPasses
+            ])
         }
         else{
             // There will be no `return` in a CAAPlugin, rather we utilize the call

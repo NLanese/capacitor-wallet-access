@@ -14,6 +14,7 @@ npx cap sync
 <docgen-index>
 
 * [`echo(...)`](#echo)
+* [`getWallet()`](#getwallet)
 
 </docgen-index>
 
@@ -31,6 +32,17 @@ echo(options: { value: string; }) => Promise<{ value: string; }>
 | **`options`** | <code>{ value: string; }</code> |
 
 **Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+
+--------------------
+
+
+### getWallet()
+
+```typescript
+getWallet() => Promise<{ cards: any[]; }>
+```
+
+**Returns:** <code>Promise&lt;{ cards: any[]; }&gt;</code>
 
 --------------------
 
