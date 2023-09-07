@@ -7,9 +7,10 @@ import Capacitor
  */
 @objc(WalletAccessPlugin)
 public class WalletAccessPlugin: CAPPlugin {
+    
     private let implementation = WalletAccess()
 
-    @objc func echo(_ call: CAPPluginCall) {
+    @objc func getWallet(_ call: CAPPluginCall) {
         let value = call.getString("value") ?? ""
         call.resolve([
             "value": implementation.echo(value)
