@@ -6,7 +6,6 @@ to acces a user's wallet. This will allow a few different things...
 ==== REQs ====
 1. This plugin will be useless on Web Applications since it is not optimized for Macs
 
-
 ==== GENERAL SET UP ====
 1. Switch to the ios directory and run `pod install`. If this command fails,
    enter this following command in your Computer User's root directory `gem install ffi -v '1.15.0'`
@@ -19,4 +18,8 @@ to acces a user's wallet. This will allow a few different things...
 
 ==== INSTALLATION AND USAGE ====
 1. You can download this package and npm install `..path/from/project/to/this/plugin`
+2. To import the Plugin on your Capacitor JS Frontend Framework; do the following...
+   `import WalletAccessPlugin from "..path/to/node_modules/capacitor-wallet-access/src`
+3. To use the getWallet function, first import (shown above) and then...
+   `const wallet = WalletAccessPlugin.getWallet()`
 
