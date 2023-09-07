@@ -76,7 +76,7 @@
     }
   },
   "dependencies": {
-    "@types/yargs": "^17.0.24",
+    "@types/yargs": "^17.0.8",
     "capacitor": "^0.5.6"
   }
 }
