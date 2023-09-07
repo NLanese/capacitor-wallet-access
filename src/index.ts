@@ -7,4 +7,4 @@ const WalletAccess = registerPlugin<WalletAccessPlugin>('WalletAccess', {
 });
 
 export * from './definitions';
-export { WalletAccess };
+export default WalletAccess;
