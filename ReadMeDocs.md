@@ -25,6 +25,15 @@ to acces a user's wallet. This will allow a few different things...
 1. You can download this package and npm install 
    `..path/from/project/to/this/plugin`
 
+2. Add the plugin to your capacitor.config.json file through the following syntax....
+  "plugins": {
+    ...
+    "capacitor-wallet-access": {
+      "path": "../path/to/capacitor-wallet-access"
+    }
+
+3. Run `npx cap sync` in the root directory of your project
+
 2. To import the Plugin on your Capacitor JS Frontend Framework; do the following...
    `import WalletAccessPlugin from "..path/to/node_modules/capacitor-wallet-access/src`
 
