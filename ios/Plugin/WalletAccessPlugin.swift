@@ -36,18 +36,19 @@ public class WalletAccessPlugin: CAPPlugin {
             print ("==== PRINTING USER PASSES ====")
             print(userPasses)
             
+            // Creates an Array that can be converted into a JSON Object for return to JS/TS
             var passesInJSONEncodables: [[String: Any]] = []
             
+            // iterates through all retrieved PKPasses
             for pass in userPasses{
-                let passJSON : [String: Any] = [
+                
+                // Fills in Basic Information
+                var passJSON : [String: Any] = [
                     "organization": pass.organizationName,
-                    "userInfo": pass.userInfo ?? "Error Getting Info"
-//                    "passTypeIdentifier": pass.passTypeIdentifier,
-//                    "expiration": pass.auxiliaryFields[1].value,
-//                    "firstName": pass.secondaryFields[0].value,
-//                    "lastName": pass.secondaryFields[0].value,
-//                    "memberNumber": pass.primaryFields[0].value
+                    "serialNumber": pass.serialNumber,
                 ]
+                
+                // Adds passJSON to the return array
                 passesInJSONEncodables.append(passJSON)
             }
 
@@ -59,6 +60,27 @@ public class WalletAccessPlugin: CAPPlugin {
             // There will be no `return` in a CAAPlugin, rather we utilize the call
             // and its unique methods
             call.reject("No Access to Pass Library")
+        }
+    }
+    
+    @objc func goToCard(_ call: CAPPluginCall){
+        let desiredPassOrganizer = call.getString("organizer") ?? "IEEE"
+        if PKPassLibrary.isPassLibraryAvailable() {
+            // Creates Reference to PassLibrary (User Wallet)
+            let passLibrary = PKPassLibrary()
+            let userPasses = passLibrary.passes()
+            
+            // Empty Value to Popuate when the proper Pass is found
+            var desiredPass = nil
+            
+            for pass in userPasses{
+                if (pass.organizationName === desiredPassOrganizer){
+                    desiredPass = pass
+                }
+            }
+            if (desiredPass){
+                open(pass.passURL)
+            }
         }
     }
 }
