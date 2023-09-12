@@ -32,10 +32,14 @@ to acces a user's wallet. This will allow a few different things...
       "path": "../path/to/capacitor-wallet-access"
     }
 
-3. Run `npx cap sync` in the root directory of your project
+2a. On iOS, you will also have to add this Capacitor Plugin to your Podfile like so....
+    `pod 'CapacitorWalletAccess', :path => '../../node_modules/capacitor-wallet-access'`
+
+
+3. Run `npx cap sync` in the root directory of your
 
 2. To import the Plugin on your Capacitor JS Frontend Framework; do the following...
-   `import WalletAccessPlugin from "..path/to/node_modules/capacitor-wallet-access/src`
+   `import WalletAccessPlugin from "..path/to/node_modules/capacitor-wallet-access`
 
 3. To use the getWallet function, first import (shown above) and then...
    `const wallet = WalletAccessPlugin.getWallet()`
