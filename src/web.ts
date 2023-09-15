@@ -10,10 +10,15 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
   }
 
   // Retrieves Wallet (Array of PKPasses)
-  async getWallet(): Promise<{ cards: any[] }> {
+  async getWallet(options: {value: string[]}): Promise<{ cards: any[] }> {
     console.log("Inside of getWallet in cap plugin...")
+    console.log('Get Wallet Params', options.value)
     return {
-      cards: []
+      cards: [],
     }
+  }
+
+  async goToPass(options: {value: string}): Promise<void>{
+    console.log(options["value"])
   }
 }

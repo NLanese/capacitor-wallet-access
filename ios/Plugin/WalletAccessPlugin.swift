@@ -2,9 +2,10 @@ import Foundation
 import Capacitor
 import PassKit
 
-///////////////////////
-// Class Declaration //
-///////////////////////
+/**
+ * Please read the Capacitor iOS Plugin Development Guide
+ * here: https://capacitorjs.com/docs/plugins/ios
+ */
 
 // Denotes that the WalletAccessPlugin in this swift file will be compatible with Objective-C
 @objc(WalletAccessPlugin)
@@ -12,24 +13,11 @@ import PassKit
 // Main Plugin Class : extends CAAPlugin (given by Capacitor)
 public class WalletAccessPlugin: CAPPlugin {
     
-    ////////////
-    // Set Up //
-    ////////////
-
     // Name of Plugin
     private let implementation = WalletAccess()
 
-    ///////////////
-    // Functions //
-    ///////////////
-    
     // Returns a JSON object for each Pass in the User's Wallet
     @objc func getWallet(_ call: CAPPluginCall) {
-        
-        let fieldKeys = call.getArray("fields") ?? []
-        print("Cap Input Params...")
-        print(fieldKeys)
-
         // If Pass Library is Available
         if PKPassLibrary.isPassLibraryAvailable() {
             
@@ -42,12 +30,40 @@ public class WalletAccessPlugin: CAPPlugin {
             
             // iterates through all retrieved PKPasses
             for pass in userPasses{
-                
                 // Fills in Basic Information
                 var passJSON : [String: Any] = [
                     "organization": pass.organizationName,
                     "serialNumber": pass.serialNumber,
                 ]
+                
+                // If inputs are provided, this will track other key/value pairs and return them
+                let fieldKeys = call.getArray("value") ?? [];
+                print(fieldKeys)
+                if (!fieldKeys.isEmpty){
+                    print("Cap Input Params...")
+                    print(fieldKeys)
+
+                    
+                    // Adds content from Primary, Secondary, and Auxiliary Fields
+                    for field in fieldKeys{
+                        if let strField = field as? String{
+                            if let strKeyValue = pass.localizedValue(forFieldKey: strField) as? String{
+                                passJSON[strField] = strKeyValue
+                            }
+                        }
+                    }
+                }
+                
+                // If no inputs or they're not found since Capacitor is fucking stupid sometimes
+                else{
+                    print("No inputs found")
+                    print(call.options["value"] as? [String] as Any)
+                    print(call.getArray("value") as Any)
+                    print(call.options as Any)
+                    print(call.self)
+                    print(call.getAny("value") as Any)
+                }
+                
                 
                 // Adds the Individual Pass Json Object to the Main Return Array
                 passesInJSONEncodables.append(passJSON)
@@ -64,24 +80,24 @@ public class WalletAccessPlugin: CAPPlugin {
         }
     }
     
-//   @objc func goToCard(_ call: CAPPluginCall){
-//       let desiredPassOrganizer = call.getString("organizer") ?? "IEEE"
-//       if PKPassLibrary.isPassLibraryAvailable() {
-//           // Creates Reference to PassLibrary (User Wallet)
-//           let passLibrary = PKPassLibrary()
-//           let userPasses = passLibrary.passes()
-//
-//           // Empty Value to Popuate when the proper Pass is found
-//           var desiredPass = nil
-//
-//           for pass in userPasses{
-//               if (pass.organizationName === desiredPassOrganizer){
-//                   desiredPass = pass
-//               }
-//           }
-//           if (desiredPass){
-//               open(pass.passURL)
-//           }
-//       }
-//   }
+   @objc func goToCard(_ call: CAPPluginCall){
+       let desiredPassOrganizer = call.getString("organizer") ?? "IEEE"
+       if PKPassLibrary.isPassLibraryAvailable() {
+           // Creates Reference to PassLibrary (User Wallet)
+           let passLibrary = PKPassLibrary()
+           let userPasses = passLibrary.passes()
+
+
+           for pass in userPasses{
+               let thisPassOrg = pass.organizationName as String
+               if (thisPassOrg == desiredPassOrganizer){
+                   print("Pass found, rerouting now")
+                   pass.passURL
+               }
+               else{
+                   print("Pass not found")
+               }
+           }
+       }
+   }
 }

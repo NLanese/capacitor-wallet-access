@@ -1,4 +1,13 @@
 export interface WalletAccessPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
-  getWallet(): Promise<{cards: any[]}>
+
+  // Echo Function 
+  echo(options: { value: string }): 
+    Promise<{ value: string }>;
+
+  // Get Wallet Function
+  getWallet(options: {value: string[]}): 
+    Promise<{ cards: any[] }>
+
+  goToPass(options: {value: string }):
+    Promise <void>
 }
