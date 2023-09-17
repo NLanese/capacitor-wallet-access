@@ -43,7 +43,6 @@ public class WalletAccessPlugin: CAPPlugin {
                     print("Cap Input Params...")
                     print(fieldKeys)
 
-                    
                     // Adds content from Primary, Secondary, and Auxiliary Fields
                     for field in fieldKeys{
                         if let strField = field as? String{
@@ -56,14 +55,8 @@ public class WalletAccessPlugin: CAPPlugin {
                 
                 // If no inputs or they're not found since Capacitor is fucking stupid sometimes
                 else{
-                    print("No inputs found")
-                    print(call.options["value"] as? [String] as Any)
-                    print(call.getArray("value") as Any)
-                    print(call.options as Any)
-                    print(call.self)
-                    print(call.getAny("value") as Any)
+                    print("No input params found")
                 }
-                
                 
                 // Adds the Individual Pass Json Object to the Main Return Array
                 passesInJSONEncodables.append(passJSON)
@@ -71,16 +64,20 @@ public class WalletAccessPlugin: CAPPlugin {
 
             // There will be no `return` in a CAAPlugin, rather we utilize the call
             // and its unique methods
+            print("Returning Passes as JSON")
             call.resolve(["cards": passesInJSONEncodables])
         }
         else{
             // There will be no `return` in a CAAPlugin, rather we utilize the call
             // and its unique methods
+            print("No Access to Pass Library")
             call.reject("No Access to Pass Library")
         }
     }
     
-   @objc func goToCard(_ call: CAPPluginCall){
+    // Goes to the Wallet App 
+   @objc func goToPass(_ call: CAPPluginCall){
+       print("Inside Go to Pass Function")
        let desiredPassOrganizer = call.getString("organizer") ?? "IEEE"
        if PKPassLibrary.isPassLibraryAvailable() {
            // Creates Reference to PassLibrary (User Wallet)
