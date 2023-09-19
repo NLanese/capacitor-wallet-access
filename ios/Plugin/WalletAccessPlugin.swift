@@ -74,27 +74,4 @@ public class WalletAccessPlugin: CAPPlugin {
             call.reject("No Access to Pass Library")
         }
     }
-    
-    // Goes to the Wallet App 
-   @objc func goToPass(_ call: CAPPluginCall){
-       print("Inside Go to Pass Function")
-       let desiredPassOrganizer = call.getString("organizer") ?? "IEEE"
-       if PKPassLibrary.isPassLibraryAvailable() {
-           // Creates Reference to PassLibrary (User Wallet)
-           let passLibrary = PKPassLibrary()
-           let userPasses = passLibrary.passes()
-
-
-           for pass in userPasses{
-               let thisPassOrg = pass.organizationName as String
-               if (thisPassOrg == desiredPassOrganizer){
-                   print("Pass found, rerouting now")
-                   pass.passURL
-               }
-               else{
-                   print("Pass not found")
-               }
-           }
-       }
-   }
 }

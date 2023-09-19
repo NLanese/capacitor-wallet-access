@@ -8,6 +8,4 @@ export interface WalletAccessPlugin {
   getWallet(options: {value: string[]}): 
     Promise<{ cards: any[] }>
 
-  goToPass(options: {value: string }):
-    Promise <void>
 }

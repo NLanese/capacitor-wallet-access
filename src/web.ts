@@ -18,7 +18,4 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     }
   }
 
-  async goToPass(options: {value: string}): Promise<void>{
-    console.log(options["value"])
-  }
 }
