@@ -80,16 +80,23 @@ public class WalletAccessPlugin: CAPPlugin {
        print("Inside Go to Pass Function")
        let desiredPassOrganizer = call.getString("organizer") ?? "IEEE"
        if PKPassLibrary.isPassLibraryAvailable() {
-           // Creates Reference to PassLibrary (User Wallet)
-           let passLibrary = PKPassLibrary()
-           let userPasses = passLibrary.passes()
+            // Creates Reference to PassLibrary (User Wallet)
+            let passLibrary = PKPassLibrary()
+    
+            // Creates basic array of user PKPasses
+            let userPasses = passLibrary.passes()
+    
+            // This will return an array of each PKPass associated with the current user's apple account.
+            // This will return them in a more secured format that will allow us to route to/render them
+//            let securedUserPasses = passLibrary.remoteSecureElementPasses
+        
 
-
-           for pass in userPasses{
+           for pass in passes{
                let thisPassOrg = pass.organizationName as String
                if (thisPassOrg == desiredPassOrganizer){
                    print("Pass found, rerouting now")
                    pass.passURL
+                   open(pass.passURL)
                }
                else{
                    print("Pass not found")
