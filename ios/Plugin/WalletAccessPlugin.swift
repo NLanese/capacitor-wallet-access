@@ -95,6 +95,7 @@ public class WalletAccessPlugin: CAPPlugin {
                let thisPassOrg = pass.organizationName as String
                if (thisPassOrg == desiredPassOrganizer){
                    print("Pass found, rerouting now")
+    let passURl  = URL(string: pass.passURL)
                    pass.passURL
                    open(pass.passURL)
                }
