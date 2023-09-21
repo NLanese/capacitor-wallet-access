@@ -94,6 +94,7 @@ public class WalletAccessPlugin: CAPPlugin {
                 call.reject("Please enter a valid serialNumber")
             }
             
+            // Checks Validity of Organizer Name
             if (organizerNameInput == "Invalid"){
                 call.reject("Please enter a valid organizerName")
             }
