@@ -77,6 +77,7 @@
   },
   "dependencies": {
     "@types/yargs": "^17.0.8",
-    "capacitor": "^0.5.6"
+    "capacitor": "^0.5.6",
+    "capacitor-wallet-access": "^1.0.0"
   }
 }
