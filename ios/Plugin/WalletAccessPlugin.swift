@@ -74,4 +74,47 @@ public class WalletAccessPlugin: CAPPlugin {
             call.reject("No Access to Pass Library")
         }
     }
+    
+    @objc func createNewPass(_ call: CAPPluginCall){
+        // If Pass Library is Available
+        if PKPassLibrary.isPassLibraryAvailable() {
+            // Fields (optional)
+            let headerFieldInput = call.getArray("headerFields") ?? []
+            let primaryFieldInput = call.getArray("primaryFields") ?? []
+            let secondaryFieldInput = call.getArray("secondaryFields") ?? []
+            let auxiliaryFieldInput = call.getArray("auxiliaryFields") ?? []
+            
+            // Needed Values for PKPass Creation
+            let serialNumberInput = call.getString("serialNumber") ?? "Invalid"
+            let organizerNameInput = call.getString("organizerName") ?? "Inavlid"
+            let passTypeInput = call.getString("passType") ?? "Invalid"
+            
+            // Checks Validity of Serial Number
+            if (serialNumberInput == "Invalid"){
+                call.reject("Please enter a valid serialNumber")
+            }
+            
+            if (organizerNameInput == "Invalid"){
+                call.reject("Please enter a valid organizerName")
+            }
+            
+            // Checks Validity of Pass Type Input
+            if (
+                passTypeInput != "Generic" &&
+                passTypeInput != "Coupon" &&
+                passTypeInput != "Boarding pass" &&
+                passTypeInput != "Store card" &&
+                passTypeInput != "Event ticket"
+            ){
+                call.reject("passTypeInput needs to be one of the following values: 'Generic', 'Coupon', 'Boarding pass', 'Store card', and 'Event ticket")
+            }
+        }
+        
+        
+        // If PKPassLibrary is Unavailable
+        else{
+            print("No Access to Pass Library")
+            call.reject("No Access to Pass Library")
+        }
+    }
 }
