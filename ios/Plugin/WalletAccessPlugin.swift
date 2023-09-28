@@ -75,19 +75,30 @@ public class WalletAccessPlugin: CAPPlugin {
         }
     }
     
+    // Creates an Apple Pass using Parameters
     @objc func createNewPass(_ call: CAPPluginCall){
+        
         // If Pass Library is Available
         if PKPassLibrary.isPassLibraryAvailable() {
+            
+            //----------------//
+            // INPUT HANDLING //
+            //----------------//
+    
             // Fields (optional)
-            let headerFieldInput = call.getArray("headerFields") ?? []
-            let primaryFieldInput = call.getArray("primaryFields") ?? []
-            let secondaryFieldInput = call.getArray("secondaryFields") ?? []
-            let auxiliaryFieldInput = call.getArray("auxiliaryFields") ?? []
+            let headerValueInput = call.getArray("headerValues") ?? []
+            let primaryValueInput = call.getArray("primaryValues") ?? []
+            let secondaryValueInput = call.getArray("secondaryValues") ?? []
+            let auxiliaryValueInput = call.getArray("auxiliaryValues") ?? []
+            let headerLabelInput = call.getArray("headerLabels") ?? []
+            let primaryLabelInput = call.getArray("primaryLabels") ?? []
+            let secondaryLabelInput = call.getArray("secondaryLabels") ?? []
+            let auxiliaryLabelInput = call.getArray("auxiliaryLabels") ?? []
             
             // Needed Values for PKPass Creation
             let serialNumberInput = call.getString("serialNumber") ?? "Invalid"
             let organizerNameInput = call.getString("organizerName") ?? "Inavlid"
-            let passTypeInput = call.getString("passType") ?? "Invalid"
+            let passURLInput = call.getString("passURL") ?? "Invalid"
             
             // Checks Validity of Serial Number
             if (serialNumberInput == "Invalid"){
@@ -101,13 +112,107 @@ public class WalletAccessPlugin: CAPPlugin {
             
             // Checks Validity of Pass Type Input
             if (
-                passTypeInput != "Generic" &&
-                passTypeInput != "Coupon" &&
-                passTypeInput != "Boarding pass" &&
-                passTypeInput != "Store card" &&
-                passTypeInput != "Event ticket"
+                passURLInput == "Invalid"
             ){
-                call.reject("passTypeInput needs to be one of the following values: 'Generic', 'Coupon', 'Boarding pass', 'Store card', and 'Event ticket")
+                call.reject("passURL needs to be supplied")
+            }
+            
+            // Checks every Label has a corresponding Value and vice versa
+            if (
+                headerLabelInput.length !== headerValueInput.length ||
+                primaryLabelInput.length !== primaryValueInput.length ||
+                secondaryLabelInput.length !== secondaryValueInput.length ||
+                auxiliaryLabelInput.length !== auxiliaryValueInput.length
+            ){
+                call.reject("For every label, there must be a value! Check your LabelInput and ValueInput params!")
+            }
+            
+            
+            //-----------------------//
+            // PASS CREATION PROCESS //
+            //-----------------------//
+            
+            // Generates the Pass
+            func generatePass(completion: @escaping((Bool) -> () )){
+                
+                //--------//
+                // PARAMS //
+                //--------//
+                
+                let params : [String: Any] = [
+                    "qrText": "This is a string that turns into a QR Code",
+                    "header": [
+                    ],
+                    "primary": [
+                    ],
+                    "secondary": [
+                    ],
+                    "auxiliary": [
+                    ],
+                    "serialNumber": serialNumberInput
+                ]
+                
+                // Populates Params with Header Labels and Values
+                headerLabelInput.forEach{ (label, index) in
+                    params["header"][index]["label"] = label
+                }
+                headerValueInput.forEach{ (value, index) in
+                    params["header"][index]["value"] = value
+                }
+                
+                // Populates Params with Primary Labels and Values
+                headerLabelInput.forEach{ (label, index) in
+                    params["primary"][index]["label"] = label
+                }
+                headerValueInput.forEach{ (value, index) in
+                    params["primary"][index]["value"] = value
+                }
+                
+                // Populates Params with Secondary Labels and Values
+                headerLabelInput.forEach{ (label, index) in
+                    params["secondary"][index]["label"] = label
+                }
+                headerValueInput.forEach{ (value, index) in
+                    params["secondary"][index]["value"] = value
+                }
+                
+                // Populates Params with Auxiliary Labels and Values
+                headerLabelInput.forEach{ (label, index) in
+                    params["auxiliary"][index]["label"] = label
+                }
+                headerValueInput.forEach{ (value, index) in
+                    params["auxiliary"][index]["value"] = value
+                }
+                
+                //---------//
+                // REQUEST //
+                //---------//
+                
+                
+                // Creates a bare request object
+                var request = URLRequest(url: URL(string: "https://us-central1-apple-pass-test.cloudfunctions.net/pass")!)
+                
+                // Specifies Request Method
+                request.httpMethod = "POST"
+                
+                // Specifies content in request will be sent via JSON
+                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                
+                // Attemts to Serialize the input JSON object. Said JSON object will be the previous declared params object
+                request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
+                
+                
+                // Deploys the request
+                let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
+                        completion(json["result"]! as! String == "SUCCESS" ? true : false)
+                    }
+                    catch {
+                        print("error")
+                        completion(false)
+                    }
+                }
             }
         }
         
