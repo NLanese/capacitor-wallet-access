@@ -27,5 +27,5 @@ export interface WalletAccessPlugin {
     passURLInput: string
 
   }): 
-    Promise<{ value: string}>
+    Promise<{ newPass: string}>
 }

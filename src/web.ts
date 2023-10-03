@@ -18,4 +18,27 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     }
   }
 
+  async createNewPass(options: {
+    headerValues: string[],
+    headerLabels: string[],
+
+    primaryValues: string[],
+    primaryLabels: string[],
+
+    secondaryValues: string[],
+    secondaryLabels: string[],
+
+    auxiliaryValues: string[],
+    auxiliaryLabels: string[],
+
+    serialNumer: string,
+    organizerName: string,
+    passURLInput: string
+  }): Promise<{ newPass: string }> {
+    console.log("Inside createNewPass")
+    return{
+      newPass: ""
+    }
+  }
+
 }
