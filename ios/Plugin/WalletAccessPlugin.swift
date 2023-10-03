@@ -98,7 +98,10 @@ public class WalletAccessPlugin: CAPPlugin {
             // Needed Values for PKPass Creation
             let serialNumberInput = call.getString("serialNumber") ?? "Invalid"
             let organizerNameInput = call.getString("organizerName") ?? "Inavlid"
-            let passURLInput = call.getString("passURL") ?? "Invalid"
+            let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
+            let passDownloadURL = call.getString("passDownloadURL") ?? "Invalid"
+            
+            
             
             // Checks Validity of Serial Number
             if (serialNumberInput == "Invalid"){
@@ -112,7 +115,7 @@ public class WalletAccessPlugin: CAPPlugin {
             
             // Checks Validity of Pass Type Input
             if (
-                passURLInput == "Invalid"
+                passCreationURL == "Invalid"
             ){
                 call.reject("passURL needs to be supplied")
             }
@@ -131,89 +134,11 @@ public class WalletAccessPlugin: CAPPlugin {
             //-----------------------//
             // PASS CREATION PROCESS //
             //-----------------------//
+            generatePass(passCreationURL, completion: <#T##(Bool) -> Void#>)
+            downloadPass(passDownloadURL, completion: <#T##(Bool) -> Void#>)
             
-            // Generates the Pass
-            func generatePass(completion: @escaping((Bool) -> () )){
-                
-                //--------//
-                // PARAMS //
-                //--------//
-                
-                let params : [String: Any] = [
-                    "qrText": "This is a string that turns into a QR Code",
-                    "header": [
-                    ],
-                    "primary": [
-                    ],
-                    "secondary": [
-                    ],
-                    "auxiliary": [
-                    ],
-                    "serialNumber": serialNumberInput
-                ]
-                
-                // Populates Params with Header Labels and Values
-                headerLabelInput.forEach{ (label, index) in
-                    params["header"][index]["label"] = label
-                }
-                headerValueInput.forEach{ (value, index) in
-                    params["header"][index]["value"] = value
-                }
-                
-                // Populates Params with Primary Labels and Values
-                headerLabelInput.forEach{ (label, index) in
-                    params["primary"][index]["label"] = label
-                }
-                headerValueInput.forEach{ (value, index) in
-                    params["primary"][index]["value"] = value
-                }
-                
-                // Populates Params with Secondary Labels and Values
-                headerLabelInput.forEach{ (label, index) in
-                    params["secondary"][index]["label"] = label
-                }
-                headerValueInput.forEach{ (value, index) in
-                    params["secondary"][index]["value"] = value
-                }
-                
-                // Populates Params with Auxiliary Labels and Values
-                headerLabelInput.forEach{ (label, index) in
-                    params["auxiliary"][index]["label"] = label
-                }
-                headerValueInput.forEach{ (value, index) in
-                    params["auxiliary"][index]["value"] = value
-                }
-                
-                //---------//
-                // REQUEST //
-                //---------//
-                
-                
-                // Creates a bare request object
-                var request = URLRequest(url: URL(string: passURLInput)!)
-                
-                // Specifies Request Method
-                request.httpMethod = "POST"
-                
-                // Specifies content in request will be sent via JSON
-                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-                
-                // Attemts to Serialize the input JSON object. Said JSON object will be the previous declared params object
-                request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
-                
-                
-                // Deploys the request
-                let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                    do {
-                        let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
-                        completion(json["result"]! as! String == "SUCCESS" ? true : false)
-                    }
-                    catch {
-                        print("error")
-                        completion(false)
-                    }
-                }
-            }
+            
+            
         }
         
         
@@ -221,6 +146,120 @@ public class WalletAccessPlugin: CAPPlugin {
         else{
             print("No Access to Pass Library")
             call.reject("No Access to Pass Library")
+        }
+    }
+}
+
+
+//----------------//
+// PASS FUNCTIONS //
+//----------------//
+
+// Generates the Pass
+func generatePass(_ passCreationURL: String, completion: @escaping((Bool) -> () )){
+    
+    //--------//
+    // PARAMS //
+    //--------//
+    
+    let params : [String: Any] = [
+        "qrText": "This is a string that turns into a QR Code",
+        "header": [
+        ],
+        "primary": [
+        ],
+        "secondary": [
+        ],
+        "auxiliary": [
+        ],
+        "serialNumber": serialNumberInput
+    ]
+    
+    // Populates Params with Header Labels and Values
+    headerLabelInput.forEach{ (label, index) in
+        params["header"][index]["label"] = label
+    }
+    headerValueInput.forEach{ (value, index) in
+        params["header"][index]["value"] = value
+    }
+    
+    // Populates Params with Primary Labels and Values
+    headerLabelInput.forEach{ (label, index) in
+        params["primary"][index]["label"] = label
+    }
+    headerValueInput.forEach{ (value, index) in
+        params["primary"][index]["value"] = value
+    }
+    
+    // Populates Params with Secondary Labels and Values
+    headerLabelInput.forEach{ (label, index) in
+        params["secondary"][index]["label"] = label
+    }
+    headerValueInput.forEach{ (value, index) in
+        params["secondary"][index]["value"] = value
+    }
+    
+    // Populates Params with Auxiliary Labels and Values
+    headerLabelInput.forEach{ (label, index) in
+        params["auxiliary"][index]["label"] = label
+    }
+    headerValueInput.forEach{ (value, index) in
+        params["auxiliary"][index]["value"] = value
+    }
+    
+    //---------//
+    // REQUEST //
+    //---------//
+    
+    // Creates a bare request object
+    var request = URLRequest(url: URL(string: passCreationURL)!)
+    
+    // Specifies Request Method
+    request.httpMethod = "POST"
+    
+    // Specifies content in request will be sent via JSON
+    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+    
+    // Attemts to Serialize the input JSON object. Said JSON object will be the previous declared params object
+    request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
+    
+    
+    // Deploys the request
+    let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        do {
+            let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
+            completion(json["result"]! as! String == "SUCCESS" ? true : false)
+        }
+        catch {
+            print("error")
+            completion(false)
+        }
+    }
+}
+
+// Downloads the Pass from Firebase
+func downloadPass(_ passDownloadURL: String, completion: @escaping((Bool) -> () )) {
+    self.storageRef.child(passDownloadURL).getData(maxSize: 1 * 1024 * 1024) { data, error in
+        if let error = error {
+            print("Error Downloading Local Resource:" + error.localizedDescription)
+            completion(false)
+        }
+        else{
+            do {
+                let canAddPass = PKAddPassesViewController.canAddPasses()
+                if (canAddPass){
+                    print("Creating a Pass")
+                    self.newPass = try PKPass.init(data: data!)
+                    completion(true)
+                }
+                else{
+                    print("Device Cannot Add Passes")
+                }
+            }
+            catch{
+                print ("Unknown Error")
+                completion(false)
+            }
         }
     }
 }

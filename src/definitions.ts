@@ -24,7 +24,8 @@ export interface WalletAccessPlugin {
 
     serialNumer: string,
     organizerName: string,
-    passURLInput: string
+    passCreationURL: string,
+    passDownloadURL: string,
   }): 
     Promise<{ newPass: string}>
 
