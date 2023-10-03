@@ -25,7 +25,26 @@ export interface WalletAccessPlugin {
     serialNumer: string,
     organizerName: string,
     passURLInput: string
+  }): 
+    Promise<{ newPass: string}>
 
+  // Updates a Pass
+  updatePass(options: {
+    headerValues: string[],
+    headerLabels: string[],
+
+    primaryValues: string[],
+    primaryLabels: string[],
+
+    secondaryValues: string[],
+    secondaryLabels: string[],
+
+    auxiliaryValues: string[],
+    auxiliaryLabels: string[],
+
+    serialNumer: string,
+    organizerName: string,
+    passURLInput: string
   }): 
     Promise<{ newPass: string}>
 }
