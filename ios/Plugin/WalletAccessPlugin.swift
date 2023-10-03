@@ -190,7 +190,7 @@ public class WalletAccessPlugin: CAPPlugin {
                 
                 
                 // Creates a bare request object
-                var request = URLRequest(url: URL(string: "https://us-central1-apple-pass-test.cloudfunctions.net/pass")!)
+                var request = URLRequest(url: URL(string: passURLInput)!)
                 
                 // Specifies Request Method
                 request.httpMethod = "POST"
