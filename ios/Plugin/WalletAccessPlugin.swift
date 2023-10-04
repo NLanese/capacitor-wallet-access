@@ -177,7 +177,7 @@ public class WalletAccessPlugin: CAPPlugin {
 //----------------//
 
 // Generates the Pass
-func generatePass(_ passCreationURL: String, usesSerialNumber: Bool, serialNumber: String? completion: @escaping((Bool) -> () )){
+func generatePass(_ passCreationURL: String, completion: @escaping((Bool) -> () )){
     
     //--------//
     // PARAMS //
@@ -259,8 +259,18 @@ func generatePass(_ passCreationURL: String, usesSerialNumber: Bool, serialNumbe
 }
 
 // Downloads the Pass from Firebase
-func downloadPass(_ passDownloadURL: String, completion: @escaping((Bool) -> () )) {
-    self.storageRef.child(passDownloadURL).getData(maxSize: 1 * 1024 * 1024) { data, error in
+func downloadPass(
+    _ passDownloadURL: String,
+    usesSerialNumber: Bool,
+    serialNumber: String?
+    completion: @escaping((Bool) -> () )
+) {
+    let pathToDownload = passDownloadURL
+    if (usesSerialNumber){
+        let splitURL = pathToDownload.split(separator: ".pkpass")
+        pathToDownload = splitURL[0] + serialNumber + splitURL[1]
+    }
+    self.storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
         if let error = error {
             print("Error Downloading Local Resource:" + error.localizedDescription)
             completion(false)
