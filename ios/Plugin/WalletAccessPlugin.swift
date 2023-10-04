@@ -100,6 +100,7 @@ public class WalletAccessPlugin: CAPPlugin {
             let organizerNameInput = call.getString("organizerName") ?? "Inavlid"
             let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
             let passDownloadURL = call.getString("passDownloadURL") ?? "Invalid"
+            let usesSerialNumberInDownloadURL = call.getBoolean("usesSerialNumberForDownload") ?? false
             
             
             
@@ -135,7 +136,27 @@ public class WalletAccessPlugin: CAPPlugin {
             // PASS CREATION PROCESS //
             //-----------------------//
             generatePass(passCreationURL, completion: <#T##(Bool) -> Void#>)
-            downloadPass(passDownloadURL, completion: <#T##(Bool) -> Void#>)
+            
+            // If Serial Number is Appended at the end of the File Name for Downloads
+            if (usesSerialNumberInDownloadURL){
+                downloadPass(
+                    passDownloadURL,
+                    usesSerialNumberInDownloadURL: true,
+                    serialNumber: serialNumberInput
+                    completion: <#T##(Bool) -> Void#>
+                )
+            }
+            
+            // If the Serial Number is NOT in the Download URL
+            else{
+                downloadPass(
+                    passDownloadURL,
+                    usesSerialNumberInDownloadURL: false,
+                    serialNumber: nil
+                    completion: <#T##(Bool) -> Void#>
+                )
+            }
+            
             
             
             
@@ -156,7 +177,7 @@ public class WalletAccessPlugin: CAPPlugin {
 //----------------//
 
 // Generates the Pass
-func generatePass(_ passCreationURL: String, completion: @escaping((Bool) -> () )){
+func generatePass(_ passCreationURL: String, usesSerialNumber: Bool, serialNumber: String? completion: @escaping((Bool) -> () )){
     
     //--------//
     // PARAMS //
