@@ -135,7 +135,21 @@ public class WalletAccessPlugin: CAPPlugin {
             //-----------------------//
             // PASS CREATION PROCESS //
             //-----------------------//
-            generatePass(passCreationURL, completion: <#T##(Bool) -> Void#>)
+            generatePass(
+                passCreationURL,
+                serialNumberInput: serialNumberInput,
+                organizerNameInput: organizerNameInput,
+                headerLabelInput: headerLabelInput,
+                headerValueInput: headerValueInput,
+                primaryLabelInput: primaryLabelInput,
+                primaryValueInput: primaryValueInput,
+                secondaryLabelInput: secondaryLabelInput,
+                secondaryValueInput: secondaryValueInput,
+                auxiliaryLabelInput: auxiliaryLabelInput,
+                auxiliaryValueInput: auxiliaryValueInput,
+                
+                completion: <#T##(Bool) -> Void#>
+            )
             
             // If Serial Number is Appended at the end of the File Name for Downloads
             if (usesSerialNumberInDownloadURL){
@@ -180,69 +194,173 @@ public class WalletAccessPlugin: CAPPlugin {
 func generatePass(
     _ passCreationURL: String,
     serialNumberInput: String,
-    headerLabelInput: [String],
-    headerValueInput: [String],
-    primaryLabelInput: [String],
-    primaryValueInput: [String],
-    secondaryLabelInput: [String],
-    secondaryValueInput: [String],
-    auxiliaryLabelInput: [String],
-    auxiliaryValueInput: [String],
+    organizerNameInput: String,
+    headerLabelInput: JSArray,
+    headerValueInput: JSArray,
+    primaryLabelInput: JSArray,
+    primaryValueInput: JSArray,
+    secondaryLabelInput: JSArray,
+    secondaryValueInput: JSArray,
+    auxiliaryLabelInput: JSArray,
+    auxiliaryValueInput: JSArray,
     
     completion: @escaping((Bool) -> () )){
     
     //--------//
     // PARAMS //
     //--------//
-    
-        // A dictionary with String Keys and Any Value
-        let singleParams: [String: Any] = [
-            "qrText": "This is a string that turns into a QR Code",
-            "serialNumber": serialNumberInput
-        ]
         
-        // A dictionary with String Keys and arrays of Any Value
-        let inputParams : [String: [[String: String]]] = [
-        "header": [
-            [String: String]()
-        ],
-        "primary": [
-        ],
-        "secondary": [
-        ],
-        "auxiliary": [
-        ],
-        
-    ]
-        
-        
-    
         // Populates Params with Header Labels and Values
-        var headerLabels = [String]()
-        var headerValues = [String]()
+        var headerLabels = JSArray()
+        var headerValues = JSArray()
         headerLabelInput.enumerated().forEach{ (index, label) in
             headerLabels[index] = label
         }
         headerValueInput.enumerated().forEach{ (index, value) in
             headerValues[index] = value
         }
+        var headers = [[String: any JSValue]]()
+        if (headerLabels.count == 2){
+            headers = [
+                [
+                    "label": headerLabels[0],
+                    "value": headerValues[0],
+                    "key": "header0"
+                ],
+                [
+                    "label": headerLabels[1],
+                    "value": headerValues[1],
+                    "key": "header1"
+                ]
+            ]
+        }
+        else{
+            headers = [
+                [
+                    "label": headerLabels[0],
+                    "value": headerValues[0],
+                    "key": "header0"
+                ]
+            ]
+        }
         
         // Populates Params with Primary Labels and Values
-        var primaryLabels = [String]()
-        var primaryValues = [String]()
+        var primaryLabels = JSArray()
+        var primaryValues = JSArray()
         primaryLabelInput.enumerated().forEach{ (index, label) in
             primaryLabels[index] = label
         }
         primaryValueInput.enumerated().forEach{ (index, value) in
             primaryValues[index] = value
         }
+        var primary = [[String: any JSValue]]()
+        if (primaryLabels.count == 2){
+            primary = [
+                [
+                    "label": primaryLabels[0],
+                    "value": primaryValues[0],
+                    "key": "primary0"
+                ],
+                [
+                    "label": primaryLabels[1],
+                    "value": primaryValues[1],
+                    "key": "primary1"
+                ]
+            ]
+        }
+        else{
+            primary = [
+                [
+                    "label": primaryLabels[0],
+                    "value": primaryValues[0],
+                    "key": "primary0"
+                ]
+            ]
+        }
+        
+        // Populates Params with Secondary Labels and Values
+        var secondaryLabels = JSArray()
+        var secondaryValues = JSArray()
+        secondaryLabelInput.enumerated().forEach{ (index, label) in
+            secondaryLabels[index] = label
+        }
+        secondaryValueInput.enumerated().forEach{ (index, value) in
+            secondaryValues[index] = value
+        }
+        var secondary = [[String: any JSValue]]()
+        if (secondaryLabels.count == 2){
+            secondary = [
+                [
+                    "label": secondaryLabels[0],
+                    "value": secondaryValues[0],
+                    "key": "secondary0"
+                ],
+                [
+                    "label": secondaryLabels[1],
+                    "value": secondaryValues[1],
+                    "key": "secondary1"
+                ]
+            ]
+        }
+        else{
+            secondary = [
+                [
+                    "label": secondaryLabels[0],
+                    "value": secondaryValues[0],
+                    "key": "secondary0"
+                ]
+            ]
+        }
+        
+        // Populates Params with Axuiliary Labels and Values
+        var auxiliaryLabels = JSArray()
+        var auxiliaryValues = JSArray()
+        auxiliaryLabelInput.enumerated().forEach{ (index, label) in
+            auxiliaryLabels[index] = label
+        }
+        auxiliaryValueInput.enumerated().forEach{ (index, value) in
+            auxiliaryValues[index] = value
+        }
+        var auxiliary = [[String: any JSValue]]()
+        if (auxiliaryLabels.count == 2){
+            auxiliary = [
+                [
+                    "label": auxiliaryLabels[0],
+                    "value": auxiliaryValues[0],
+                    "key": "auxiliary0"
+                ],
+                [
+                    "label": auxiliaryLabels[1],
+                    "value": auxiliaryValues[1],
+                    "key": "auxiliary1"
+                ]
+            ]
+        }
+        else{
+            auxiliary = [
+                [
+                    "label": auxiliaryLabels[0],
+                    "value": auxiliaryValues[0],
+                    "key": "auxiliary0"
+                ]
+            ]
+        }
+        
     
-
-    
+        
     //---------//
     // REQUEST //
     //---------//
     
+        let params: [String: Any] = [
+            "organizerName": organizerNameInput,
+            "serialNumber": serialNumberInput,
+            "header": headers,
+            "primary": primary,
+            "secondary": secondary,
+            "auxiliary": auxiliary
+        ]
+        
     // Creates a bare request object
     var request = URLRequest(url: URL(string: passCreationURL)!)
     
