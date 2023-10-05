@@ -86,21 +86,21 @@ public class WalletAccessPlugin: CAPPlugin {
             //----------------//
     
             // Fields (optional)
-            let headerValueInput = call.getArray("headerValues") ?? []
-            let primaryValueInput = call.getArray("primaryValues") ?? []
-            let secondaryValueInput = call.getArray("secondaryValues") ?? []
-            let auxiliaryValueInput = call.getArray("auxiliaryValues") ?? []
-            let headerLabelInput = call.getArray("headerLabels") ?? []
-            let primaryLabelInput = call.getArray("primaryLabels") ?? []
-            let secondaryLabelInput = call.getArray("secondaryLabels") ?? []
-            let auxiliaryLabelInput = call.getArray("auxiliaryLabels") ?? []
+            let headerValueInput = call.getArray("headerValues") ?? [String]()
+            let primaryValueInput = call.getArray("primaryValues") ?? [String]()
+            let secondaryValueInput = call.getArray("secondaryValues") ?? [String]()
+            let auxiliaryValueInput = call.getArray("auxiliaryValues") ?? [String]()
+            let headerLabelInput = call.getArray("headerLabels") ?? [String]()
+            let primaryLabelInput = call.getArray("primaryLabels") ?? [String]()
+            let secondaryLabelInput = call.getArray("secondaryLabels") ?? [String]()
+            let auxiliaryLabelInput = call.getArray("auxiliaryLabels") ?? [String]()
             
             // Needed Values for PKPass Creation
             let serialNumberInput = call.getString("serialNumber") ?? "Invalid"
             let organizerNameInput = call.getString("organizerName") ?? "Inavlid"
             let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
             let passDownloadURL = call.getString("passDownloadURL") ?? "Invalid"
-            let usesSerialNumberInDownloadURL = call.getBoolean("usesSerialNumberForDownload") ?? false
+            let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberForDownload") ?? false
             
             
             
@@ -120,13 +120,13 @@ public class WalletAccessPlugin: CAPPlugin {
             ){
                 call.reject("passURL needs to be supplied")
             }
-            
+                        
             // Checks every Label has a corresponding Value and vice versa
             if (
-                headerLabelInput.length !== headerValueInput.length ||
-                primaryLabelInput.length !== primaryValueInput.length ||
-                secondaryLabelInput.length !== secondaryValueInput.length ||
-                auxiliaryLabelInput.length !== auxiliaryValueInput.length
+                headerLabelInput.count != headerValueInput.count ||
+                primaryLabelInput.count != primaryValueInput.count ||
+                secondaryLabelInput.count != secondaryValueInput.count ||
+                auxiliaryLabelInput.count != auxiliaryValueInput.count
             ){
                 call.reject("For every label, there must be a value! Check your LabelInput and ValueInput params!")
             }
@@ -177,15 +177,34 @@ public class WalletAccessPlugin: CAPPlugin {
 //----------------//
 
 // Generates the Pass
-func generatePass(_ passCreationURL: String, completion: @escaping((Bool) -> () )){
+func generatePass(
+    _ passCreationURL: String,
+    serialNumberInput: String,
+    headerLabelInput: [String],
+    headerValueInput: [String],
+    primaryLabelInput: [String],
+    primaryValueInput: [String],
+    secondaryLabelInput: [String],
+    secondaryValueInput: [String],
+    auxiliaryLabelInput: [String],
+    auxiliaryValueInput: [String],
+    
+    completion: @escaping((Bool) -> () )){
     
     //--------//
     // PARAMS //
     //--------//
     
-    let params : [String: Any] = [
-        "qrText": "This is a string that turns into a QR Code",
+        // A dictionary with String Keys and Any Value
+        let singleParams: [String: Any] = [
+            "qrText": "This is a string that turns into a QR Code",
+            "serialNumber": serialNumberInput
+        ]
+        
+        // A dictionary with String Keys and arrays of Any Value
+        let inputParams : [String: [[String: String]]] = [
         "header": [
+            [String: String]()
         ],
         "primary": [
         ],
@@ -193,40 +212,32 @@ func generatePass(_ passCreationURL: String, completion: @escaping((Bool) -> () 
         ],
         "auxiliary": [
         ],
-        "serialNumber": serialNumberInput
+        
     ]
+        
+        
     
-    // Populates Params with Header Labels and Values
-    headerLabelInput.forEach{ (label, index) in
-        params["header"][index]["label"] = label
-    }
-    headerValueInput.forEach{ (value, index) in
-        params["header"][index]["value"] = value
-    }
+        // Populates Params with Header Labels and Values
+        var headerLabels = [String]()
+        var headerValues = [String]()
+        headerLabelInput.enumerated().forEach{ (index, label) in
+            headerLabels[index] = label
+        }
+        headerValueInput.enumerated().forEach{ (index, value) in
+            headerValues[index] = value
+        }
+        
+        // Populates Params with Primary Labels and Values
+        var primaryLabels = [String]()
+        var primaryValues = [String]()
+        primaryLabelInput.enumerated().forEach{ (index, label) in
+            primaryLabels[index] = label
+        }
+        primaryValueInput.enumerated().forEach{ (index, value) in
+            primaryValues[index] = value
+        }
     
-    // Populates Params with Primary Labels and Values
-    headerLabelInput.forEach{ (label, index) in
-        params["primary"][index]["label"] = label
-    }
-    headerValueInput.forEach{ (value, index) in
-        params["primary"][index]["value"] = value
-    }
-    
-    // Populates Params with Secondary Labels and Values
-    headerLabelInput.forEach{ (label, index) in
-        params["secondary"][index]["label"] = label
-    }
-    headerValueInput.forEach{ (value, index) in
-        params["secondary"][index]["value"] = value
-    }
-    
-    // Populates Params with Auxiliary Labels and Values
-    headerLabelInput.forEach{ (label, index) in
-        params["auxiliary"][index]["label"] = label
-    }
-    headerValueInput.forEach{ (value, index) in
-        params["auxiliary"][index]["value"] = value
-    }
+
     
     //---------//
     // REQUEST //
