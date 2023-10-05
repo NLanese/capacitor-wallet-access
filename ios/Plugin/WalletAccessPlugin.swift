@@ -147,7 +147,6 @@ public class WalletAccessPlugin: CAPPlugin {
                 secondaryValueInput: secondaryValueInput,
                 auxiliaryLabelInput: auxiliaryLabelInput,
                 auxiliaryValueInput: auxiliaryValueInput,
-                
                 completion: <#T##(Bool) -> Void#>
             )
             
@@ -361,31 +360,31 @@ func generatePass(
             "auxiliary": auxiliary
         ]
         
-    // Creates a bare request object
-    var request = URLRequest(url: URL(string: passCreationURL)!)
-    
-    // Specifies Request Method
-    request.httpMethod = "POST"
-    
-    // Specifies content in request will be sent via JSON
-    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-    
-    // Attemts to Serialize the input JSON object. Said JSON object will be the previous declared params object
-    request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
-    
-    
-    // Deploys the request
-    let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-        do {
-            let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
-            completion(json["result"]! as! String == "SUCCESS" ? true : false)
-        }
-        catch {
-            print("error")
-            completion(false)
+        // Creates a bare request object
+        var request = URLRequest(url: URL(string: passCreationURL)!)
+        
+        // Specifies Request Method
+        request.httpMethod = "POST"
+        
+        // Specifies content in request will be sent via JSON
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Attemts to Serialize the input JSON object. Said JSON object will be the previous declared params object
+        request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
+        
+        
+        // Deploys the request
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            do {
+                let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
+                completion(json["result"]! as! String == "SUCCESS" ? true : false)
+            }
+            catch {
+                print("error")
+                completion(false)
+            }
         }
     }
-}
 
 // Downloads the Pass from Firebase
 func downloadPass(
