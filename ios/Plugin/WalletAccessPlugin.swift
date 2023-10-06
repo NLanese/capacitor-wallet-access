@@ -394,9 +394,11 @@ func downloadPass(
     completion: @escaping((Bool) -> () )
 ) {
     var pathToDownload = passDownloadURL
-    if (usesSerialNumber){
-        let splitURL = pathToDownload.split(separator: ".pkpass")
-        pathToDownload = splitURL[0] + serialNumber + splitURL[1]
+    if usesSerialNumber, let serialString = serialNumber {
+        if let range = pathToDownload.range(of: ".pkpass") {
+            let prefix = pathToDownload[pathToDownload.startIndex..<range.lowerBound]
+            let suffix = pathToDownload[range.lowerBound..<pathToDownload.endIndex]
+            pathToDownload = prefix + serialString + suffix
     }
     self.storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
         if let error = error {
