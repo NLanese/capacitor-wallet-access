@@ -154,8 +154,8 @@ public class WalletAccessPlugin: CAPPlugin {
             if (usesSerialNumberInDownloadURL){
                 downloadPass(
                     passDownloadURL,
-                    usesSerialNumberInDownloadURL: true,
-                    serialNumber: serialNumberInput
+                    usesSerialNumber: true,
+                    serialNumber: serialNumberInput,
                     completion: <#T##(Bool) -> Void#>
                 )
             }
@@ -164,8 +164,8 @@ public class WalletAccessPlugin: CAPPlugin {
             else{
                 downloadPass(
                     passDownloadURL,
-                    usesSerialNumberInDownloadURL: false,
-                    serialNumber: nil
+                    usesSerialNumber: false,
+                    serialNumber: nil,
                     completion: <#T##(Bool) -> Void#>
                 )
             }
@@ -390,10 +390,10 @@ func generatePass(
 func downloadPass(
     _ passDownloadURL: String,
     usesSerialNumber: Bool,
-    serialNumber: String?
+    serialNumber: String?,
     completion: @escaping((Bool) -> () )
 ) {
-    let pathToDownload = passDownloadURL
+    var pathToDownload = passDownloadURL
     if (usesSerialNumber){
         let splitURL = pathToDownload.split(separator: ".pkpass")
         pathToDownload = splitURL[0] + serialNumber + splitURL[1]
