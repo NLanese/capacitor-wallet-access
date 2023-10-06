@@ -166,6 +166,7 @@ public class WalletAccessPlugin: CAPPlugin {
             if (usesSerialNumberInDownloadURL){
                 downloadPass(
                     passDownloadURL,
+                    webStorage: webStorageInput,
                     usesSerialNumber: true,
                     serialNumber: serialNumberInput,
                     completion: <#T##(Bool) -> Void#>
@@ -176,6 +177,7 @@ public class WalletAccessPlugin: CAPPlugin {
             else{
                 downloadPass(
                     passDownloadURL,
+                    webStorage: webStorageInput,
                     usesSerialNumber: false,
                     serialNumber: nil,
                     completion: <#T##(Bool) -> Void#>
@@ -206,7 +208,6 @@ func generatePass(
     _ passCreationURL: String,
     serialNumberInput: String,
     organizerNameInput: String,
-    webStorage: String,
     
     headerLabelInput: JSArray,
     headerValueInput: JSArray,
@@ -420,7 +421,7 @@ func generatePass(
 // Downloads the Pass from Firebase
 func downloadPass(
     _ passDownloadURL: String,
-    webStorage: Stirng,
+    webStorage: String,
     usesSerialNumber: Bool,
     serialNumber: String?,
     completion: @escaping((Bool) -> () )
@@ -433,8 +434,13 @@ func downloadPass(
             pathToDownload = prefix + serialString + suffix
         }
     }
+    
+    // FIREBASE Storage
     if (webStorage == "firebase"){
-        self.storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
+        let storageRef = Storage.storage().reference()
+        var newPass: PKPass?
+        
+        storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
             if let error = error {
                 print("Error Downloading Local Resource:" + error.localizedDescription)
                 completion(false)
@@ -444,7 +450,7 @@ func downloadPass(
                     let canAddPass = PKAddPassesViewController.canAddPasses()
                     if (canAddPass){
                         print("Creating a Pass")
-                        self.newPass = try PKPass.init(data: data!)
+                        newPass = try PKPass.init(data: data!)
                         completion(true)
                     }
                     else{
