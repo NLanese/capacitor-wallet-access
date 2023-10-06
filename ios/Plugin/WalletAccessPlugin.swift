@@ -1,6 +1,9 @@
 import Foundation
 import Capacitor
 import PassKit
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseStorage
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
@@ -99,6 +102,7 @@ public class WalletAccessPlugin: CAPPlugin {
             let serialNumberInput = call.getString("serialNumber") ?? "Invalid"
             let organizerNameInput = call.getString("organizerName") ?? "Inavlid"
             let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
+            let webStorageInput = call.getString("webStorage") ?? "Invalid"
             let passDownloadURL = call.getString("passDownloadURL") ?? "Invalid"
             let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberForDownload") ?? false
             
@@ -115,10 +119,16 @@ public class WalletAccessPlugin: CAPPlugin {
             }
             
             // Checks Validity of Pass Type Input
-            if (
-                passCreationURL == "Invalid"
-            ){
+            if (passCreationURL == "Invalid"){
                 call.reject("passURL needs to be supplied")
+            }
+            
+            // Checks Validity of Web Storage
+            if (
+                webStorageInput != "firebase" &&
+                webStorageInput != "aws"
+            ){
+                call.reject("The'webstorage' prop needs to be provided and needs to be either 'firebase' or 'aws'")
             }
                         
             // Checks every Label has a corresponding Value and vice versa
@@ -139,6 +149,7 @@ public class WalletAccessPlugin: CAPPlugin {
                 passCreationURL,
                 serialNumberInput: serialNumberInput,
                 organizerNameInput: organizerNameInput,
+                
                 headerLabelInput: headerLabelInput,
                 headerValueInput: headerValueInput,
                 primaryLabelInput: primaryLabelInput,
@@ -147,6 +158,7 @@ public class WalletAccessPlugin: CAPPlugin {
                 secondaryValueInput: secondaryValueInput,
                 auxiliaryLabelInput: auxiliaryLabelInput,
                 auxiliaryValueInput: auxiliaryValueInput,
+                
                 completion: <#T##(Bool) -> Void#>
             )
             
@@ -194,6 +206,8 @@ func generatePass(
     _ passCreationURL: String,
     serialNumberInput: String,
     organizerNameInput: String,
+    webStorage: String,
+    
     headerLabelInput: JSArray,
     headerValueInput: JSArray,
     primaryLabelInput: JSArray,
@@ -209,15 +223,23 @@ func generatePass(
     // PARAMS //
     //--------//
         
-        // Populates Params with Header Labels and Values
+        //---------//
+        // HEADERS //
+        //---------//
+        // Creates a blank JS Array Object to store the call params from JS App
         var headerLabels = JSArray()
         var headerValues = JSArray()
+        
+        // For Each with Index through Label JSArray from params
         headerLabelInput.enumerated().forEach{ (index, label) in
             headerLabels[index] = label
         }
+        // For Each with Index through Value JSArray from params
         headerValueInput.enumerated().forEach{ (index, value) in
             headerValues[index] = value
         }
+        // Creates a Dictrionary with StringKeys and any JSValue as a value
+        // This dictionary will be passed into the final params dictironary for the URL Request
         var headers = [[String: any JSValue]]()
         if (headerLabels.count == 2){
             headers = [
@@ -243,7 +265,10 @@ func generatePass(
             ]
         }
         
-        // Populates Params with Primary Labels and Values
+        //---------//
+        // PRIMARY //
+        //---------//
+        // Creates a blank JS Array Object to store the call params from JS App
         var primaryLabels = JSArray()
         var primaryValues = JSArray()
         primaryLabelInput.enumerated().forEach{ (index, label) in
@@ -277,7 +302,10 @@ func generatePass(
             ]
         }
         
-        // Populates Params with Secondary Labels and Values
+        //-----------//
+        // SECONDARY //
+        //-----------//
+        // Creates a blank JS Array Object to store the call params from JS App
         var secondaryLabels = JSArray()
         var secondaryValues = JSArray()
         secondaryLabelInput.enumerated().forEach{ (index, label) in
@@ -311,7 +339,10 @@ func generatePass(
             ]
         }
         
-        // Populates Params with Axuiliary Labels and Values
+        //-----------//
+        // AUXILIARY //
+        //-----------//
+        // Creates a blank JS Array Object to store the call params from JS App
         var auxiliaryLabels = JSArray()
         var auxiliaryValues = JSArray()
         auxiliaryLabelInput.enumerated().forEach{ (index, label) in
@@ -389,6 +420,7 @@ func generatePass(
 // Downloads the Pass from Firebase
 func downloadPass(
     _ passDownloadURL: String,
+    webStorage: Stirng,
     usesSerialNumber: Bool,
     serialNumber: String?,
     completion: @escaping((Bool) -> () )
@@ -399,28 +431,32 @@ func downloadPass(
             let prefix = pathToDownload[pathToDownload.startIndex..<range.lowerBound]
             let suffix = pathToDownload[range.lowerBound..<pathToDownload.endIndex]
             pathToDownload = prefix + serialString + suffix
-    }
-    self.storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
-        if let error = error {
-            print("Error Downloading Local Resource:" + error.localizedDescription)
-            completion(false)
         }
-        else{
-            do {
-                let canAddPass = PKAddPassesViewController.canAddPasses()
-                if (canAddPass){
-                    print("Creating a Pass")
-                    self.newPass = try PKPass.init(data: data!)
-                    completion(true)
-                }
-                else{
-                    print("Device Cannot Add Passes")
-                }
-            }
-            catch{
-                print ("Unknown Error")
+    }
+    if (webStorage == "firebase"){
+        self.storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
+            if let error = error {
+                print("Error Downloading Local Resource:" + error.localizedDescription)
                 completion(false)
             }
+            else{
+                do {
+                    let canAddPass = PKAddPassesViewController.canAddPasses()
+                    if (canAddPass){
+                        print("Creating a Pass")
+                        self.newPass = try PKPass.init(data: data!)
+                        completion(true)
+                    }
+                    else{
+                        print("Device Cannot Add Passes")
+                    }
+                }
+                catch{
+                    print ("Unknown Error")
+                    completion(false)
+                }
+            }
         }
     }
+    
 }
