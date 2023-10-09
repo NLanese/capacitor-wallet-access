@@ -93,8 +93,9 @@ public class WalletAccessPlugin: CAPPlugin {
             let organizerNameInput = call.getString("organizerName") ?? "Inavlid"
             
             let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
-            let webStorageInput = call.getString("webStorage") ?? "Invalid"
             let passDownloadURL = call.getString("passDownloadURL") ?? "Invalid"
+            let passAuthorizationKey = call.getString("passAuthorizationKey") ?? "Invalid"
+            let webStorageInput = call.getString("webStorage") ?? "Invalid"
             let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberForDownload") ?? false
     
             // Fields (optional)
