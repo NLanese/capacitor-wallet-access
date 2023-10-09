@@ -18,7 +18,7 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     }
   }
 
-  async createNewPass(options: {
+  async generatePass(options: {
     headerValues: string[],
     headerLabels: string[],
 
@@ -59,6 +59,7 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     passURLInput: string
   }): Promise<{ newPass: string }> {
     console.log("Inside updatePass")
+    console.log("Params: ", options)
     return{
       newPass: ""
     }

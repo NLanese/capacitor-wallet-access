@@ -15,6 +15,8 @@ npx cap sync
 
 * [`echo(...)`](#echo)
 * [`getWallet(...)`](#getwallet)
+* [`createNewPass(...)`](#createnewpass)
+* [`updatePass(...)`](#updatepass)
 
 </docgen-index>
 
@@ -47,6 +49,36 @@ getWallet(options: { value: string[]; }) => Promise<{ cards: any[]; }>
 | **`options`** | <code>{ value: string[]; }</code> |
 
 **Returns:** <code>Promise&lt;{ cards: any[]; }&gt;</code>
+
+--------------------
+
+
+### createNewPass(...)
+
+```typescript
+createNewPass(options: { headerValues: string[]; headerLabels: string[]; primaryValues: string[]; primaryLabels: string[]; secondaryValues: string[]; secondaryLabels: string[]; auxiliaryValues: string[]; auxiliaryLabels: string[]; serialNumer: string; organizerName: string; passCreationURL: string; passDownloadURL: string; }) => Promise<{ newPass: string; }>
+```
+
+| Param         | Type                                                                                                                                                                                                                                                                                                                         |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ headerValues: string[]; headerLabels: string[]; primaryValues: string[]; primaryLabels: string[]; secondaryValues: string[]; secondaryLabels: string[]; auxiliaryValues: string[]; auxiliaryLabels: string[]; serialNumer: string; organizerName: string; passCreationURL: string; passDownloadURL: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ newPass: string; }&gt;</code>
+
+--------------------
+
+
+### updatePass(...)
+
+```typescript
+updatePass(options: { headerValues: string[]; headerLabels: string[]; primaryValues: string[]; primaryLabels: string[]; secondaryValues: string[]; secondaryLabels: string[]; auxiliaryValues: string[]; auxiliaryLabels: string[]; serialNumer: string; organizerName: string; passURLInput: string; }) => Promise<{ newPass: string; }>
+```
+
+| Param         | Type                                                                                                                                                                                                                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **`options`** | <code>{ headerValues: string[]; headerLabels: string[]; primaryValues: string[]; primaryLabels: string[]; secondaryValues: string[]; secondaryLabels: string[]; auxiliaryValues: string[]; auxiliaryLabels: string[]; serialNumer: string; organizerName: string; passURLInput: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ newPass: string; }&gt;</code>
 
 --------------------
 
