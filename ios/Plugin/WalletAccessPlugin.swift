@@ -108,6 +108,7 @@ public class WalletAccessPlugin: CAPPlugin {
             let secondaryLabelInput = call.getArray("secondaryLabels") ?? [String]()
             let auxiliaryLabelInput = call.getArray("auxiliaryLabels") ?? [String]()
             
+            print("Processed all inputs...")
             
             // Checks Validity of Serial Number
             if (serialNumberInput == "Invalid"){
@@ -142,6 +143,7 @@ public class WalletAccessPlugin: CAPPlugin {
                 call.reject("For every label, there must be a value! Check your LabelInput and ValueInput params!")
             }
             
+            print("Passed all param validations...")
             
             //-----------------------//
             // PASS CREATION PROCESS //
@@ -162,6 +164,8 @@ public class WalletAccessPlugin: CAPPlugin {
                 
                 completion: <#T##(Bool) -> Void#>
             )
+            
+            print("Pass Created")
             
             // If Serial Number is Appended at the end of the File Name for Downloads
             if (usesSerialNumberInDownloadURL){
@@ -221,6 +225,8 @@ func createPass(
     
     completion: @escaping((Bool) -> () )){
     
+        
+    print("     Inside 'createPass' sub-function")
     //--------//
     // PARAMS //
     //--------//
@@ -378,7 +384,7 @@ func createPass(
             ]
         }
         
-    
+    print("     Created 'params' pre-objects...")
         
     //---------//
     // REQUEST //
@@ -393,8 +399,14 @@ func createPass(
             "auxiliary": auxiliary
         ]
         
+        
+        print("     created full params body object")
+        
         // Creates a bare request object
         var request = URLRequest(url: URL(string: passCreationURL)!)
+        
+        
+        print("     created request")
         
         // Specifies Request Method
         request.httpMethod = "POST"
@@ -405,6 +417,7 @@ func createPass(
         // Attemts to Serialize the input JSON object. Said JSON object will be the previous declared params object
         request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
         
+        print("     request configuration complete, about to send...")
         
         // Deploys the request
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
