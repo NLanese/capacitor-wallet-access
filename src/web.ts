@@ -19,6 +19,14 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
   }
 
   async generatePass(options: {
+    serialNumberInput: string,
+    organizerNameInput: string,
+
+    passCreationURL: string,
+    webStroageInput: string,
+    passDownloadURL: string,
+    userSerialNumberinDownload: string,
+
     headerValues: string[],
     headerLabels: string[],
 
@@ -30,39 +38,40 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
 
     auxiliaryValues: string[],
     auxiliaryLabels: string[],
-
-    serialNumer: string,
-    organizerName: string,
-    passURLInput: string
   }): Promise<{ newPass: string }> {
     console.log("Inside createNewPass")
-    return{
-      newPass: ""
-    }
-  }
-
-  async updatePass(options: {
-    headerValues: string[],
-    headerLabels: string[],
-
-    primaryValues: string[],
-    primaryLabels: string[],
-
-    secondaryValues: string[],
-    secondaryLabels: string[],
-
-    auxiliaryValues: string[],
-    auxiliaryLabels: string[],
-
-    serialNumer: string,
-    organizerName: string,
-    passURLInput: string
-  }): Promise<{ newPass: string }> {
-    console.log("Inside updatePass")
     console.log("Params: ", options)
     return{
       newPass: ""
     }
   }
+
+  // async updatePass(options: {
+  //   serialNumberInput: string,
+  //   organizerNameInput: string,
+
+  //   passCreationURL: string,
+  //   webStroageInput: string,
+  //   passDownloadURL: string,
+  //   userSerialNumberinDownload: string,
+
+  //   headerValues: string[],
+  //   headerLabels: string[],
+
+  //   primaryValues: string[],
+  //   primaryLabels: string[],
+
+  //   secondaryValues: string[],
+  //   secondaryLabels: string[],
+
+  //   auxiliaryValues: string[],
+  //   auxiliaryLabels: string[],
+  // }): Promise<{ newPass: string }> {
+  //   console.log("Inside updatePass")
+  //   console.log("Params: ", options)
+  //   return{
+  //     newPass: ""
+  //   }
+  // }
 
 }

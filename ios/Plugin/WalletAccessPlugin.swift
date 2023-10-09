@@ -79,7 +79,7 @@ public class WalletAccessPlugin: CAPPlugin {
     }
     
     // Creates an Apple Pass using Parameters
-    @objc func createNewPass(_ call: CAPPluginCall){
+    @objc func generatePass(_ call: CAPPluginCall){
         
         // If Pass Library is Available
         if PKPassLibrary.isPassLibraryAvailable() {
@@ -87,6 +87,15 @@ public class WalletAccessPlugin: CAPPlugin {
             //----------------//
             // INPUT HANDLING //
             //----------------//
+            
+            // Needed Values for PKPass Creation
+            let serialNumberInput = call.getString("serialNumber") ?? "Invalid"
+            let organizerNameInput = call.getString("organizerName") ?? "Inavlid"
+            
+            let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
+            let webStorageInput = call.getString("webStorage") ?? "Invalid"
+            let passDownloadURL = call.getString("passDownloadURL") ?? "Invalid"
+            let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberForDownload") ?? false
     
             // Fields (optional)
             let headerValueInput = call.getArray("headerValues") ?? [String]()
@@ -97,15 +106,6 @@ public class WalletAccessPlugin: CAPPlugin {
             let primaryLabelInput = call.getArray("primaryLabels") ?? [String]()
             let secondaryLabelInput = call.getArray("secondaryLabels") ?? [String]()
             let auxiliaryLabelInput = call.getArray("auxiliaryLabels") ?? [String]()
-            
-            // Needed Values for PKPass Creation
-            let serialNumberInput = call.getString("serialNumber") ?? "Invalid"
-            let organizerNameInput = call.getString("organizerName") ?? "Inavlid"
-            let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
-            let webStorageInput = call.getString("webStorage") ?? "Invalid"
-            let passDownloadURL = call.getString("passDownloadURL") ?? "Invalid"
-            let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberForDownload") ?? false
-            
             
             
             // Checks Validity of Serial Number
@@ -145,7 +145,7 @@ public class WalletAccessPlugin: CAPPlugin {
             //-----------------------//
             // PASS CREATION PROCESS //
             //-----------------------//
-            generatePass(
+            createPass(
                 passCreationURL,
                 serialNumberInput: serialNumberInput,
                 organizerNameInput: organizerNameInput,
@@ -204,7 +204,7 @@ public class WalletAccessPlugin: CAPPlugin {
 //----------------//
 
 // Generates the Pass
-func generatePass(
+func createPass(
     _ passCreationURL: String,
     serialNumberInput: String,
     organizerNameInput: String,

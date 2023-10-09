@@ -9,28 +9,15 @@ export interface WalletAccessPlugin {
     Promise<{ cards: any[] }>
 
   // Creates a Pass
-  createNewPass(options: {
-    headerValues: string[],
-    headerLabels: string[],
+  generatePass(options: {
+    serialNumberInput: string,
+    organizerNameInput: string,
 
-    primaryValues: string[],
-    primaryLabels: string[],
-
-    secondaryValues: string[],
-    secondaryLabels: string[],
-
-    auxiliaryValues: string[],
-    auxiliaryLabels: string[],
-
-    serialNumer: string,
-    organizerName: string,
     passCreationURL: string,
+    webStroageInput: string,
     passDownloadURL: string,
-  }): 
-    Promise<{ newPass: string}>
+    userSerialNumberinDownload: string,
 
-  // Updates a Pass
-  updatePass(options: {
     headerValues: string[],
     headerLabels: string[],
 
@@ -42,10 +29,26 @@ export interface WalletAccessPlugin {
 
     auxiliaryValues: string[],
     auxiliaryLabels: string[],
-
-    serialNumer: string,
-    organizerName: string,
-    passURLInput: string
   }): 
     Promise<{ newPass: string}>
+
+  // // Updates a Pass
+  // updatePass(options: {
+  //   headerValues: string[],
+  //   headerLabels: string[],
+
+  //   primaryValues: string[],
+  //   primaryLabels: string[],
+
+  //   secondaryValues: string[],
+  //   secondaryLabels: string[],
+
+  //   auxiliaryValues: string[],
+  //   auxiliaryLabels: string[],
+
+  //   serialNumer: string,
+  //   organizerName: string,
+  //   passURLInput: string
+  // }): 
+  //   Promise<{ newPass: string}>
 }
