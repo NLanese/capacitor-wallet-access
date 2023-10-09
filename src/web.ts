@@ -26,7 +26,7 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     passDownloadURL: string,
     passAuthorizationKey: string,
     webStroageInput: string,
-    usesSerialNumberinDownload: string,
+    usesSerialNumberinDownload: boolean,
 
     headerValues: string[],
     headerLabels: string[],
