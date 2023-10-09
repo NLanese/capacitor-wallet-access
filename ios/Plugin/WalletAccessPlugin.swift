@@ -161,8 +161,6 @@ public class WalletAccessPlugin: CAPPlugin {
                 secondaryValueInput: secondaryValueInput,
                 auxiliaryLabelInput: auxiliaryLabelInput,
                 auxiliaryValueInput: auxiliaryValueInput,
-                
-                completion: <#T##(Bool) -> Void#>
             )
             
             print("Pass Created")
@@ -174,7 +172,6 @@ public class WalletAccessPlugin: CAPPlugin {
                     webStorage: webStorageInput,
                     usesSerialNumber: true,
                     serialNumber: serialNumberInput,
-                    completion: <#T##(Bool) -> Void#>
                 )
             }
             
@@ -185,7 +182,6 @@ public class WalletAccessPlugin: CAPPlugin {
                     webStorage: webStorageInput,
                     usesSerialNumber: false,
                     serialNumber: nil,
-                    completion: <#T##(Bool) -> Void#>
                 )
             }
             

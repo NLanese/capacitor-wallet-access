@@ -16,7 +16,7 @@ export interface WalletAccessPlugin {
     passCreationURL: string,
     passDownloadURL: string,
     passAuthorizationKey: string,
-    webStroageInput: string,
+    webStorageInput: string,
     usesSerialNumberinDownload: boolean,
 
     headerValues: string[],
