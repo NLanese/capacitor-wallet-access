@@ -1,9 +1,10 @@
 import Foundation
 import Capacitor
 import PassKit
-import FirebaseCore
-import FirebaseFirestore
-import FirebaseStorage
+//import Amplify
+//import FirebaseCore
+//import FirebaseFirestore
+//import FirebaseStorage
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
@@ -160,8 +161,27 @@ public class WalletAccessPlugin: CAPPlugin {
                 secondaryLabelInput: secondaryLabelInput,
                 secondaryValueInput: secondaryValueInput,
                 auxiliaryLabelInput: auxiliaryLabelInput,
-                auxiliaryValueInput: auxiliaryValueInput,
-            )
+                auxiliaryValueInput: auxiliaryValueInput)
+                {
+                    createPassResult in
+                    if (createPassResult){
+                        
+                        if (usesSerialNumberInDownloadURL){
+                            
+                            downloadPass(
+                                passDownloadURL,
+                                webStorage: webStorageInput,
+                                usesSerialNumber: true,
+                                serialNumber: serialNumberInput
+                            ){
+                                downloadPassResult in
+                                if (downloadPassResult){
+                                    print("Downloaded")
+                                }
+                            }
+                        }
+                    }
+                }
             
             print("Pass Created")
             
@@ -172,6 +192,7 @@ public class WalletAccessPlugin: CAPPlugin {
                     webStorage: webStorageInput,
                     usesSerialNumber: true,
                     serialNumber: serialNumberInput,
+                    completion: <#T##(Bool) -> Void#>
                 )
             }
             
@@ -182,6 +203,7 @@ public class WalletAccessPlugin: CAPPlugin {
                     webStorage: webStorageInput,
                     usesSerialNumber: false,
                     serialNumber: nil,
+                    completion: <#T##(Bool) -> Void#>
                 )
             }
             
@@ -219,7 +241,8 @@ func createPass(
     auxiliaryLabelInput: JSArray,
     auxiliaryValueInput: JSArray,
     
-    completion: @escaping((Bool) -> () )){
+    completion: @escaping((Bool) -> () )
+){
     
         
     print("     Inside 'createPass' sub-function")
@@ -447,32 +470,37 @@ func downloadPass(
     
     // FIREBASE Storage
     if (webStorage == "firebase"){
-        let storageRef = Storage.storage().reference()
-        var newPass: PKPass?
+//        let storageRef = Storage.storage().reference()
+//        var newPass: PKPass?
+//
+//        storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
+//            if let error = error {
+//                print("Error Downloading Local Resource:" + error.localizedDescription)
+//                completion(false)
+//            }
+//            else{
+//                do {
+//                    let canAddPass = PKAddPassesViewController.canAddPasses()
+//                    if (canAddPass){
+//                        print("Creating a Pass")
+//                        newPass = try PKPass.init(data: data!)
+//                        completion(true)
+//                    }
+//                    else{
+//                        print("Device Cannot Add Passes")
+//                    }
+//                }
+//                catch{
+//                    print ("Unknown Error")
+//                    completion(false)
+//                }
+//            }
+//        }
+    }
+    
+    // AWS Storage
+    if (webStorage == "aws"){
         
-        storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
-            if let error = error {
-                print("Error Downloading Local Resource:" + error.localizedDescription)
-                completion(false)
-            }
-            else{
-                do {
-                    let canAddPass = PKAddPassesViewController.canAddPasses()
-                    if (canAddPass){
-                        print("Creating a Pass")
-                        newPass = try PKPass.init(data: data!)
-                        completion(true)
-                    }
-                    else{
-                        print("Device Cannot Add Passes")
-                    }
-                }
-                catch{
-                    print ("Unknown Error")
-                    completion(false)
-                }
-            }
-        }
     }
     
 }
