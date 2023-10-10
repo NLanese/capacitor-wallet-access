@@ -82,6 +82,16 @@ public class WalletAccessPlugin: CAPPlugin {
     // Creates an Apple Pass using Parameters
     @objc func generatePass(_ call: CAPPluginCall){
         
+        print("=======================")
+        print("*")
+        print("*")
+        print("*")
+        print("INSIDE CAPACITOR PLUGIN")
+        print("*")
+        print("*")
+        print("*")
+        print("=======================")
+        
         // If Pass Library is Available
         if PKPassLibrary.isPassLibraryAvailable() {
             
@@ -90,14 +100,14 @@ public class WalletAccessPlugin: CAPPlugin {
             //----------------//
             
             // Needed Values for PKPass Creation
-            let serialNumberInput = call.getString("serialNumber") ?? "Invalid"
-            let organizerNameInput = call.getString("organizerName") ?? "Inavlid"
+            let serialNumberInput = call.getString("serialNumberInput") ?? "Invalid"
+            let organizerNameInput = call.getString("organizerNameInput") ?? "Inavlid"
             
             let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
             let passDownloadURL = call.getString("passDownloadURL") ?? "Invalid"
             let passAuthorizationKey = call.getString("passAuthorizationKey") ?? "Invalid"
-            let webStorageInput = call.getString("webStorage") ?? "Invalid"
-            let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberForDownload") ?? false
+            let webStorageInput = call.getString("webStorageInput") ?? "Invalid"
+            let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberinDownload") ?? false
     
             // Fields (optional)
             let headerValueInput = call.getArray("headerValues") ?? [String]()
@@ -108,8 +118,21 @@ public class WalletAccessPlugin: CAPPlugin {
             let primaryLabelInput = call.getArray("primaryLabels") ?? [String]()
             let secondaryLabelInput = call.getArray("secondaryLabels") ?? [String]()
             let auxiliaryLabelInput = call.getArray("auxiliaryLabels") ?? [String]()
-            
             print("Processed all inputs...")
+            print("SerialNumberInput -- " + serialNumberInput)
+            print("OrganizerNameInput -- " + organizerNameInput)
+            print("PassCreationURL -- " + passCreationURL)
+            print("PassDownloadURL -- " + passDownloadURL)
+            print("PassAuthorizationKey -- " + passAuthorizationKey)
+            print("Web Storage Service -- " + webStorageInput)
+            print("Uses Serial Number in Download? " + (usesSerialNumberInDownloadURL ? "True" : "False"))
+            print("Headers")
+            print(headerLabelInput)
+            print(headerValueInput)
+            print("Primary")
+            print(primaryLabelInput)
+            print(primaryValueInput)
+            
             
             // Checks Validity of Serial Number
             if (serialNumberInput == "Invalid"){
@@ -166,8 +189,9 @@ public class WalletAccessPlugin: CAPPlugin {
                     createPassResult in
                     if (createPassResult){
                         
+                        
+                        // IF Serial Number is in URL
                         if (usesSerialNumberInDownloadURL){
-                            
                             downloadPass(
                                 passDownloadURL,
                                 webStorage: webStorageInput,
@@ -180,33 +204,23 @@ public class WalletAccessPlugin: CAPPlugin {
                                 }
                             }
                         }
+                        
+                        // IF Serial Number is not in URL
+                        else{
+                            downloadPass(
+                                passDownloadURL,
+                                webStorage: webStorageInput,
+                                usesSerialNumber: false,
+                                serialNumber: nil
+                            ){
+                                downloadPassResult in
+                                if (downloadPassResult){
+                                    print("Downloaded")
+                                }
+                            }
+                        }
                     }
                 }
-            
-            print("Pass Created")
-            
-            // If Serial Number is Appended at the end of the File Name for Downloads
-            if (usesSerialNumberInDownloadURL){
-                downloadPass(
-                    passDownloadURL,
-                    webStorage: webStorageInput,
-                    usesSerialNumber: true,
-                    serialNumber: serialNumberInput,
-                    completion: <#T##(Bool) -> Void#>
-                )
-            }
-            
-            // If the Serial Number is NOT in the Download URL
-            else{
-                downloadPass(
-                    passDownloadURL,
-                    webStorage: webStorageInput,
-                    usesSerialNumber: false,
-                    serialNumber: nil,
-                    completion: <#T##(Bool) -> Void#>
-                )
-            }
-            
             
             
             
@@ -259,11 +273,14 @@ func createPass(
         
         // For Each with Index through Label JSArray from params
         headerLabelInput.enumerated().forEach{ (index, label) in
-            headerLabels[index] = label
+            print("     Inside Header Disemination")
+            print("     Working on header index of")
+            print("     ", index)
+            headerLabels.append(label)
         }
         // For Each with Index through Value JSArray from params
         headerValueInput.enumerated().forEach{ (index, value) in
-            headerValues[index] = value
+            headerValues.append(value)
         }
         // Creates a Dictrionary with StringKeys and any JSValue as a value
         // This dictionary will be passed into the final params dictironary for the URL Request
@@ -299,10 +316,10 @@ func createPass(
         var primaryLabels = JSArray()
         var primaryValues = JSArray()
         primaryLabelInput.enumerated().forEach{ (index, label) in
-            primaryLabels[index] = label
+            primaryLabels.append(label)
         }
         primaryValueInput.enumerated().forEach{ (index, value) in
-            primaryValues[index] = value
+            primaryValues.append(value)
         }
         var primary = [[String: any JSValue]]()
         if (primaryLabels.count == 2){
@@ -336,10 +353,10 @@ func createPass(
         var secondaryLabels = JSArray()
         var secondaryValues = JSArray()
         secondaryLabelInput.enumerated().forEach{ (index, label) in
-            secondaryLabels[index] = label
+            secondaryLabels.append(label)
         }
         secondaryValueInput.enumerated().forEach{ (index, value) in
-            secondaryValues[index] = value
+            secondaryValues.append(value)
         }
         var secondary = [[String: any JSValue]]()
         if (secondaryLabels.count == 2){
@@ -373,10 +390,10 @@ func createPass(
         var auxiliaryLabels = JSArray()
         var auxiliaryValues = JSArray()
         auxiliaryLabelInput.enumerated().forEach{ (index, label) in
-            auxiliaryLabels[index] = label
+            auxiliaryLabels.append(label)
         }
         auxiliaryValueInput.enumerated().forEach{ (index, value) in
-            auxiliaryValues[index] = value
+            auxiliaryValues.append(value)
         }
         var auxiliary = [[String: any JSValue]]()
         if (auxiliaryLabels.count == 2){
@@ -439,9 +456,11 @@ func createPass(
         print("     request configuration complete, about to send...")
         
         // Deploys the request
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        let _task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             do {
+                print("     inside the task do, about to serialize json for request")
                 let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
+                print("     serialized. Moving onto 'createPass' completion which should bring us to download")
                 completion(json["result"]! as! String == "SUCCESS" ? true : false)
             }
             catch {
