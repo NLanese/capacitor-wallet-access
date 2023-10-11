@@ -1,6 +1,7 @@
 import Foundation
 import Capacitor
 import PassKit
+import JavaScriptCore
 //import Amplify
 //import FirebaseCore
 //import FirebaseFirestore
@@ -268,23 +269,30 @@ func createPass(
         // HEADERS //
         //---------//
         // Creates a blank JS Array Object to store the call params from JS App
-        var headerLabels = JSArray()
-        var headerValues = JSArray()
+        var headerLabels = [String]()
+        var headerValues = [String]()
         
         // For Each with Index through Label JSArray from params
         headerLabelInput.enumerated().forEach{ (index, label) in
-            print("     Inside Header Disemination")
-            print("     Working on header index of")
-            print("     ", index)
-            headerLabels.append(label)
+            if var swiftString = label as? String {
+                headerLabels.append(swiftString)
+            }
+            else{
+                headerLabels.append("Invalid")
+            }
         }
         // For Each with Index through Value JSArray from params
         headerValueInput.enumerated().forEach{ (index, value) in
-            headerValues.append(value)
+            if var swiftString = value as? String {
+                headerValues.append(swiftString)
+            }
+            else{
+                headerValues.append("Invalid")
+            }
         }
-        // Creates a Dictrionary with StringKeys and any JSValue as a value
-        // This dictionary will be passed into the final params dictironary for the URL Request
-        var headers = [[String: any JSValue]]()
+    
+        // Creates the Headers Object for final params
+        var headers = [[String: String]]()
         if (headerLabels.count == 2){
             headers = [
                 [
@@ -313,15 +321,25 @@ func createPass(
         // PRIMARY //
         //---------//
         // Creates a blank JS Array Object to store the call params from JS App
-        var primaryLabels = JSArray()
-        var primaryValues = JSArray()
+        var primaryLabels = [String]()
+        var primaryValues = [String]()
         primaryLabelInput.enumerated().forEach{ (index, label) in
-            primaryLabels.append(label)
+            if var swiftString = label as? String {
+                primaryLabels.append(swiftString)
+            }
+            else{
+                primaryLabels.append("Invalid")
+            }
         }
         primaryValueInput.enumerated().forEach{ (index, value) in
-            primaryValues.append(value)
+            if var swiftString = value as? String {
+                primaryValues.append(swiftString)
+            }
+            else{
+                primaryValues.append("Invalid")
+            }
         }
-        var primary = [[String: any JSValue]]()
+        var primary = [[String: String]]()
         if (primaryLabels.count == 2){
             primary = [
                 [
@@ -350,15 +368,25 @@ func createPass(
         // SECONDARY //
         //-----------//
         // Creates a blank JS Array Object to store the call params from JS App
-        var secondaryLabels = JSArray()
-        var secondaryValues = JSArray()
+        var secondaryLabels = [String]()
+        var secondaryValues = [String]()
         secondaryLabelInput.enumerated().forEach{ (index, label) in
-            secondaryLabels.append(label)
+            if var swiftString = label as? String {
+                secondaryLabels.append(swiftString)
+            }
+            else{
+                secondaryLabels.append("Invalid")
+            }
         }
         secondaryValueInput.enumerated().forEach{ (index, value) in
-            secondaryValues.append(value)
+            if var swiftString = value as? String {
+                secondaryValues.append(swiftString)
+            }
+            else{
+                secondaryValues.append("Invalid")
+            }
         }
-        var secondary = [[String: any JSValue]]()
+        var secondary = [[String: String]]()
         if (secondaryLabels.count == 2){
             secondary = [
                 [
@@ -387,15 +415,25 @@ func createPass(
         // AUXILIARY //
         //-----------//
         // Creates a blank JS Array Object to store the call params from JS App
-        var auxiliaryLabels = JSArray()
-        var auxiliaryValues = JSArray()
+        var auxiliaryLabels = [String]()
+        var auxiliaryValues = [String]()
         auxiliaryLabelInput.enumerated().forEach{ (index, label) in
-            auxiliaryLabels.append(label)
+            if var swiftString = label as? String {
+                auxiliaryLabels.append(swiftString)
+            }
+            else{
+                auxiliaryLabels.append("Invalid")
+            }
         }
         auxiliaryValueInput.enumerated().forEach{ (index, value) in
-            auxiliaryValues.append(value)
+            if var swiftString = value as? String {
+                auxiliaryValues.append(swiftString)
+            }
+            else{
+                auxiliaryValues.append("Invalid")
+            }
         }
-        var auxiliary = [[String: any JSValue]]()
+        var auxiliary = [[String: String]]()
         if (auxiliaryLabels.count == 2){
             auxiliary = [
                 [
@@ -468,7 +506,7 @@ func createPass(
                 completion(false)
             }
         }.resume()
-        print("Session Complete")
+        print("Session Complete! ")
     }
 
 // Downloads the Pass from Firebase
