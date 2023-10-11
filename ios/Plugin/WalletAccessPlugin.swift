@@ -456,7 +456,7 @@ func createPass(
         print("     request configuration complete, about to send...")
         
         // Deploys the request
-        let _task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        let _ = URLSession.shared.dataTask(with: request) { (data, response, error) in
             do {
                 print("     inside the task do, about to serialize json for request")
                 let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
@@ -467,7 +467,8 @@ func createPass(
                 print("error")
                 completion(false)
             }
-        }
+        }.resume()
+        print("Session Complete")
     }
 
 // Downloads the Pass from Firebase
