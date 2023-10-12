@@ -495,17 +495,40 @@ func createPass(
         
         // Deploys the request
         let _ = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            do {
-                print("     inside the task do, about to serialize json for request")
-                let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
-                print("     serialized. Moving onto 'createPass' completion which should bring us to download")
-                completion(json["result"]! as! String == "SUCCESS" ? true : false)
+            if let error = error {
+                print("Error: \(error)")
+                completion(false)
+                return
             }
-            catch {
-                print("error")
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                completion(false)
+                return
+            }
+            
+            if httpResponse.statusCode != 200 {
+                print("HTTP status code: \(httpResponse.statusCode)")
+                completion(false)
+                return
+            }
+            
+            guard let data = data else {
+                print("No data received")
+                completion(false)
+                return
+            }
+            
+            do {
+                let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+                let result = json["result"] as? String
+                completion(result == "SUCCESS")
+            } catch {
+                print("JSON serialization error: \(error)")
                 completion(false)
             }
-        }.resume()
+        }
+        .resume()
         print("Session Complete! ")
     }
 
