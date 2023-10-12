@@ -24,6 +24,7 @@ public class WalletAccessPlugin: CAPPlugin {
     @objc func getWallet(_ call: CAPPluginCall) {
         // If Pass Library is Available
         if PKPassLibrary.isPassLibraryAvailable() {
+            
         // Creates Reference to PassLibrary (User Wallet)
             let passLibrary = PKPassLibrary()
             let userPasses = passLibrary.passes()
@@ -83,6 +84,8 @@ public class WalletAccessPlugin: CAPPlugin {
     // Creates an Apple Pass using Parameters
     @objc func generatePass(_ call: CAPPluginCall){
         
+        
+        // Logs to denote the plugin function has successfully fired
         print("=======================")
         print("*")
         print("*")
@@ -101,6 +104,7 @@ public class WalletAccessPlugin: CAPPlugin {
             //----------------//
             
             // Needed Values for PKPass Creation
+            // Recall that the ONLY param for a Capacitor plugin is `call`. The Params of this call function are declared in the plugin's definitions.ts and index.ts
             let serialNumberInput = call.getString("serialNumberInput") ?? "Invalid"
             let organizerNameInput = call.getString("organizerNameInput") ?? "Inavlid"
             
@@ -111,6 +115,7 @@ public class WalletAccessPlugin: CAPPlugin {
             let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberinDownload") ?? false
     
             // Fields (optional)
+            // Since they are optional, you must declare an alternative of the same time. Thus we create an empty String Array if nothing is there
             let headerValueInput = call.getArray("headerValues") ?? [String]()
             let primaryValueInput = call.getArray("primaryValues") ?? [String]()
             let secondaryValueInput = call.getArray("secondaryValues") ?? [String]()
@@ -119,6 +124,9 @@ public class WalletAccessPlugin: CAPPlugin {
             let primaryLabelInput = call.getArray("primaryLabels") ?? [String]()
             let secondaryLabelInput = call.getArray("secondaryLabels") ?? [String]()
             let auxiliaryLabelInput = call.getArray("auxiliaryLabels") ?? [String]()
+            
+            
+            // More Feedback Logs
             print("Processed all inputs...")
             print("SerialNumberInput -- " + serialNumberInput)
             print("OrganizerNameInput -- " + organizerNameInput)
@@ -173,6 +181,8 @@ public class WalletAccessPlugin: CAPPlugin {
             //-----------------------//
             // PASS CREATION PROCESS //
             //-----------------------//
+            
+            // fires the function declared at the bottom of this file
             createPass(
                 passCreationURL,
                 serialNumberInput: serialNumberInput,
@@ -187,7 +197,11 @@ public class WalletAccessPlugin: CAPPlugin {
                 auxiliaryLabelInput: auxiliaryLabelInput,
                 auxiliaryValueInput: auxiliaryValueInput)
                 {
+                    // We then fire the `completion` funtion which is initialized here
+                    
+                    // 'createPassResult' being the return value of the called function. Think of this like a really complicated looking `.then(createPassResult => {} ` but in Swift
                     createPassResult in
+                    // if the result exists, do this...
                     if (createPassResult){
                         
                         
