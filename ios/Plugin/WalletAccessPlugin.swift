@@ -565,32 +565,50 @@ func downloadPass(
     
     // FIREBASE Storage
     if (webStorage == "firebase"){
-//        let storageRef = Storage.storage().reference()
-//        var newPass: PKPass?
-//
-//        storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
-//            if let error = error {
-//                print("Error Downloading Local Resource:" + error.localizedDescription)
-//                completion(false)
-//            }
-//            else{
-//                do {
-//                    let canAddPass = PKAddPassesViewController.canAddPasses()
-//                    if (canAddPass){
-//                        print("Creating a Pass")
-//                        newPass = try PKPass.init(data: data!)
-//                        completion(true)
-//                    }
-//                    else{
-//                        print("Device Cannot Add Passes")
-//                    }
-//                }
-//                catch{
-//                    print ("Unknown Error")
-//                    completion(false)
-//                }
-//            }
-//        }
+        
+        // Get a reference to the storage service using the default Firebase App
+        let storage = Storage.storage()
+
+        // Create a storage reference from our storage service
+        let storageRef = storage.reference()
+        
+        //        let storageRef = Storage.storage().reference()
+        //        var newPass: PKPass?
+        //
+        //        storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
+        //            if let error = error {
+        //                print("Error Downloading Local Resource:" + error.localizedDescription)
+        //                completion(false)
+        //            }
+        //            else{
+        //                do {
+        //                    let canAddPass = PKAddPassesViewController.canAddPasses()
+        //                    if (canAddPass){
+        //                        print("Creating a Pass")
+        //                        newPass = try PKPass.init(data: data!)
+        //                        completion(true)
+        //                    }
+        //                    else{
+        //                        print("Device Cannot Add Passes")
+        //                    }
+        //                }
+        //                catch{
+        //                    print ("Unknown Error")
+        //                    completion(false)
+        //                }
+        //            }
+        //        }
+    
+        let gsReference = storage.reference(forURL: "gs://apple-pass-test.appspot.com/passes/\(serialNumber).pkpass")
+        
+        gsReference.getData(maxSize: 1 * 1024 * 1024){ data, error in
+            if let error = error {
+                print("ERROR IN GET DATA")
+            }
+            else{
+                print("DOWNLOADED")
+            }
+        }
     }
     
     // AWS Storage
