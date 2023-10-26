@@ -127,6 +127,11 @@ public class WalletAccessPlugin: CAPPlugin {
             let auxiliaryLabelInput = call.getArray("auxiliaryLabels") ?? [String]()
             
             
+            // Firebase Related Fields
+            let firebaseStorageUrl = call.getString("firebaseStorageUrl") ?? nil,
+            let googleAppID: call.getString("googleAppID") ?? nil,
+            
+            
             // More Feedback Logs
             print("Processed all inputs...")
             print("SerialNumberInput -- " + serialNumberInput)
@@ -209,10 +214,13 @@ public class WalletAccessPlugin: CAPPlugin {
                         // IF Serial Number is in URL
                         if (usesSerialNumberInDownloadURL){
                             downloadPass(
-                                passDownloadURL,
+                                passDownloadURL: passDownloadURL,
                                 webStorage: webStorageInput,
                                 usesSerialNumber: true,
-                                serialNumber: serialNumberInput
+                                call: call
+                                serialNumber: serialNumberInput,
+                                firebaseStorageUrl: firebaseStorageUrl,
+                                googleAppID: googleAppID
                             ){
                                 downloadPassResult in
                                 if (downloadPassResult){
@@ -224,7 +232,7 @@ public class WalletAccessPlugin: CAPPlugin {
                         // IF Serial Number is not in URL
                         else{
                             downloadPass(
-                                passDownloadURL,
+                                passDownloadURL: passDownloadURL,
                                 webStorage: webStorageInput,
                                 usesSerialNumber: false,
                                 serialNumber: nil
@@ -549,10 +557,13 @@ func createPass(
 
 // Downloads the Pass from Firebase
 func downloadPass(
-    _ passDownloadURL: String,
+    passDownloadURL: String,
     webStorage: String,
     usesSerialNumber: Bool,
+    call: CAPPluginCall,
     serialNumber: String?,
+    firebaseStorageUrl: String?,
+    googleAppID: String?
     completion: @escaping((Bool) -> () )
 ) {
     var pathToDownload = passDownloadURL
@@ -565,9 +576,8 @@ func downloadPass(
     
     // FIREBASE Storage
     if (webStorage == "firebase"){
-        
-
-
+        initializeFirebase(firebaseStorageUrl: firebaseStorageUrl, googleAppID: googleAppID, capPluginCall: call)
+        firebaseDownloadPkPass(capPluginCall: call, path: passDownloadURL)
     }
     
     // AWS Storage
