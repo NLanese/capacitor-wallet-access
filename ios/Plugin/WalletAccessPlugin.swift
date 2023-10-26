@@ -611,4 +611,13 @@ func firebaseDownloadPkPass(
     
     // Finds the specific file
     let fileRef = storageRef.child(path)
+    
+    // Downloads the File
+    fileRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
+        if let error = error {
+            call.reject("Error in Downloading the File. The Pass, however, was successfully created in Firebase Storage. It will not be added to this device until installed \n \(error.localizedDescription)")
+        }{
+            call.resolve(data)
+        }
+    }
 }
