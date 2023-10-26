@@ -5,7 +5,8 @@ import JavaScriptCore
 //import Amplify
 //import FirebaseCore
 //import FirebaseFirestore
-//import FirebaseStorage
+import Firebase
+import FirebaseStorage
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
@@ -555,60 +556,18 @@ func downloadPass(
     completion: @escaping((Bool) -> () )
 ) {
     var pathToDownload = passDownloadURL
-    if usesSerialNumber, let serialString = serialNumber {
-        if let range = pathToDownload.range(of: ".pkpass") {
-            let prefix = pathToDownload[pathToDownload.startIndex..<range.lowerBound]
-            let suffix = pathToDownload[range.lowerBound..<pathToDownload.endIndex]
-            pathToDownload = prefix + serialString + suffix
-        }
+    if usesSerialNumber{
+        pathToDownload = pathToDownload + serialNumber + ".pkpass"
+    }
+    else{
+        pathToDownload = pathToDownload + ".pkpass"
     }
     
     // FIREBASE Storage
     if (webStorage == "firebase"){
         
-        // Get a reference to the storage service using the default Firebase App
-        let storage = Storage.storage()
 
-        // Create a storage reference from our storage service
-        let storageRef = storage.reference()
-        
-        //        let storageRef = Storage.storage().reference()
-        //        var newPass: PKPass?
-        //
-        //        storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
-        //            if let error = error {
-        //                print("Error Downloading Local Resource:" + error.localizedDescription)
-        //                completion(false)
-        //            }
-        //            else{
-        //                do {
-        //                    let canAddPass = PKAddPassesViewController.canAddPasses()
-        //                    if (canAddPass){
-        //                        print("Creating a Pass")
-        //                        newPass = try PKPass.init(data: data!)
-        //                        completion(true)
-        //                    }
-        //                    else{
-        //                        print("Device Cannot Add Passes")
-        //                    }
-        //                }
-        //                catch{
-        //                    print ("Unknown Error")
-        //                    completion(false)
-        //                }
-        //            }
-        //        }
-    
-        let gsReference = storage.reference(forURL: "gs://apple-pass-test.appspot.com/passes/\(serialNumber).pkpass")
-        
-        gsReference.getData(maxSize: 1 * 1024 * 1024){ data, error in
-            if let error = error {
-                print("ERROR IN GET DATA")
-            }
-            else{
-                print("DOWNLOADED")
-            }
-        }
+
     }
     
     // AWS Storage
@@ -616,4 +575,40 @@ func downloadPass(
         
     }
     
+}
+
+//------------------//
+// DOWNLOAD HELPERS //
+//------------------//
+
+// Initializes Firebase Connection if Firebase is the used Storage
+func initializeFirebase(
+    firebaseStorageUrl: String,         // Access URL ro Firebase
+    googleAppID: String,                // This can be found in the google-services.json (Android) or GoogleService-Info.plist (iOS) files
+    capPluginCall: CAPPluginCall
+    
+){
+    // Checks to make sure proper values have been provided to connect to the desired Firebase Storage Bucket
+    if (!firebaseStorageUrl || !googleAppID){
+        capPluginCall.reject("If using Firebase Storage, please provide 'firebaseStorageUrl' and 'googleAppID' keys")
+    }
+    // Sets up appropriate values for finding the Firebase Storage Proejct
+    let fileopts = FirebaseOptions(googleAppID: googleAppID, storageBucket: firebaseStorageURL)
+    
+    // Sets up the Firebase Connection
+    FirebaseApp.configure(options: fileopts)
+}
+
+func firebaseDownloadPkPass(
+    capPluginCall: CAPPluginCall,
+    path: String
+){
+    // Connects to the Storage, provided the Firebase App connected
+    let storage = Storage.storage()
+    
+    // Creates a Reference to the Storage Object, so the storage can be interacted with as a variable
+    let storageRef = storage.refernce
+    
+    // Finds the specific file
+    let fileRef = storageRef.child(path)
 }
