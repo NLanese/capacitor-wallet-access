@@ -6,6 +6,7 @@ import JavaScriptCore
 //import FirebaseCore
 //import FirebaseFirestore
 import Firebase
+import FirebaseStorage
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
@@ -562,7 +563,7 @@ func downloadPass(
     call: CAPPluginCall,
     serialNumber: String?,
     firebaseStorageUrl: String?,
-    googleAppID: String?
+    googleAppID: String?,
     completion: @escaping((Bool) -> () )
 ) {
     var pathToDownload = passDownloadURL
