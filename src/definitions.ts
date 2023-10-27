@@ -29,8 +29,9 @@ export interface WalletAccessPlugin {
     auxiliaryLabels: string[],
 
     firebaseStorageUrl: string,
-    googleAppID: string
-
+    googleAppID: string,
+    gcmSenderID: string,
+    apiKey: string,
   }): 
     Promise<{ newPass: string}>
 

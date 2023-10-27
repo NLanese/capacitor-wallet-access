@@ -128,8 +128,8 @@ public class WalletAccessPlugin: CAPPlugin {
             
             
             // Firebase Related Fields
-            let firebaseStorageUrl = call.getString("firebaseStorageUrl") ?? nil,
-            let googleAppID: call.getString("googleAppID") ?? nil,
+            let firebaseStorageUrl = call.getString("firebaseStorageUrl") ?? nil
+            let googleAppID = call.getString("googleAppID") ?? nil
             
             
             // More Feedback Logs
@@ -217,7 +217,7 @@ public class WalletAccessPlugin: CAPPlugin {
                                 passDownloadURL: passDownloadURL,
                                 webStorage: webStorageInput,
                                 usesSerialNumber: true,
-                                call: call
+                                call: call,
                                 serialNumber: serialNumberInput,
                                 firebaseStorageUrl: firebaseStorageUrl,
                                 googleAppID: googleAppID
@@ -235,7 +235,10 @@ public class WalletAccessPlugin: CAPPlugin {
                                 passDownloadURL: passDownloadURL,
                                 webStorage: webStorageInput,
                                 usesSerialNumber: false,
-                                serialNumber: nil
+                                call: call,
+                                serialNumber: nil,
+                                firebaseStorageUrl: firebaseStorageUrl,
+                                googleAppID: googleAppID
                             ){
                                 downloadPassResult in
                                 if (downloadPassResult){
@@ -568,7 +571,9 @@ func downloadPass(
 ) {
     var pathToDownload = passDownloadURL
     if usesSerialNumber{
-        pathToDownload = pathToDownload + serialNumber + ".pkpass"
+        if serialNumber != nil {
+            pathToDownload = pathToDownload + (serialNumber ?? "INVALIDSERIALNUMBER") + ".pkpass"
+        }
     }
     else{
         pathToDownload = pathToDownload + ".pkpass"
@@ -576,7 +581,15 @@ func downloadPass(
     
     // FIREBASE Storage
     if (webStorage == "firebase"){
-        initializeFirebase(firebaseStorageUrl: firebaseStorageUrl, googleAppID: googleAppID, capPluginCall: call)
+        let checkedURL = (firebaseStorageUrl ?? "INVALID")
+        let checkedID = (googleAppID ?? "INVALID")
+        if (checkedURL == "INVALID"){
+            call.reject("If using Firebase Storage, you need to provide a FirebaseStorageUrl")
+        }
+        if (checkedID == "INVALID"){
+            call.reject("If using Firebase Storage, you need to provide a googleAppID. This can be found in your app's GoogleService-Info.plist")
+        }
+        initializeFirebase(firebaseStorageUrl: checkedURL, googleAppID: checkedID, capPluginCall: call)
         firebaseDownloadPkPass(capPluginCall: call, path: passDownloadURL)
     }
     
@@ -595,15 +608,15 @@ func downloadPass(
 func initializeFirebase(
     firebaseStorageUrl: String,         // Access URL ro Firebase
     googleAppID: String,                // This can be found in the google-services.json (Android) or GoogleService-Info.plist (iOS) files
+    gcmSenderID: String,
+    apiKey: String,
     capPluginCall: CAPPluginCall
     
 ){
-    // Checks to make sure proper values have been provided to connect to the desired Firebase Storage Bucket
-    if (!firebaseStorageUrl || !googleAppID){
-        capPluginCall.reject("If using Firebase Storage, please provide 'firebaseStorageUrl' and 'googleAppID' keys")
-    }
     // Sets up appropriate values for finding the Firebase Storage Proejct
-    let fileopts = FirebaseOptions(googleAppID: googleAppID, storageBucket: firebaseStorageURL)
+    let fileopts = FirebaseOptions(googleAppID: googleAppID, gcmSenderID: gcmSenderID)
+    fileopts.storageBucket = firebaseStorageUrl
+    fileopts.apiKey = apiKey
     
     // Sets up the Firebase Connection
     FirebaseApp.configure(options: fileopts)
@@ -617,7 +630,7 @@ func firebaseDownloadPkPass(
     let storage = Storage.storage()
     
     // Creates a Reference to the Storage Object, so the storage can be interacted with as a variable
-    let storageRef = storage.refernce
+    let storageRef = storage.reference()
     
     // Finds the specific file
     let fileRef = storageRef.child(path)
