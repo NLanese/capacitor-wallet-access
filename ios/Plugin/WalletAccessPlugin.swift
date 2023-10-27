@@ -6,7 +6,6 @@ import JavaScriptCore
 //import FirebaseCore
 //import FirebaseFirestore
 import Firebase
-import FirebaseStorage
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
