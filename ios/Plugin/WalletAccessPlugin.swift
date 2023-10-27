@@ -130,6 +130,7 @@ public class WalletAccessPlugin: CAPPlugin {
             // Firebase Related Fields
             let firebaseStorageUrl = call.getString("firebaseStorageUrl") ?? nil
             let googleAppID = call.getString("googleAppID") ?? nil
+            let gcmSenderID = call.getString("gcmSenderID")
             
             
             // More Feedback Logs
@@ -592,8 +593,10 @@ func downloadPass(
         initializeFirebase(
             firebaseStorageUrl: checkedURL,
             googleAppID: checkedID,
+            gcmSenderID: <#T##String#>,
             capPluginCall: call
         )
+        
         firebaseDownloadPkPass(capPluginCall: call, path: passDownloadURL)
     }
     
@@ -613,14 +616,12 @@ func initializeFirebase(
     firebaseStorageUrl: String,         // Access URL ro Firebase
     googleAppID: String,                // This can be found in the google-services.json (Android) or GoogleService-Info.plist (iOS) files
     gcmSenderID: String,
-    apiKey: String,
     capPluginCall: CAPPluginCall
     
 ){
     // Sets up appropriate values for finding the Firebase Storage Proejct
     let fileopts = FirebaseOptions(googleAppID: googleAppID, gcmSenderID: gcmSenderID)
     fileopts.storageBucket = firebaseStorageUrl
-    fileopts.apiKey = apiKey
     
     // Sets up the Firebase Connection
     FirebaseApp.configure(options: fileopts)
