@@ -128,9 +128,9 @@ public class WalletAccessPlugin: CAPPlugin {
             
             
             // Firebase Related Fields
-            let firebaseStorageUrl = call.getString("firebaseStorageUrl") ?? nil
-            let googleAppID = call.getString("googleAppID") ?? nil
-            let gcmSenderID = call.getString("gcmSenderID")
+            let firebaseStorageUrl = call.getString("firebaseStorageUrl") ?? "INVALID"
+            let googleAppID = call.getString("googleAppID") ?? "INVALID"
+            let gcmSenderID = call.getString("gcmSenderID") ?? "INVALID"
             
             
             // More Feedback Logs
@@ -221,7 +221,8 @@ public class WalletAccessPlugin: CAPPlugin {
                                 call: call,
                                 serialNumber: serialNumberInput,
                                 firebaseStorageUrl: firebaseStorageUrl,
-                                googleAppID: googleAppID
+                                googleAppID: googleAppID,
+                                gcmSenderID: gcmSenderID
                             ){
                                 downloadPassResult in
                                 if (downloadPassResult){
@@ -239,7 +240,8 @@ public class WalletAccessPlugin: CAPPlugin {
                                 call: call,
                                 serialNumber: nil,
                                 firebaseStorageUrl: firebaseStorageUrl,
-                                googleAppID: googleAppID
+                                googleAppID: googleAppID,
+                                gcmSenderID: gcmSenderID
                             ){
                                 downloadPassResult in
                                 if (downloadPassResult){
@@ -566,8 +568,9 @@ func downloadPass(
     usesSerialNumber: Bool,
     call: CAPPluginCall,
     serialNumber: String?,
-    firebaseStorageUrl: String?,
-    googleAppID: String?,
+    firebaseStorageUrl: String,
+    googleAppID: String,
+    gcmSenderID: String,
     completion: @escaping((Bool) -> () )
 ) {
     var pathToDownload = passDownloadURL
@@ -582,18 +585,19 @@ func downloadPass(
     
     // FIREBASE Storage
     if (webStorage == "firebase"){
-        let checkedURL = (firebaseStorageUrl ?? "INVALID")
-        let checkedID = (googleAppID ?? "INVALID")
-        if (checkedURL == "INVALID"){
+        if (firebaseStorageUrl == "INVALID"){
             call.reject("If using Firebase Storage, you need to provide a FirebaseStorageUrl")
         }
-        if (checkedID == "INVALID"){
+        if (googleAppID == "INVALID"){
             call.reject("If using Firebase Storage, you need to provide a googleAppID. This can be found in your app's GoogleService-Info.plist")
         }
+        if (gcmSenderID == "INVALID"){
+            call.reject("If using Firebase Storage, you need to provide a gcmSenderID. This can be found in your app's GoogleService-Info.plist")
+        }
         initializeFirebase(
-            firebaseStorageUrl: checkedURL,
-            googleAppID: checkedID,
-            gcmSenderID: <#T##String#>,
+            firebaseStorageUrl: firebaseStorageUrl,
+            googleAppID: googleAppID,
+            gcmSenderID: gcmSenderID,
             capPluginCall: call
         )
         
