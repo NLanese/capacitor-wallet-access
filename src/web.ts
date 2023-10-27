@@ -40,8 +40,7 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     firebaseStorageUrl: string,
     googleAppID: string,
     gcmSenderID: string,
-  }): 
-  Promise<{ newPass: string }> {
+  }): Promise<{ newPass: string }> {
     console.log("Inside createNewPass")
     console.log("Params: ", options)
     return{

@@ -646,7 +646,12 @@ func firebaseDownloadPkPass(
             capPluginCall.reject("Error in Downloading the File. The Pass, however, was successfully created in Firebase Storage. It will not be added to this device until installed \n \(error.localizedDescription)")
         }
         else {
-            capPluginCall.resolve(data)
+            if let returnData = data?.base64EncodedString(){
+                capPluginCall.resolve(["newPass": returnData])
+            }
+            else{
+                capPluginCall.reject("Issue occurred in resolving the pkpass to string for return.")
+            }
         }
     }
 }
