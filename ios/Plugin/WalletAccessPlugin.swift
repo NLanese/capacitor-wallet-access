@@ -300,7 +300,7 @@ func createPass(
         
         // For Each with Index through Label JSArray from params
         headerLabelInput.enumerated().forEach{ (index, label) in
-            if var swiftString = label as? String {
+            if let swiftString = label as? String {
                 headerLabels.append(swiftString)
             }
             else{
@@ -309,7 +309,7 @@ func createPass(
         }
         // For Each with Index through Value JSArray from params
         headerValueInput.enumerated().forEach{ (index, value) in
-            if var swiftString = value as? String {
+            if let swiftString = value as? String {
                 headerValues.append(swiftString)
             }
             else{
@@ -350,7 +350,7 @@ func createPass(
         var primaryLabels = [String]()
         var primaryValues = [String]()
         primaryLabelInput.enumerated().forEach{ (index, label) in
-            if var swiftString = label as? String {
+            if let swiftString = label as? String {
                 primaryLabels.append(swiftString)
             }
             else{
@@ -358,7 +358,7 @@ func createPass(
             }
         }
         primaryValueInput.enumerated().forEach{ (index, value) in
-            if var swiftString = value as? String {
+            if let swiftString = value as? String {
                 primaryValues.append(swiftString)
             }
             else{
@@ -397,7 +397,7 @@ func createPass(
         var secondaryLabels = [String]()
         var secondaryValues = [String]()
         secondaryLabelInput.enumerated().forEach{ (index, label) in
-            if var swiftString = label as? String {
+            if let swiftString = label as? String {
                 secondaryLabels.append(swiftString)
             }
             else{
@@ -405,7 +405,7 @@ func createPass(
             }
         }
         secondaryValueInput.enumerated().forEach{ (index, value) in
-            if var swiftString = value as? String {
+            if let swiftString = value as? String {
                 secondaryValues.append(swiftString)
             }
             else{
@@ -444,7 +444,7 @@ func createPass(
         var auxiliaryLabels = [String]()
         var auxiliaryValues = [String]()
         auxiliaryLabelInput.enumerated().forEach{ (index, label) in
-            if var swiftString = label as? String {
+            if let swiftString = label as? String {
                 auxiliaryLabels.append(swiftString)
             }
             else{
@@ -452,7 +452,7 @@ func createPass(
             }
         }
         auxiliaryValueInput.enumerated().forEach{ (index, value) in
-            if var swiftString = value as? String {
+            if let swiftString = value as? String {
                 auxiliaryValues.append(swiftString)
             }
             else{
@@ -589,7 +589,11 @@ func downloadPass(
         if (checkedID == "INVALID"){
             call.reject("If using Firebase Storage, you need to provide a googleAppID. This can be found in your app's GoogleService-Info.plist")
         }
-        initializeFirebase(firebaseStorageUrl: checkedURL, googleAppID: checkedID, capPluginCall: call)
+        initializeFirebase(
+            firebaseStorageUrl: checkedURL,
+            googleAppID: checkedID,
+            capPluginCall: call
+        )
         firebaseDownloadPkPass(capPluginCall: call, path: passDownloadURL)
     }
     
@@ -638,9 +642,10 @@ func firebaseDownloadPkPass(
     // Downloads the File
     fileRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
         if let error = error {
-            call.reject("Error in Downloading the File. The Pass, however, was successfully created in Firebase Storage. It will not be added to this device until installed \n \(error.localizedDescription)")
-        }{
-            call.resolve(data)
+            capPluginCall.reject("Error in Downloading the File. The Pass, however, was successfully created in Firebase Storage. It will not be added to this device until installed \n \(error.localizedDescription)")
+        }
+        else {
+            capPluginCall.resolve(data)
         }
     }
 }
