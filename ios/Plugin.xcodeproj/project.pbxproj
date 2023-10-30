@@ -91,7 +91,6 @@
 				10BA13513C126EFA3CDBDFDB /* Pods-PluginTests.debug.xcconfig */,
 				AF59CE11D147DF08F3150D55 /* Pods-PluginTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
