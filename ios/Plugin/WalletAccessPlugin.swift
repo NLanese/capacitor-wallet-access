@@ -3,8 +3,6 @@ import Capacitor
 import PassKit
 import JavaScriptCore
 //import Amplify
-//import FirebaseCore
-//import FirebaseFirestore
 import Firebase
 import FirebaseStorage
 
