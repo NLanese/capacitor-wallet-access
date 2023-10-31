@@ -459,7 +459,7 @@ func createPass(
             ]
         }
         
-    print("     Created 'params' pre-objects...")
+        print("     Created 'params' pre-objects...")
         
     //---------//
     // REQUEST //
@@ -473,14 +473,10 @@ func createPass(
             "secondary": secondary,
             "auxiliary": auxiliary
         ]
-        
-        
         print("     created full params body object")
         
         // Creates a bare request object
         var request = URLRequest(url: URL(string: passCreationURL)!)
-        
-        
         print("     created request")
         
         // Specifies Request Method
@@ -530,7 +526,6 @@ func createPass(
             }
         }
         .resume()
-        print("Session Complete! ")
     }
 
 // Downloads the Pass from Firebase
@@ -541,6 +536,7 @@ func downloadPass(
     serialNumber: String?,
     completion: @escaping((Bool) -> () )
 ) {
+    print("     Entered downloadPass()")
     var pathToDownload = passDownloadURL
     if usesSerialNumber, let serialString = serialNumber {
         if let range = pathToDownload.range(of: ".pkpass") {
@@ -552,6 +548,7 @@ func downloadPass(
     
     // FIREBASE Storage
     if (webStorage == "firebase"){
+        print("Firebase Storage")
 //        let storageRef = Storage.storage().reference()
 //        var newPass: PKPass?
 //
