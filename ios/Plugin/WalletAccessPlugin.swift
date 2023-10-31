@@ -2,6 +2,7 @@ import Foundation
 import Capacitor
 import PassKit
 import JavaScriptCore
+
 //import Amplify
 import FirebaseCore
 import FirebaseFirestore
@@ -25,6 +26,7 @@ public class WalletAccessPlugin: CAPPlugin {
     @objc func getWallet(_ call: CAPPluginCall) {
         // If Pass Library is Available
         if PKPassLibrary.isPassLibraryAvailable() {
+            
         // Creates Reference to PassLibrary (User Wallet)
             let passLibrary = PKPassLibrary()
             let userPasses = passLibrary.passes()
@@ -84,6 +86,8 @@ public class WalletAccessPlugin: CAPPlugin {
     // Creates an Apple Pass using Parameters
     @objc func generatePass(_ call: CAPPluginCall){
         
+        
+        // Logs to denote the plugin function has successfully fired
         print("=======================")
         print("*")
         print("*")
@@ -102,6 +106,7 @@ public class WalletAccessPlugin: CAPPlugin {
             //----------------//
             
             // Needed Values for PKPass Creation
+            // Recall that the ONLY param for a Capacitor plugin is `call`. The Params of this call function are declared in the plugin's definitions.ts and index.ts
             let serialNumberInput = call.getString("serialNumberInput") ?? "Invalid"
             let organizerNameInput = call.getString("organizerNameInput") ?? "Inavlid"
             
@@ -112,6 +117,7 @@ public class WalletAccessPlugin: CAPPlugin {
             let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberinDownload") ?? false
     
             // Fields (optional)
+            // Since they are optional, you must declare an alternative of the same time. Thus we create an empty String Array if nothing is there
             let headerValueInput = call.getArray("headerValues") ?? [String]()
             let primaryValueInput = call.getArray("primaryValues") ?? [String]()
             let secondaryValueInput = call.getArray("secondaryValues") ?? [String]()
@@ -120,6 +126,15 @@ public class WalletAccessPlugin: CAPPlugin {
             let primaryLabelInput = call.getArray("primaryLabels") ?? [String]()
             let secondaryLabelInput = call.getArray("secondaryLabels") ?? [String]()
             let auxiliaryLabelInput = call.getArray("auxiliaryLabels") ?? [String]()
+            
+            
+            // Firebase Related Fields
+            let firebaseStorageUrl = call.getString("firebaseStorageUrl") ?? "INVALID"
+            let googleAppID = call.getString("googleAppID") ?? "INVALID"
+            let gcmSenderID = call.getString("gcmSenderID") ?? "INVALID"
+            
+            
+            // More Feedback Logs
             print("Processed all inputs...")
             print("SerialNumberInput -- " + serialNumberInput)
             print("OrganizerNameInput -- " + organizerNameInput)
@@ -174,6 +189,8 @@ public class WalletAccessPlugin: CAPPlugin {
             //-----------------------//
             // PASS CREATION PROCESS //
             //-----------------------//
+            
+            // fires the function declared at the bottom of this file
             createPass(
                 passCreationURL,
                 serialNumberInput: serialNumberInput,
@@ -188,17 +205,25 @@ public class WalletAccessPlugin: CAPPlugin {
                 auxiliaryLabelInput: auxiliaryLabelInput,
                 auxiliaryValueInput: auxiliaryValueInput)
                 {
+                    // We then fire the `completion` funtion which is initialized here
+                    
+                    // 'createPassResult' being the return value of the called function. Think of this like a really complicated looking `.then(createPassResult => {} ` but in Swift
                     createPassResult in
+                    // if the result exists, do this...
                     if (createPassResult){
                         
                         
                         // IF Serial Number is in URL
                         if (usesSerialNumberInDownloadURL){
                             downloadPass(
-                                passDownloadURL,
+                                passDownloadURL: passDownloadURL,
                                 webStorage: webStorageInput,
                                 usesSerialNumber: true,
-                                serialNumber: serialNumberInput
+                                call: call,
+                                serialNumber: serialNumberInput,
+                                firebaseStorageUrl: firebaseStorageUrl,
+                                googleAppID: googleAppID,
+                                gcmSenderID: gcmSenderID
                             ){
                                 downloadPassResult in
                                 if (downloadPassResult){
@@ -210,10 +235,14 @@ public class WalletAccessPlugin: CAPPlugin {
                         // IF Serial Number is not in URL
                         else{
                             downloadPass(
-                                passDownloadURL,
+                                passDownloadURL: passDownloadURL,
                                 webStorage: webStorageInput,
                                 usesSerialNumber: false,
-                                serialNumber: nil
+                                call: call,
+                                serialNumber: nil,
+                                firebaseStorageUrl: firebaseStorageUrl,
+                                googleAppID: googleAppID,
+                                gcmSenderID: gcmSenderID
                             ){
                                 downloadPassResult in
                                 if (downloadPassResult){
@@ -275,7 +304,7 @@ func createPass(
         
         // For Each with Index through Label JSArray from params
         headerLabelInput.enumerated().forEach{ (index, label) in
-            if var swiftString = label as? String {
+            if let swiftString = label as? String {
                 headerLabels.append(swiftString)
             }
             else{
@@ -284,7 +313,7 @@ func createPass(
         }
         // For Each with Index through Value JSArray from params
         headerValueInput.enumerated().forEach{ (index, value) in
-            if var swiftString = value as? String {
+            if let swiftString = value as? String {
                 headerValues.append(swiftString)
             }
             else{
@@ -325,7 +354,7 @@ func createPass(
         var primaryLabels = [String]()
         var primaryValues = [String]()
         primaryLabelInput.enumerated().forEach{ (index, label) in
-            if var swiftString = label as? String {
+            if let swiftString = label as? String {
                 primaryLabels.append(swiftString)
             }
             else{
@@ -333,7 +362,7 @@ func createPass(
             }
         }
         primaryValueInput.enumerated().forEach{ (index, value) in
-            if var swiftString = value as? String {
+            if let swiftString = value as? String {
                 primaryValues.append(swiftString)
             }
             else{
@@ -372,7 +401,7 @@ func createPass(
         var secondaryLabels = [String]()
         var secondaryValues = [String]()
         secondaryLabelInput.enumerated().forEach{ (index, label) in
-            if var swiftString = label as? String {
+            if let swiftString = label as? String {
                 secondaryLabels.append(swiftString)
             }
             else{
@@ -380,7 +409,7 @@ func createPass(
             }
         }
         secondaryValueInput.enumerated().forEach{ (index, value) in
-            if var swiftString = value as? String {
+            if let swiftString = value as? String {
                 secondaryValues.append(swiftString)
             }
             else{
@@ -419,7 +448,7 @@ func createPass(
         var auxiliaryLabels = [String]()
         var auxiliaryValues = [String]()
         auxiliaryLabelInput.enumerated().forEach{ (index, label) in
-            if var swiftString = label as? String {
+            if let swiftString = label as? String {
                 auxiliaryLabels.append(swiftString)
             }
             else{
@@ -427,7 +456,7 @@ func createPass(
             }
         }
         auxiliaryValueInput.enumerated().forEach{ (index, value) in
-            if var swiftString = value as? String {
+            if let swiftString = value as? String {
                 auxiliaryValues.append(swiftString)
             }
             else{
@@ -530,51 +559,47 @@ func createPass(
 
 // Downloads the Pass from Firebase
 func downloadPass(
-    _ passDownloadURL: String,
+    passDownloadURL: String,
     webStorage: String,
     usesSerialNumber: Bool,
+    call: CAPPluginCall,
     serialNumber: String?,
+    firebaseStorageUrl: String,
+    googleAppID: String,
+    gcmSenderID: String,
     completion: @escaping((Bool) -> () )
 ) {
     print("     Entered downloadPass()")
     var pathToDownload = passDownloadURL
-    if usesSerialNumber, let serialString = serialNumber {
-        if let range = pathToDownload.range(of: ".pkpass") {
-            let prefix = pathToDownload[pathToDownload.startIndex..<range.lowerBound]
-            let suffix = pathToDownload[range.lowerBound..<pathToDownload.endIndex]
-            pathToDownload = prefix + serialString + suffix
+    if usesSerialNumber{
+        if serialNumber != nil {
+            pathToDownload = pathToDownload + (serialNumber ?? "INVALIDSERIALNUMBER") + ".pkpass"
         }
+    }
+    else{
+        pathToDownload = pathToDownload + ".pkpass"
     }
     
     // FIREBASE Storage
     if (webStorage == "firebase"){
         print("Firebase Storage")
-//        let storageRef = Storage.storage().reference()
-//        var newPass: PKPass?
-//
-//        storageRef.child(pathToDownload).getData(maxSize: 1 * 1024 * 1024) { data, error in
-//            if let error = error {
-//                print("Error Downloading Local Resource:" + error.localizedDescription)
-//                completion(false)
-//            }
-//            else{
-//                do {
-//                    let canAddPass = PKAddPassesViewController.canAddPasses()
-//                    if (canAddPass){
-//                        print("Creating a Pass")
-//                        newPass = try PKPass.init(data: data!)
-//                        completion(true)
-//                    }
-//                    else{
-//                        print("Device Cannot Add Passes")
-//                    }
-//                }
-//                catch{
-//                    print ("Unknown Error")
-//                    completion(false)
-//                }
-//            }
-//        }
+        if (firebaseStorageUrl == "INVALID"){
+            call.reject("If using Firebase Storage, you need to provide a FirebaseStorageUrl")
+        }
+        if (googleAppID == "INVALID"){
+            call.reject("If using Firebase Storage, you need to provide a googleAppID. This can be found in your app's GoogleService-Info.plist")
+        }
+        if (gcmSenderID == "INVALID"){
+            call.reject("If using Firebase Storage, you need to provide a gcmSenderID. This can be found in your app's GoogleService-Info.plist")
+        }
+        initializeFirebase(
+            firebaseStorageUrl: firebaseStorageUrl,
+            googleAppID: googleAppID,
+            gcmSenderID: gcmSenderID,
+            capPluginCall: call
+        )
+        
+        firebaseDownloadPkPass(capPluginCall: call, path: passDownloadURL)
     }
     
     // AWS Storage
@@ -582,4 +607,54 @@ func downloadPass(
         
     }
     
+}
+
+//------------------//
+// DOWNLOAD HELPERS //
+//------------------//
+
+// Initializes Firebase Connection if Firebase is the used Storage
+func initializeFirebase(
+    firebaseStorageUrl: String,         // Access URL ro Firebase
+    googleAppID: String,                // This can be found in the google-services.json (Android) or GoogleService-Info.plist (iOS) files
+    gcmSenderID: String,
+    capPluginCall: CAPPluginCall
+    
+){
+    // Sets up appropriate values for finding the Firebase Storage Proejct
+    let fileopts = FirebaseOptions(googleAppID: googleAppID, gcmSenderID: gcmSenderID)
+    fileopts.storageBucket = firebaseStorageUrl
+    
+    // Sets up the Firebase Connection
+    FirebaseApp.configure(options: fileopts)
+}
+
+func firebaseDownloadPkPass(
+    capPluginCall: CAPPluginCall,
+    path: String
+){
+    
+    // Connects to the Storage, provided the Firebase App connected
+    let storage = Storage.storage()
+    
+    // Creates a Reference to the Storage Object, so the storage can be interacted with as a variable
+    let storageRef = storage.reference()
+    
+    // Finds the specific file
+    let fileRef = storageRef.child(path)
+    
+    // Downloads the File
+    fileRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
+        if let error = error {
+            capPluginCall.reject("Error in Downloading the File. The Pass, however, was successfully created in Firebase Storage. It will not be added to this device until installed \n \(error.localizedDescription)")
+        }
+        else {
+            if let returnData = data?.base64EncodedString(){
+                capPluginCall.resolve(["newPass": returnData])
+            }
+            else{
+                capPluginCall.reject("Issue occurred in resolving the pkpass to string for return.")
+            }
+        }
+    }
 }

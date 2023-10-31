@@ -21,15 +21,16 @@ export interface WalletAccessPlugin {
 
     headerValues: string[],
     headerLabels: string[],
-
     primaryValues: string[],
     primaryLabels: string[],
-
     secondaryValues: string[],
     secondaryLabels: string[],
-
     auxiliaryValues: string[],
     auxiliaryLabels: string[],
+
+    firebaseStorageUrl: string,
+    googleAppID: string,
+    gcmSenderID: string,
   }): 
     Promise<{ newPass: string}>
 

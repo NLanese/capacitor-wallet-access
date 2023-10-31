@@ -10,8 +10,6 @@
 		29E2D995DD0A4F5995780287 /* Pods_Plugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA918EBA99CED627273D31A4 /* Pods_Plugin.framework */; };
 		2F98D68224C9AAE500613A4C /* WalletAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98D68124C9AAE400613A4C /* WalletAccess.swift */; };
 		401DD57B2ACFCE0200185C54 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD57A2ACFCE0200185C54 /* FirebaseAuth */; };
-		401DD57D2ACFCE0200185C54 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD57C2ACFCE0200185C54 /* FirebaseDatabase */; };
-		401DD57F2ACFCE0200185C54 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD57E2ACFCE0200185C54 /* FirebaseDatabaseSwift */; };
 		401DD5812ACFCE0200185C54 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD5802ACFCE0200185C54 /* FirebaseFirestore */; };
 		401DD5832ACFCE0200185C54 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD5822ACFCE0200185C54 /* FirebasePerformance */; };
 		401DD5852ACFCE0200185C54 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD5842ACFCE0200185C54 /* FirebaseRemoteConfig */; };
@@ -60,11 +58,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				401DD5832ACFCE0200185C54 /* FirebasePerformance in Frameworks */,
-				401DD57F2ACFCE0200185C54 /* FirebaseDatabaseSwift in Frameworks */,
 				401DD5872ACFCE0200185C54 /* FirebaseStorage in Frameworks */,
 				50ADFFA42020D75100D50D53 /* Capacitor.framework in Frameworks */,
 				401DD57B2ACFCE0200185C54 /* FirebaseAuth in Frameworks */,
-				401DD57D2ACFCE0200185C54 /* FirebaseDatabase in Frameworks */,
 				401DD5812ACFCE0200185C54 /* FirebaseFirestore in Frameworks */,
 				401DD5852ACFCE0200185C54 /* FirebaseRemoteConfig in Frameworks */,
 				29E2D995DD0A4F5995780287 /* Pods_Plugin.framework in Frameworks */,
@@ -91,7 +87,6 @@
 				10BA13513C126EFA3CDBDFDB /* Pods-PluginTests.debug.xcconfig */,
 				AF59CE11D147DF08F3150D55 /* Pods-PluginTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -177,8 +172,6 @@
 			name = Plugin;
 			packageProductDependencies = (
 				401DD57A2ACFCE0200185C54 /* FirebaseAuth */,
-				401DD57C2ACFCE0200185C54 /* FirebaseDatabase */,
-				401DD57E2ACFCE0200185C54 /* FirebaseDatabaseSwift */,
 				401DD5802ACFCE0200185C54 /* FirebaseFirestore */,
 				401DD5822ACFCE0200185C54 /* FirebasePerformance */,
 				401DD5842ACFCE0200185C54 /* FirebaseRemoteConfig */,
@@ -301,11 +294,45 @@
 				"${PODS_ROOT}/Target Support Files/Pods-PluginTests/Pods-PluginTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Capacitor/Capacitor.framework",
 				"${BUILT_PRODUCTS_DIR}/CapacitorCordova/Cordova.framework",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAppCheckInterop/FirebaseAppCheckInterop.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAuthInterop/FirebaseAuthInterop.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseFirestore/FirebaseFirestore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseStorage/FirebaseStorage.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
+				"${BUILT_PRODUCTS_DIR}/abseil/absl.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Capacitor.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cordova.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl_grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAppCheckInterop.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuthInterop.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreExtension.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreInternal.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseStorage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/absl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -637,16 +664,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
-		};
-		401DD57C2ACFCE0200185C54 /* FirebaseDatabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseDatabase;
-		};
-		401DD57E2ACFCE0200185C54 /* FirebaseDatabaseSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseDatabaseSwift;
 		};
 		401DD5802ACFCE0200185C54 /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
