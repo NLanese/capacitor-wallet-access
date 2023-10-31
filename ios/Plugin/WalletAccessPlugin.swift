@@ -2,9 +2,11 @@ import Foundation
 import Capacitor
 import PassKit
 import JavaScriptCore
+
 //import Amplify
 import Firebase
-import FirebaseStorage
+import FirebaseCore
+import FirebaseAuth
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
@@ -633,6 +635,7 @@ func firebaseDownloadPkPass(
     capPluginCall: CAPPluginCall,
     path: String
 ){
+    
     // Connects to the Storage, provided the Firebase App connected
     let storage = Storage.storage()
     
