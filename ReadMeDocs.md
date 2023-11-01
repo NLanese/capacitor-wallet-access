@@ -3,6 +3,9 @@ This plugin aims to give Front End Developers who are working with a nodeJS pack
 to acces a user's wallet. This will allow a few different things...
 1. We can use this plugin to see whether or not a pass already exists on a user's device
 
+==== TO BUILD LOCALLY ====
+1. run `npm run build`
+
 ==== REQs ====
 1. This plugin will be useless on Web Applications since it is not optimized for Macs
 
@@ -34,7 +37,6 @@ to acces a user's wallet. This will allow a few different things...
 
 2a. On iOS, you will also have to add this Capacitor Plugin to your Podfile like so....
     `pod 'CapacitorWalletAccess', :path => '../../node_modules/capacitor-wallet-access'`
-
 
 3. Run `npx cap sync` in the root directory of your
 
