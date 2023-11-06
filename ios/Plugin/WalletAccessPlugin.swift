@@ -4,8 +4,10 @@ import PassKit
 import JavaScriptCore
 
 //import Amplify
-import FirebaseCore
-import FirebaseAuth
+//import FirebaseCore
+//import FirebaseAuth
+
+import Firebase
 import FirebaseStorage
 
 
