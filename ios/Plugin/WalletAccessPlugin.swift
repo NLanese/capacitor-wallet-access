@@ -5,8 +5,7 @@ import JavaScriptCore
 
 //import Amplify
 import Firebase
-import FirebaseCore
-import FirebaseAuth
+import FirebaseStorage
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
