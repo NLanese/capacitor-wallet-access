@@ -1,21 +1,21 @@
-==== GOAL OF THIS PLUGIN ====
+# ==== GOAL OF THIS PLUGIN ==== #
 This plugin aims to give Front End Developers who are working with a nodeJS package using Capacitor the ability
 to acces a user's wallet. This will allow a few different things...
 1. We can use this plugin to see whether or not a pass already exists on a user's device
 
-==== TO BUILD LOCALLY ====
+# ==== TO BUILD LOCALLY ==== #
 1. run `npm run build`
 
-==== REQs ====
+# ==== REQs ==== #
 1. This plugin will be useless on Web Applications since it is not optimized for Macs
 
-==== GENERAL SET UP ====
+# ==== GENERAL SET UP ==== #
 1. Switch to the ios directory and run 
    `pod install`.
     If this command fails,enter this following command in your Computer User's root directory 
    `gem install ffi -v '1.15.0'`
 
-==== SET UP FOR CAPACITOR v3.9.0 ====
+# ==== SET UP FOR CAPACITOR v3.9.0 ==== #
 1. Change all Capacitor Dependency versions in the package.json to `3.9.0`
 2. In the root directory, run 
    `npm i @type/yarg@17.0.8`
@@ -24,7 +24,7 @@ to acces a user's wallet. This will allow a few different things...
    enter this following command in your Computer User's root directory 
    `gem install ffi -v '1.15.0'`
 
-==== INSTALLATION AND USAGE ====
+# ==== INSTALLATION AND USAGE ==== #
 1. You can download this package and npm install 
    `..path/from/project/to/this/plugin`
 

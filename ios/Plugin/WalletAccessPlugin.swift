@@ -9,7 +9,6 @@ import JavaScriptCore
 
 import Firebase
 import FirebaseStorage
-import FirebaseStorage
 
 
 
@@ -616,6 +615,7 @@ func downloadPass(
 //------------------//
 // DOWNLOAD HELPERS //
 //------------------//
+
 // Initializes Firebase Connection if Firebase is the used Storage
 func initializeFirebase(
     firebaseStorageUrl: String,         // Access URL ro Firebase
@@ -632,6 +632,7 @@ func initializeFirebase(
     FirebaseApp.configure(options: fileopts)
 }
 
+// Downloads Pass from Firebase
 func firebaseDownloadPkPass(
     capPluginCall: CAPPluginCall,
     path: String
