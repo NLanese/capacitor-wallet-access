@@ -5,5 +5,5 @@
 // each method the plugin supports using the CAP_PLUGIN_METHOD macro.
 CAP_PLUGIN(WalletAccessPlugin, "WalletAccess",
            CAP_PLUGIN_METHOD(getWallet, CAPPluginReturnPromise);
-           CAP_PLUGIN_METHOD(goToWallet, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(generatePass, CAPPluginReturnPromise);
 )

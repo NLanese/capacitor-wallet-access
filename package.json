@@ -1,10 +1,11 @@
 {
   "name": "capacitor-wallet-access",
-  "version": "0.0.2",
+  "version": "2.0.0",
   "description": "Used to gain access to a user's wallet on their device. This allows access to the cards, passes, or tickets a user will have in their wallet, but this does NOT include the capacity to create new passes",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
+  "type": "module",
   "unpkg": "dist/plugin.js",
   "files": [
     "android/src/main/",
@@ -44,23 +45,24 @@
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
-    "@capacitor/android": "3.9.0",
-    "@capacitor/core": "^3.9.0",
+    "@capacitor/android": "5.5.1",
+    "@capacitor/cli": "^5.0.0",
+    "@capacitor/core": "5.5.1",
     "@capacitor/docgen": "^0.0.18",
-    "@capacitor/ios": "^3.9.0",
+    "@capacitor/ios": "^5.0.0",
     "@ionic/eslint-config": "^0.3.0",
-    "@ionic/prettier-config": "^1.0.1",
+    "@ionic/prettier-config": "3.1.0",
     "@ionic/swiftlint-config": "^1.1.2",
-    "eslint": "^7.11.0",
-    "prettier": "~2.3.0",
+    "eslint": "8.53.0",
+    "prettier": "3.0.3",
     "prettier-plugin-java": "~1.0.2",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.32.0",
+    "rimraf": "5.0.5",
+    "rollup": "4.3.0",
     "swiftlint": "^1.0.1",
-    "typescript": "^3.8.3"
+    "typescript": "5.2.2"
   },
   "peerDependencies": {
-    "@capacitor/core": "^3.9.0"
+    "@capacitor/core": "^5.0.0"
   },
   "prettier": "@ionic/prettier-config",
   "swiftlint": "@ionic/swiftlint-config",
@@ -76,7 +78,8 @@
     }
   },
   "dependencies": {
-    "@types/yargs": "^17.0.8",
-    "capacitor": "^0.5.6"
+    "@types/yargs": "^17.0.31",
+    "capacitor": "^0.5.6",
+    "firebase": "^10.5.2"
   }
 }

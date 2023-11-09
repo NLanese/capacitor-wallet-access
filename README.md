@@ -15,7 +15,7 @@ npx cap sync
 
 * [`echo(...)`](#echo)
 * [`getWallet(...)`](#getwallet)
-* [`goToPass(...)`](#gotopass)
+* [`generatePass(...)`](#generatepass)
 
 </docgen-index>
 
@@ -52,15 +52,17 @@ getWallet(options: { value: string[]; }) => Promise<{ cards: any[]; }>
 --------------------
 
 
-### goToPass(...)
+### generatePass(...)
 
 ```typescript
-goToPass(options: { value: string; }) => Promise<void>
+generatePass(options: { serialNumberInput: string; organizerNameInput: string; passCreationURL: string; passDownloadURL: string; passAuthorizationKey: string; webStorageInput: string; usesSerialNumberinDownload: boolean; headerValues: string[]; headerLabels: string[]; primaryValues: string[]; primaryLabels: string[]; secondaryValues: string[]; secondaryLabels: string[]; auxiliaryValues: string[]; auxiliaryLabels: string[]; firebaseStorageUrl: string; googleAppID: string; gcmSenderID: string; }) => Promise<{ newPass: string; }>
 ```
 
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
+| Param         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ serialNumberInput: string; organizerNameInput: string; passCreationURL: string; passDownloadURL: string; passAuthorizationKey: string; webStorageInput: string; usesSerialNumberinDownload: boolean; headerValues: string[]; headerLabels: string[]; primaryValues: string[]; primaryLabels: string[]; secondaryValues: string[]; secondaryLabels: string[]; auxiliaryValues: string[]; auxiliaryLabels: string[]; firebaseStorageUrl: string; googleAppID: string; gcmSenderID: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ newPass: string; }&gt;</code>
 
 --------------------
 

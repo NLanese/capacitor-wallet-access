@@ -18,7 +18,62 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     }
   }
 
-  async goToPass(options: {value: string}): Promise<void>{
-    console.log(options["value"])
+  async generatePass(options: {
+    serialNumberInput: string,
+    organizerNameInput: string,
+
+    passCreationURL: string,
+    passDownloadURL: string,
+    passAuthorizationKey: string,
+    webStorageInput: string,
+    usesSerialNumberinDownload: boolean,
+
+    headerValues: string[],
+    headerLabels: string[],
+    primaryValues: string[],
+    primaryLabels: string[],
+    secondaryValues: string[],
+    secondaryLabels: string[],
+    auxiliaryValues: string[],
+    auxiliaryLabels: string[],
+
+    firebaseStorageUrl: string,
+    googleAppID: string,
+    gcmSenderID: string,
+  }): Promise<{ newPass: string }> {
+    console.log("Inside createNewPass")
+    console.log("Params: ", options)
+    return{
+      newPass: ""
+    }
   }
+
+  // async updatePass(options: {
+  //   serialNumberInput: string,
+  //   organizerNameInput: string,
+
+  //   passCreationURL: string,
+  //   webStroageInput: string,
+  //   passDownloadURL: string,
+  //   userSerialNumberinDownload: string,
+
+  //   headerValues: string[],
+  //   headerLabels: string[],
+
+  //   primaryValues: string[],
+  //   primaryLabels: string[],
+
+  //   secondaryValues: string[],
+  //   secondaryLabels: string[],
+
+  //   auxiliaryValues: string[],
+  //   auxiliaryLabels: string[],
+  // }): Promise<{ newPass: string }> {
+  //   console.log("Inside updatePass")
+  //   console.log("Params: ", options)
+  //   return{
+  //     newPass: ""
+  //   }
+  // }
+
 }
