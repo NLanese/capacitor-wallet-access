@@ -1,7 +1,5 @@
 #import <Foundation/Foundation.h>
 #import <Capacitor/Capacitor.h>
-#import <Firebase.h>
-
 
 // Define the plugin using the CAP_PLUGIN Macro, and
 // each method the plugin supports using the CAP_PLUGIN_METHOD macro.

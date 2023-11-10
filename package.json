@@ -1,11 +1,10 @@
 {
   "name": "capacitor-wallet-access",
-  "version": "2.0.0",
-  "description": "Used to gain access to a user's wallet on their device. This allows access to the cards, passes, or tickets a user will have in their wallet, but this does NOT include the capacity to create new passes",
+  "version": "0.0.1",
+  "description": "Accesses user's Wallets. This plugin can provide read-only data on every pass in the wallet, as well as providing the ability to create and update passes",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
-  "type": "module",
   "unpkg": "dist/plugin.js",
   "files": [
     "android/src/main/",
@@ -38,28 +37,27 @@
     "eslint": "eslint . --ext ts",
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
     "swiftlint": "node-swiftlint",
-    "docgen": "docgen --api WalletAccessPlugin --output-readme README.md --output-json dist/docs.json",
+    "docgen": "docgen --api CapacitorWalletAccessPlugin --output-readme README.md --output-json dist/docs.json",
     "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.js",
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
-    "@capacitor/android": "^5.5.1",
-    "@capacitor/cli": "^5.5.1",
-    "@capacitor/core": "^5.5.1",
+    "@capacitor/android": "^5.0.0",
+    "@capacitor/core": "^5.0.0",
     "@capacitor/docgen": "^0.0.18",
-    "@capacitor/ios": "^5.5.1",
+    "@capacitor/ios": "^5.0.0",
     "@ionic/eslint-config": "^0.3.0",
-    "@ionic/prettier-config": "3.1.0",
+    "@ionic/prettier-config": "^1.0.1",
     "@ionic/swiftlint-config": "^1.1.2",
-    "eslint": "8.53.0",
-    "prettier": "3.0.3",
+    "eslint": "^7.11.0",
+    "prettier": "~2.3.0",
     "prettier-plugin-java": "~1.0.2",
-    "rimraf": "5.0.5",
-    "rollup": "4.3.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.32.0",
     "swiftlint": "^1.0.1",
-    "typescript": "5.2.2"
+    "typescript": "~4.1.5"
   },
   "peerDependencies": {
     "@capacitor/core": "^5.0.0"
@@ -78,9 +76,6 @@
     }
   },
   "dependencies": {
-    "@types/yargs": "^17.0.31",
-    "capacitor": "^0.5.6",
-    "cordova-plugin-wkwebview-engine": "^1.2.2",
-    "firebase": "^10.5.2"
+    "firebase": "^10.6.0"
   }
 }

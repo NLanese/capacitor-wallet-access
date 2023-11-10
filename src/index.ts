@@ -1,10 +1,10 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { WalletAccessPlugin } from './definitions';
+import type { CapacitorWalletAccessPlugin } from './definitions';
 
-const WalletAccess = registerPlugin<WalletAccessPlugin>('WalletAccess', {
-  web: () => import('./web').then(m => new m.WalletAccessWeb()),
+const CapacitorWalletAccess = registerPlugin<CapacitorWalletAccessPlugin>('CapacitorWalletAccess', {
+  web: () => import('./web').then(m => new m.CapacitorWalletAccessWeb()),
 });
 
 export * from './definitions';
-export default WalletAccess;
+export { CapacitorWalletAccess };

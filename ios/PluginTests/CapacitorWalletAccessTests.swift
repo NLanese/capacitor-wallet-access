@@ -1,7 +1,7 @@
 import XCTest
 @testable import Plugin
 
-class WalletAccessTests: XCTestCase {
+class CapacitorWalletAccessTests: XCTestCase {
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -16,7 +16,7 @@ class WalletAccessTests: XCTestCase {
         // This is an example of a functional test case for a plugin.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
 
-        let implementation = WalletAccess()
+        let implementation = CapacitorWalletAccess()
         let value = "Hello, World!"
         let result = implementation.echo(value)
 

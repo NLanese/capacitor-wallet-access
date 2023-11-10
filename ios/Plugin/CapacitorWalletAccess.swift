@@ -1,16 +1,6 @@
 import Foundation
 import Capacitor
 import PassKit
-import JavaScriptCore
-
-//import Amplify
-//import FirebaseCore
-//import FirebaseAuth
-
-import Firebase
-import FirebaseStorage
-
-
 
 public class WalletAccess: NSObject {
     
