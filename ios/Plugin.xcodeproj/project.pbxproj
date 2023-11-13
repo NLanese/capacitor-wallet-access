@@ -14,6 +14,10 @@
 		401DD5832ACFCE0200185C54 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD5822ACFCE0200185C54 /* FirebasePerformance */; };
 		401DD5852ACFCE0200185C54 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD5842ACFCE0200185C54 /* FirebaseRemoteConfig */; };
 		401DD5872ACFCE0200185C54 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD5862ACFCE0200185C54 /* FirebaseStorage */; };
+		40FD7E272B02869D008B82CC /* AWSAmplify in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E262B02869D008B82CC /* AWSAmplify */; };
+		40FD7E292B02869D008B82CC /* AWSS3 in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E282B02869D008B82CC /* AWSS3 */; };
+		40FD7E2B2B02869D008B82CC /* AWSS3Control in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E2A2B02869D008B82CC /* AWSS3Control */; };
+		40FD7E2D2B02869D008B82CC /* AWSS3Outposts in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E2C2B02869D008B82CC /* AWSS3Outposts */; };
 		50ADFF92201F53D600D50D53 /* Plugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50ADFF88201F53D600D50D53 /* Plugin.framework */; };
 		50ADFF97201F53D600D50D53 /* WalletAccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ADFF96201F53D600D50D53 /* WalletAccessTests.swift */; };
 		50ADFF99201F53D600D50D53 /* WalletAccessPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ADFF8B201F53D600D50D53 /* WalletAccessPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -59,11 +63,15 @@
 			files = (
 				401DD5832ACFCE0200185C54 /* FirebasePerformance in Frameworks */,
 				401DD5872ACFCE0200185C54 /* FirebaseStorage in Frameworks */,
+				40FD7E2D2B02869D008B82CC /* AWSS3Outposts in Frameworks */,
 				50ADFFA42020D75100D50D53 /* Capacitor.framework in Frameworks */,
+				40FD7E292B02869D008B82CC /* AWSS3 in Frameworks */,
 				401DD57B2ACFCE0200185C54 /* FirebaseAuth in Frameworks */,
 				401DD5812ACFCE0200185C54 /* FirebaseFirestore in Frameworks */,
+				40FD7E2B2B02869D008B82CC /* AWSS3Control in Frameworks */,
 				401DD5852ACFCE0200185C54 /* FirebaseRemoteConfig in Frameworks */,
 				29E2D995DD0A4F5995780287 /* Pods_Plugin.framework in Frameworks */,
+				40FD7E272B02869D008B82CC /* AWSAmplify in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,6 +184,10 @@
 				401DD5822ACFCE0200185C54 /* FirebasePerformance */,
 				401DD5842ACFCE0200185C54 /* FirebaseRemoteConfig */,
 				401DD5862ACFCE0200185C54 /* FirebaseStorage */,
+				40FD7E262B02869D008B82CC /* AWSAmplify */,
+				40FD7E282B02869D008B82CC /* AWSS3 */,
+				40FD7E2A2B02869D008B82CC /* AWSS3Control */,
+				40FD7E2C2B02869D008B82CC /* AWSS3Outposts */,
 			);
 			productName = Plugin;
 			productReference = 50ADFF88201F53D600D50D53 /* Plugin.framework */;
@@ -234,6 +246,7 @@
 			mainGroup = 50ADFF7E201F53D600D50D53;
 			packageReferences = (
 				401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */,
 			);
 			productRefGroup = 50ADFF89201F53D600D50D53 /* Products */;
 			projectDirPath = "";
@@ -657,6 +670,14 @@
 				minimumVersion = 10.0.0;
 			};
 		};
+		40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/awslabs/aws-sdk-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.31.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -684,6 +705,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		40FD7E262B02869D008B82CC /* AWSAmplify */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
+			productName = AWSAmplify;
+		};
+		40FD7E282B02869D008B82CC /* AWSS3 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
+			productName = AWSS3;
+		};
+		40FD7E2A2B02869D008B82CC /* AWSS3Control */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
+			productName = AWSS3Control;
+		};
+		40FD7E2C2B02869D008B82CC /* AWSS3Outposts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
+			productName = AWSS3Outposts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
