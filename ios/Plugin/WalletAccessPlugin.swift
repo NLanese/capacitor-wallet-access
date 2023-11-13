@@ -10,6 +10,7 @@ import JavaScriptCore
 //import Firebase
 //import FirebaseStorage
 
+import Amplify
 import ClientRuntime
 import AWSS3
 
@@ -665,7 +666,25 @@ func firebaseDownloadPkPass(
 //    }
 }
 
-func awsDownloadPkPass(){
+func awsDownloadPkPass(
+    capPluginCall: CAPPluginCall,
+    awsRegion: String
+){
     
 }
  
+
+
+
+
+do {
+    let client = try S3Client(region: awsRegion)
+    // Your code that uses the S3Client goes here
+}
+
+
+// If no valid awsRegion was provided
+catch let error {
+    print("Error creating S3Client: \(error)")
+    capPluginCall.reject("There was an invalid awsRegion value applied. Please make sure when using aws as your webStorage to fill in all aws field. For example, this should look something like 'us-east-1'")
+}

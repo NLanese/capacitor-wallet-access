@@ -18,6 +18,8 @@
 		40FD7E292B02869D008B82CC /* AWSS3 in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E282B02869D008B82CC /* AWSS3 */; };
 		40FD7E2B2B02869D008B82CC /* AWSS3Control in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E2A2B02869D008B82CC /* AWSS3Control */; };
 		40FD7E2D2B02869D008B82CC /* AWSS3Outposts in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E2C2B02869D008B82CC /* AWSS3Outposts */; };
+		40FD7E302B02B0AE008B82CC /* AWSDataStorePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E2F2B02B0AE008B82CC /* AWSDataStorePlugin */; };
+		40FD7E322B02B0AE008B82CC /* Amplify in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E312B02B0AE008B82CC /* Amplify */; };
 		50ADFF92201F53D600D50D53 /* Plugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50ADFF88201F53D600D50D53 /* Plugin.framework */; };
 		50ADFF97201F53D600D50D53 /* WalletAccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ADFF96201F53D600D50D53 /* WalletAccessTests.swift */; };
 		50ADFF99201F53D600D50D53 /* WalletAccessPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ADFF8B201F53D600D50D53 /* WalletAccessPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -64,6 +66,8 @@
 				401DD5832ACFCE0200185C54 /* FirebasePerformance in Frameworks */,
 				401DD5872ACFCE0200185C54 /* FirebaseStorage in Frameworks */,
 				40FD7E2D2B02869D008B82CC /* AWSS3Outposts in Frameworks */,
+				40FD7E322B02B0AE008B82CC /* Amplify in Frameworks */,
+				40FD7E302B02B0AE008B82CC /* AWSDataStorePlugin in Frameworks */,
 				50ADFFA42020D75100D50D53 /* Capacitor.framework in Frameworks */,
 				40FD7E292B02869D008B82CC /* AWSS3 in Frameworks */,
 				401DD57B2ACFCE0200185C54 /* FirebaseAuth in Frameworks */,
@@ -188,6 +192,8 @@
 				40FD7E282B02869D008B82CC /* AWSS3 */,
 				40FD7E2A2B02869D008B82CC /* AWSS3Control */,
 				40FD7E2C2B02869D008B82CC /* AWSS3Outposts */,
+				40FD7E2F2B02B0AE008B82CC /* AWSDataStorePlugin */,
+				40FD7E312B02B0AE008B82CC /* Amplify */,
 			);
 			productName = Plugin;
 			productReference = 50ADFF88201F53D600D50D53 /* Plugin.framework */;
@@ -247,6 +253,7 @@
 			packageReferences = (
 				401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */,
+				40FD7E2E2B02B0AE008B82CC /* XCRemoteSwiftPackageReference "amplify-swift" */,
 			);
 			productRefGroup = 50ADFF89201F53D600D50D53 /* Products */;
 			projectDirPath = "";
@@ -307,6 +314,14 @@
 				"${PODS_ROOT}/Target Support Files/Pods-PluginTests/Pods-PluginTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Capacitor/Capacitor.framework",
 				"${BUILT_PRODUCTS_DIR}/CapacitorCordova/Cordova.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSAuthCore/AWSAuthCore.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSAuthUI/AWSAuthUI.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProvider/AWSCognitoIdentityProvider.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProviderASF/AWSCognitoIdentityProviderASF.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSCore/AWSCore.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSMobileClient/AWSMobileClient.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSS3/AWSS3.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSUserPoolsSignIn/AWSUserPoolsSignIn.framework",
 				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseAppCheckInterop/FirebaseAppCheckInterop.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseAuthInterop/FirebaseAuthInterop.framework",
@@ -314,7 +329,9 @@
 				"${BUILT_PRODUCTS_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseFirestore/FirebaseFirestore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseFirestoreInternal/FirebaseFirestoreInternal.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseSharedSwift/FirebaseSharedSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseStorage/FirebaseStorage.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
@@ -329,6 +346,14 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Capacitor.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cordova.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSAuthCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSAuthUI.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProvider.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProviderASF.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSMobileClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSS3.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSUserPoolsSignIn.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl_grpc.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAppCheckInterop.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuthInterop.framework",
@@ -336,7 +361,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreExtension.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreInternal.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestoreInternal.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseSharedSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseStorage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
@@ -678,6 +705,14 @@
 				minimumVersion = 0.31.0;
 			};
 		};
+		40FD7E2E2B02B0AE008B82CC /* XCRemoteSwiftPackageReference "amplify-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/aws-amplify/amplify-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -725,6 +760,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
 			productName = AWSS3Outposts;
+		};
+		40FD7E2F2B02B0AE008B82CC /* AWSDataStorePlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 40FD7E2E2B02B0AE008B82CC /* XCRemoteSwiftPackageReference "amplify-swift" */;
+			productName = AWSDataStorePlugin;
+		};
+		40FD7E312B02B0AE008B82CC /* Amplify */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 40FD7E2E2B02B0AE008B82CC /* XCRemoteSwiftPackageReference "amplify-swift" */;
+			productName = Amplify;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

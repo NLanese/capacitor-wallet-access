@@ -13,6 +13,12 @@ target 'Plugin' do
   pod 'Firebase/Core'
   pod 'Firebase/Storage'
   pod 'Firebase/Firestore'
+  pod 'AWSMobileClient'
+  pod 'AWSUserPoolsSignIn'
+  pod 'AWSAuthUI'
+  pod 'AWSS3'
+  pod 'AWSCore'
+  pod 'AWSCognito'
 end
 
 target 'PluginTests' do
