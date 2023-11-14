@@ -113,7 +113,6 @@ public class WalletAccessPlugin: CAPPlugin {
             //----------------//
             
             // Needed Values for PKPass Creation
-            // Recall that the ONLY param for a Capacitor plugin is `call`. The Params of this call function are declared in the plugin's definitions.ts and index.ts
             let serialNumberInput = call.getString("serialNumberInput") ?? "Invalid"
             let organizerNameInput = call.getString("organizerNameInput") ?? "Inavlid"
             
@@ -125,7 +124,6 @@ public class WalletAccessPlugin: CAPPlugin {
             let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberinDownload") ?? false
     
             // Fields (optional)
-            // Since they are optional, you must declare an alternative of the same time. Thus we create an empty String Array if nothing is there
             let headerValueInput = call.getArray("headerValues") ?? [String]()
             let primaryValueInput = call.getArray("primaryValues") ?? [String]()
             let secondaryValueInput = call.getArray("secondaryValues") ?? [String]()
@@ -143,23 +141,6 @@ public class WalletAccessPlugin: CAPPlugin {
             // AWS Related Fields
             let awsRegion = call.getString("awsRegion") ?? "INVALID"
             let awsBucketName = call.getString("awsBucketCode") ?? "INVALID"
-            
-            
-            // More Feedback Logs
-            print("Processed all inputs...")
-            print("SerialNumberInput -- " + serialNumberInput)
-            print("OrganizerNameInput -- " + organizerNameInput)
-            print("PassCreationURL -- " + passCreationURL)
-            print("PassDownloadPath -- " + passDownloadPath)
-            print("PassAuthorizationKey -- " + passAuthorizationKey)
-            print("Web Storage Service -- " + webStorageInput)
-            print("Uses Serial Number in Download? " + (usesSerialNumberInDownloadURL ? "True" : "False"))
-            print("Headers")
-            print(headerLabelInput)
-            print(headerValueInput)
-            print("Primary")
-            print(primaryLabelInput)
-            print(primaryValueInput)
             
             
             // Checks Validity of Serial Number
@@ -585,11 +566,65 @@ func downloadPass(
     
 }
 
+
+//-----------------//
+// REQUEST HELPERS //
+//-----------------//
+func populatePassBlock(
+    inputArrayJS: JSArray,
+    keyname: String
+) -> [[String : String]]{
+    var reqLabels = [String]()
+    var reqValues = [String]()
+    
+    // Populates Labels
+    inputArrayJS.enumerated().forEach{ (index, label) in
+        if let swiftString = label as? String {
+            reqLabels.append(swiftString)
+        }
+        else{
+            reqLabels.append("Invalid")
+        }
+    }
+    // Populates Values
+    inputArrayJS.enumerated().forEach{ (index, value) in
+        if let swiftString = value as? String {
+            reqValues.append(swiftString)
+        }
+        else{
+            reqValues.append("Invalid")
+        }
+    }
+    
+    // Creates the Headers Object for final params
+    if (reqLabels.count == 2){
+        return([
+            [
+                "label": reqLabels[0],
+                "value": reqValues[0],
+                "key": (keyname + "0")
+            ],
+            [
+                "label": reqLabels[1],
+                "value": reqValues[1],
+                "key": (keyname + "1")
+            ]
+        ])
+    }
+    else{
+        return([
+            [
+                "label": reqLabels[0],
+                "value": reqValues[0],
+                "key": (keyname + "0")
+            ]
+        ])
+    }
+}
+
 //------------------//
 // DOWNLOAD HELPERS //
 //------------------//
-
-
  func awsDownloadPkPass(
     capPluginCall: CAPPluginCall,
     awsRegion: String,
