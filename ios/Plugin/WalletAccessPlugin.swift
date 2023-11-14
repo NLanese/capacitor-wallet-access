@@ -93,18 +93,6 @@ public class WalletAccessPlugin: CAPPlugin {
     // Creates an Apple Pass using Parameters
     @objc func generatePass(_ call: CAPPluginCall) async {
         
-        
-        // Logs to denote the plugin function has successfully fired
-        print("=======================")
-        print("*")
-        print("*")
-        print("*")
-        print("INSIDE CAPACITOR PLUGIN")
-        print("*")
-        print("*")
-        print("*")
-        print("=======================")
-        
         // If Pass Library is Available
         if PKPassLibrary.isPassLibraryAvailable() {
             
@@ -243,243 +231,44 @@ func createPass(
     secondaryValueInput: JSArray,
     auxiliaryLabelInput: JSArray,
     auxiliaryValueInput: JSArray
-) async {
+) async throws -> String {
     
         
     print("     Inside 'createPass' sub-function")
-    //--------//
-    // PARAMS //
-    //--------//
-        
-        //---------//
-        // HEADERS //
-        //---------//
-        // Creates a blank JS Array Object to store the call params from JS App
-        var headerLabels = [String]()
-        var headerValues = [String]()
-        
-        // For Each with Index through Label JSArray from params
-        headerLabelInput.enumerated().forEach{ (index, label) in
-            if let swiftString = label as? String {
-                headerLabels.append(swiftString)
-            }
-            else{
-                headerLabels.append("Invalid")
-            }
-        }
-        // For Each with Index through Value JSArray from params
-        headerValueInput.enumerated().forEach{ (index, value) in
-            if let swiftString = value as? String {
-                headerValues.append(swiftString)
-            }
-            else{
-                headerValues.append("Invalid")
-            }
-        }
+    let headers = populatePassBlock(labelArrayJS: headerLabelInput, valueArrayJS: headerValueInput, keyname: "header")
+    let primary = populatePassBlock(labelArrayJS: primaryLabelInput, valueArrayJS: primaryValueInput, keyname: "primary")
+    let secondary = populatePassBlock(labelArrayJS: secondaryLabelInput, valueArrayJS: secondaryValueInput, keyname: "secondary")
+    let auxiliary = populatePassBlock(labelArrayJS: auxiliaryLabelInput, valueArrayJS: auxiliaryValueInput, keyname: "auxiliary")
     
-        // Creates the Headers Object for final params
-        var headers = [[String: String]]()
-        if (headerLabels.count == 2){
-            headers = [
-                [
-                    "label": headerLabels[0],
-                    "value": headerValues[0],
-                    "key": "header0"
-                ],
-                [
-                    "label": headerLabels[1],
-                    "value": headerValues[1],
-                    "key": "header1"
-                ]
-            ]
-        }
-        else{
-            headers = [
-                [
-                    "label": headerLabels[0],
-                    "value": headerValues[0],
-                    "key": "header0"
-                ]
-            ]
-        }
-        
-        //---------//
-        // PRIMARY //
-        //---------//
-        // Creates a blank JS Array Object to store the call params from JS App
-        var primaryLabels = [String]()
-        var primaryValues = [String]()
-        primaryLabelInput.enumerated().forEach{ (index, label) in
-            if let swiftString = label as? String {
-                primaryLabels.append(swiftString)
-            }
-            else{
-                primaryLabels.append("Invalid")
-            }
-        }
-        primaryValueInput.enumerated().forEach{ (index, value) in
-            if let swiftString = value as? String {
-                primaryValues.append(swiftString)
-            }
-            else{
-                primaryValues.append("Invalid")
-            }
-        }
-        var primary = [[String: String]]()
-        if (primaryLabels.count == 2){
-            primary = [
-                [
-                    "label": primaryLabels[0],
-                    "value": primaryValues[0],
-                    "key": "primary0"
-                ],
-                [
-                    "label": primaryLabels[1],
-                    "value": primaryValues[1],
-                    "key": "primary1"
-                ]
-            ]
-        }
-        else{
-            primary = [
-                [
-                    "label": primaryLabels[0],
-                    "value": primaryValues[0],
-                    "key": "primary0"
-                ]
-            ]
-        }
-        
-        //-----------//
-        // SECONDARY //
-        //-----------//
-        // Creates a blank JS Array Object to store the call params from JS App
-        var secondaryLabels = [String]()
-        var secondaryValues = [String]()
-        secondaryLabelInput.enumerated().forEach{ (index, label) in
-            if let swiftString = label as? String {
-                secondaryLabels.append(swiftString)
-            }
-            else{
-                secondaryLabels.append("Invalid")
-            }
-        }
-        secondaryValueInput.enumerated().forEach{ (index, value) in
-            if let swiftString = value as? String {
-                secondaryValues.append(swiftString)
-            }
-            else{
-                secondaryValues.append("Invalid")
-            }
-        }
-        var secondary = [[String: String]]()
-        if (secondaryLabels.count == 2){
-            secondary = [
-                [
-                    "label": secondaryLabels[0],
-                    "value": secondaryValues[0],
-                    "key": "secondary0"
-                ],
-                [
-                    "label": secondaryLabels[1],
-                    "value": secondaryValues[1],
-                    "key": "secondary1"
-                ]
-            ]
-        }
-        else{
-            secondary = [
-                [
-                    "label": secondaryLabels[0],
-                    "value": secondaryValues[0],
-                    "key": "secondary0"
-                ]
-            ]
-        }
-        
-        //-----------//
-        // AUXILIARY //
-        //-----------//
-        // Creates a blank JS Array Object to store the call params from JS App
-        var auxiliaryLabels = [String]()
-        var auxiliaryValues = [String]()
-        auxiliaryLabelInput.enumerated().forEach{ (index, label) in
-            if let swiftString = label as? String {
-                auxiliaryLabels.append(swiftString)
-            }
-            else{
-                auxiliaryLabels.append("Invalid")
-            }
-        }
-        auxiliaryValueInput.enumerated().forEach{ (index, value) in
-            if let swiftString = value as? String {
-                auxiliaryValues.append(swiftString)
-            }
-            else{
-                auxiliaryValues.append("Invalid")
-            }
-        }
-        var auxiliary = [[String: String]]()
-        if (auxiliaryLabels.count == 2){
-            auxiliary = [
-                [
-                    "label": auxiliaryLabels[0],
-                    "value": auxiliaryValues[0],
-                    "key": "auxiliary0"
-                ],
-                [
-                    "label": auxiliaryLabels[1],
-                    "value": auxiliaryValues[1],
-                    "key": "auxiliary1"
-                ]
-            ]
-        }
-        else{
-            auxiliary = [
-                [
-                    "label": auxiliaryLabels[0],
-                    "value": auxiliaryValues[0],
-                    "key": "auxiliary0"
-                ]
-            ]
-        }
-        
-        print("     Created 'params' pre-objects...")
-        
     //---------//
     // REQUEST //
     //---------//
     
-        let params: [String: Any] = [
-            "organizerName": organizerNameInput,
-            "serialNumber": serialNumberInput,
-            "header": headers,
-            "primary": primary,
-            "secondary": secondary,
-            "auxiliary": auxiliary
-        ]
-        print("     created full params body object")
+    let params: [String: Any] = [
+        "organizerName": organizerNameInput,
+        "serialNumber": serialNumberInput,
+        "header": headers,
+        "primary": primary,
+        "secondary": secondary,
+        "auxiliary": auxiliary
+    ]
+    print("     created full params body object")
         
         // Creates a bare request object
         var request = URLRequest(url: URL(string: passCreationURL)!)
         print("     created request")
         
-        // Specifies Request Method
+        // Specifies Request Method, values, and body content
         request.httpMethod = "POST"
-        
-        // Specifies content in request will be sent via JSON
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        // Attemts to Serialize the input JSON object. Said JSON object will be the previous declared params object
         request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
-        
         print("     request configuration complete, about to send...")
         
         // Deploys the request
         let _ = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error: \(error)")
-                return
+//                return"Error: \(error)"
             }
             
             guard let httpResponse = response as? HTTPURLResponse else {
@@ -500,13 +289,12 @@ func createPass(
             do {
                 let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
                 let result = json["result"] as? String
-                return
+                return result
             } catch {
                 print("JSON serialization error: \(error)")
                 return
             }
         }
-        .resume()
     }
 
 // Downloads the Pass from Firebase
@@ -571,14 +359,15 @@ func downloadPass(
 // REQUEST HELPERS //
 //-----------------//
 func populatePassBlock(
-    inputArrayJS: JSArray,
+    labelArrayJS: JSArray,
+    valueArrayJS: JSArray,
     keyname: String
 ) -> [[String : String]]{
     var reqLabels = [String]()
     var reqValues = [String]()
     
     // Populates Labels
-    inputArrayJS.enumerated().forEach{ (index, label) in
+    labelArrayJS.enumerated().forEach{ (index, label) in
         if let swiftString = label as? String {
             reqLabels.append(swiftString)
         }
@@ -587,7 +376,7 @@ func populatePassBlock(
         }
     }
     // Populates Values
-    inputArrayJS.enumerated().forEach{ (index, value) in
+    valueArrayJS.enumerated().forEach{ (index, value) in
         if let swiftString = value as? String {
             reqValues.append(swiftString)
         }
