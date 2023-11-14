@@ -14,7 +14,7 @@ export interface WalletAccessPlugin {
     organizerNameInput: string,
 
     passCreationURL: string,
-    passDownloadURL: string,
+    passDownloadPath: string,
     passAuthorizationKey: string,
     webStorageInput: string,
     usesSerialNumberinDownload: boolean,
@@ -28,7 +28,6 @@ export interface WalletAccessPlugin {
     auxiliaryValues: string[],
     auxiliaryLabels: string[],
 
-    firebaseStorageUrl: string,
     googleAppID: string,
     gcmSenderID: string,
   }): 

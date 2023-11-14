@@ -91,7 +91,7 @@ public class WalletAccessPlugin: CAPPlugin {
     }
     
     // Creates an Apple Pass using Parameters
-    @objc func generatePass(_ call: CAPPluginCall){
+    @objc func generatePass(_ call: CAPPluginCall) async {
         
         
         // Logs to denote the plugin function has successfully fired
@@ -118,7 +118,7 @@ public class WalletAccessPlugin: CAPPlugin {
             let organizerNameInput = call.getString("organizerNameInput") ?? "Inavlid"
             
             let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
-            let passDownloadURL = call.getString("passDownloadURL") ?? "Invalid"
+            let passDownloadPath = call.getString("passDownloadPath") ?? ""
             let passAuthorizationKey = call.getString("passAuthorizationKey") ?? "Invalid"
             let webStorageInput = call.getString("webStorageInput") ?? "Invalid"
             let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberinDownload") ?? false
@@ -136,9 +136,12 @@ public class WalletAccessPlugin: CAPPlugin {
             
             
             // Firebase Related Fields
-            let firebaseStorageUrl = call.getString("firebaseStorageUrl") ?? "INVALID"
             let googleAppID = call.getString("googleAppID") ?? "INVALID"
             let gcmSenderID = call.getString("gcmSenderID") ?? "INVALID"
+            
+            // AWS Related Fields
+            let awsRegion = call.getString("awsRegion") ?? "INVALID"
+            let awsBucketName = call.getString("awsBucketCode") ?? "INVALID"
             
             
             // More Feedback Logs
@@ -146,7 +149,7 @@ public class WalletAccessPlugin: CAPPlugin {
             print("SerialNumberInput -- " + serialNumberInput)
             print("OrganizerNameInput -- " + organizerNameInput)
             print("PassCreationURL -- " + passCreationURL)
-            print("PassDownloadURL -- " + passDownloadURL)
+            print("PassDownloadPath -- " + passDownloadPath)
             print("PassAuthorizationKey -- " + passAuthorizationKey)
             print("Web Storage Service -- " + webStorageInput)
             print("Uses Serial Number in Download? " + (usesSerialNumberInDownloadURL ? "True" : "False"))
@@ -198,7 +201,7 @@ public class WalletAccessPlugin: CAPPlugin {
             //-----------------------//
             
             // fires the function declared at the bottom of this file
-            createPass(
+            await createPass(
                 passCreationURL,
                 serialNumberInput: serialNumberInput,
                 organizerNameInput: organizerNameInput,
@@ -222,15 +225,16 @@ public class WalletAccessPlugin: CAPPlugin {
                         
                         // IF Serial Number is in URL
                         if (usesSerialNumberInDownloadURL){
-                            downloadPass(
-                                passDownloadURL: passDownloadURL,
+                            await downloadPass(
+                                passDownloadPath: passDownloadPath,
                                 webStorage: webStorageInput,
                                 usesSerialNumber: true,
                                 call: call,
                                 serialNumber: serialNumberInput,
-                                firebaseStorageUrl: firebaseStorageUrl,
                                 googleAppID: googleAppID,
-                                gcmSenderID: gcmSenderID
+                                gcmSenderID: gcmSenderID,
+                                awsRegion: awsRegion,
+                                awsBucketName: awsBucketName
                             ){
                                 downloadPassResult in
                                 if (downloadPassResult){
@@ -241,15 +245,16 @@ public class WalletAccessPlugin: CAPPlugin {
                         
                         // IF Serial Number is not in URL
                         else{
-                            downloadPass(
-                                passDownloadURL: passDownloadURL,
+                            await downloadPass(
+                                passDownloadPath: passDownloadPath,
                                 webStorage: webStorageInput,
                                 usesSerialNumber: false,
                                 call: call,
                                 serialNumber: nil,
-                                firebaseStorageUrl: firebaseStorageUrl,
                                 googleAppID: googleAppID,
-                                gcmSenderID: gcmSenderID
+                                gcmSenderID: gcmSenderID,
+                                awsRegion: awsRegion,
+                                awsBucketName: awsBucketName
                             ){
                                 downloadPassResult in
                                 if (downloadPassResult){
@@ -294,7 +299,7 @@ func createPass(
     auxiliaryValueInput: JSArray,
     
     completion: @escaping((Bool) -> () )
-){
+) async {
     
         
     print("     Inside 'createPass' sub-function")
@@ -566,52 +571,49 @@ func createPass(
 
 // Downloads the Pass from Firebase
 func downloadPass(
-    passDownloadURL: String,
+    
+    passDownloadPath: String,
     webStorage: String,
     usesSerialNumber: Bool,
     call: CAPPluginCall,
     serialNumber: String?,
-    firebaseStorageUrl: String,
+    
     googleAppID: String,
     gcmSenderID: String,
+    
+    awsRegion: String,
+    awsBucketName: String,
+    
     completion: @escaping((Bool) -> () )
-) {
+) async {
     print("     Entered downloadPass()")
-    var pathToDownload = passDownloadURL
+    var pathToDownload = passDownloadPath
     if usesSerialNumber{
         if serialNumber != nil {
-            pathToDownload = pathToDownload + (serialNumber ?? "INVALIDSERIALNUMBER") + ".pkpass"
+            pathToDownload = pathToDownload + (serialNumber ?? "INVALID-SERIAL-NUMBER")
         }
-    }
-    else{
-        pathToDownload = pathToDownload + ".pkpass"
     }
     
     // FIREBASE Storage
     if (webStorage == "firebase"){
         print("Firebase Storage")
-        if (firebaseStorageUrl == "INVALID"){
-            call.reject("If using Firebase Storage, you need to provide a FirebaseStorageUrl")
-        }
-        if (googleAppID == "INVALID"){
-            call.reject("If using Firebase Storage, you need to provide a googleAppID. This can be found in your app's GoogleService-Info.plist")
-        }
-        if (gcmSenderID == "INVALID"){
-            call.reject("If using Firebase Storage, you need to provide a gcmSenderID. This can be found in your app's GoogleService-Info.plist")
-        }
-        initializeFirebase(
-            firebaseStorageUrl: firebaseStorageUrl,
-            googleAppID: googleAppID,
-            gcmSenderID: gcmSenderID,
-            capPluginCall: call
-        )
-        
-        firebaseDownloadPkPass(capPluginCall: call, path: passDownloadURL)
     }
     
     // AWS Storage
     if (webStorage == "aws"){
+        if (awsRegion == "INVALID"){
+            call.reject("If using AWS S3 Storage, you need to provide an awsRegion value. For example, 'us-north-2' or 'af-south-1' " )
+        }
+        if (awsBucketName == "INVALID"){
+            call.reject("If using AWS S3 Storage, you need to provide a awsBucketNAme. This can be found in your AWS S3 List")
+        }
         
+        await awsDownloadPkPass(
+            capPluginCall: call,
+            awsRegion: awsRegion,
+            awsBucketName: awsBucketName,
+            awsFilePath: pathToDownload
+        )
     }
     
 }
@@ -620,71 +622,34 @@ func downloadPass(
 // DOWNLOAD HELPERS //
 //------------------//
 
-// Initializes Firebase Connection if Firebase is the used Storage
-func initializeFirebase(
-    firebaseStorageUrl: String,         // Access URL ro Firebase
-    googleAppID: String,                // This can be found in the google-services.json (Android) or GoogleService-Info.plist (iOS) files
-    gcmSenderID: String,
-    capPluginCall: CAPPluginCall
-    
-){
-//    // Sets up appropriate values for finding the Firebase Storage Proejct
-//    let fileopts = FirebaseOptions(googleAppID: googleAppID, gcmSenderID: gcmSenderID)
-//    fileopts.storageBucket = firebaseStorageUrl
-//
-//    // Sets up the Firebase Connection
-//    FirebaseApp.configure(options: fileopts)
-}
 
-// Downloads Pass from Firebase
-func firebaseDownloadPkPass(
+ func awsDownloadPkPass(
     capPluginCall: CAPPluginCall,
-    path: String
-){
-//    // Connects to the Storage, provided the Firebase App connected
-//    let storage = Storage.storage()
-//
-//    // Creates a Reference to the Storage Object, so the storage can be interacted with as a variable
-//    let storageRef = storage.reference()
-//
-//    // Finds the specific file
-//    let fileRef = storageRef.child(path)
-//
-//    // Downloads the File
-//    fileRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
-//        if let error = error {
-//            capPluginCall.reject("Error in Downloading the File. The Pass, however, was successfully created in Firebase Storage. It will not be added to this device until installed \n \(error.localizedDescription)")
-//        }
-//        else {
-//            if let returnData = data?.base64EncodedString(){
-//                capPluginCall.resolve(["newPass": returnData])
-//            }
-//            else{
-//                capPluginCall.reject("Issue occurred in resolving the pkpass to string for return.")
-//            }
-//        }
-//    }
-}
-
-func awsDownloadPkPass(
-    capPluginCall: CAPPluginCall,
-    awsRegion: String
-){
+    awsRegion: String,
+    awsBucketName: String,
+    awsFilePath: String
+ ) async{
     
-}
+    do { let client = try S3Client(region: awsRegion)
+    do { let s3 = try await S3Client()
+          
+        let inputObject = GetObjectInput(bucket: awsBucketName, key: awsFilePath)
+    }
+        
+    // If the Client Service Cannot be established
+    catch {
+            
+    }}
+
+
+    // If no valid awsRegion was provided
+    catch {
+        print("Error creating S3Client: \(error)")
+        capPluginCall.reject("There was an invalid awsRegion value applied. Please make sure when using aws as your webStorage to fill in all aws field. For example, this should look something like 'us-east-1'")
+    }}
  
 
 
 
 
-do {
-    let client = try S3Client(region: awsRegion)
-    // Your code that uses the S3Client goes here
-}
 
-
-// If no valid awsRegion was provided
-catch let error {
-    print("Error creating S3Client: \(error)")
-    capPluginCall.reject("There was an invalid awsRegion value applied. Please make sure when using aws as your webStorage to fill in all aws field. For example, this should look something like 'us-east-1'")
-}

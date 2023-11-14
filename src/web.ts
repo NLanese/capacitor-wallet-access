@@ -23,7 +23,7 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     organizerNameInput: string,
 
     passCreationURL: string,
-    passDownloadURL: string,
+    passDownloadPath: string,
     passAuthorizationKey: string,
     webStorageInput: string,
     usesSerialNumberinDownload: boolean,
@@ -37,7 +37,6 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     auxiliaryValues: string[],
     auxiliaryLabels: string[],
 
-    firebaseStorageUrl: string,
     googleAppID: string,
     gcmSenderID: string,
   }): Promise<{ newPass: string }> {
