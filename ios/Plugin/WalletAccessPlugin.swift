@@ -170,21 +170,27 @@ public class WalletAccessPlugin: CAPPlugin {
             // PASS CREATION PROCESS //
             //-----------------------//
             
-            // fires the function declared at the bottom of this file
-            await createPass(
-                passCreationURL,
-                serialNumberInput: serialNumberInput,
-                organizerNameInput: organizerNameInput,
-                
-                headerLabelInput: headerLabelInput,
-                headerValueInput: headerValueInput,
-                primaryLabelInput: primaryLabelInput,
-                primaryValueInput: primaryValueInput,
-                secondaryLabelInput: secondaryLabelInput,
-                secondaryValueInput: secondaryValueInput,
-                auxiliaryLabelInput: auxiliaryLabelInput,
-                auxiliaryValueInput: auxiliaryValueInput
-            )
+            do {
+                let creationResult = try await createPass(
+                    passCreationURL,
+                    serialNumberInput: serialNumberInput,
+                    organizerNameInput: organizerNameInput,
+                    
+                    headerLabelInput: headerLabelInput,
+                    headerValueInput: headerValueInput,
+                    primaryLabelInput: primaryLabelInput,
+                    primaryValueInput: primaryValueInput,
+                    secondaryLabelInput: secondaryLabelInput,
+                    secondaryValueInput: secondaryValueInput,
+                    auxiliaryLabelInput: auxiliaryLabelInput,
+                    auxiliaryValueInput: auxiliaryValueInput
+                )
+            }
+            catch{
+                print("Error Creating the Pass!")
+                call.reject("Error creating the pass")
+            }
+            
             await downloadPass(
                 passDownloadPath: passDownloadPath,
                 passStoredAs: passStoredAs,
@@ -233,7 +239,7 @@ func createPass(
     auxiliaryValueInput: JSArray
 ) async throws -> String {
     
-        
+    
     print("     Inside 'createPass' sub-function")
     let headers = populatePassBlock(labelArrayJS: headerLabelInput, valueArrayJS: headerValueInput, keyname: "header")
     let primary = populatePassBlock(labelArrayJS: primaryLabelInput, valueArrayJS: primaryValueInput, keyname: "primary")
@@ -253,49 +259,34 @@ func createPass(
         "auxiliary": auxiliary
     ]
     print("     created full params body object")
-        
-        // Creates a bare request object
-        var request = URLRequest(url: URL(string: passCreationURL)!)
-        print("     created request")
-        
-        // Specifies Request Method, values, and body content
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
-        print("     request configuration complete, about to send...")
-        
-        // Deploys the request
-        let _ = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                print("Error: \(error)")
-//                return"Error: \(error)"
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Invalid response")
-                return
-            }
-            
-            if httpResponse.statusCode != 200 {
-                print("HTTP status code: \(httpResponse.statusCode)")
-                return
-            }
-            
-            guard let data = data else {
-                print("No data received")
-                return
-            }
-            
-            do {
-                let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
-                let result = json["result"] as? String
-                return result
-            } catch {
-                print("JSON serialization error: \(error)")
-                return
-            }
+    
+    // Creates a bare request object
+    // Specifies Request Method, values, and body content
+    var request = URLRequest(url: URL(string: passCreationURL)!)
+    request.httpMethod = "POST"
+    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
+    print("     request configuration complete, about to send...")
+    
+    do {
+        let (data, _) = try await URLSession.shared.data(for: request)
+        do {
+            let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+            let result = json["result"] as? String
+            return result ?? "Error"
+        }
+        catch {
+            print("JSON Serialization Error: \(error)")
+            throw error
         }
     }
+    catch {
+        print("Error: \(error)")
+        throw error
+    }
+}
+    
+
 
 // Downloads the Pass from Firebase
 func downloadPass(
