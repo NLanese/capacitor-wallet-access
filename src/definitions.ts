@@ -29,6 +29,7 @@ export interface WalletAccessPlugin {
     auxiliaryValues: string[],
     auxiliaryLabels: string[],
 
+    firebaseStorageUrl?: string,
     googleAppID?: string,
     gcmSenderID?: string,
 

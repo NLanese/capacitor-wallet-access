@@ -38,6 +38,7 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     auxiliaryValues: string[],
     auxiliaryLabels: string[],
 
+    firebaseStorageUrl?: string,
     googleAppID?: string,
     gcmSenderID?: string,
 
