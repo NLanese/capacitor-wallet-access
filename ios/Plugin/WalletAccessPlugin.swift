@@ -119,6 +119,7 @@ public class WalletAccessPlugin: CAPPlugin {
             
             let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
             let passDownloadPath = call.getString("passDownloadPath") ?? ""
+            let passStoredAs = call.getString("passStoredAs") ?? "pkpass"
             let passAuthorizationKey = call.getString("passAuthorizationKey") ?? "Invalid"
             let webStorageInput = call.getString("webStorageInput") ?? "Invalid"
             let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberinDownload") ?? false
@@ -217,6 +218,7 @@ public class WalletAccessPlugin: CAPPlugin {
             )
             await downloadPass(
                 passDownloadPath: passDownloadPath,
+                passStoredAs: passStoredAs,
                 webStorage: webStorageInput,
                 usesSerialNumber: usesSerialNumberInDownloadURL,
                 call: call,
@@ -530,6 +532,7 @@ func createPass(
 func downloadPass(
     
     passDownloadPath: String,
+    passStoredAs: String,
     webStorage: String,
     usesSerialNumber: Bool,
     call: CAPPluginCall,
@@ -547,19 +550,24 @@ func downloadPass(
     
     print("     Entered downloadPass()")
     var pathToDownload = passDownloadPath
+    
     if usesSerialNumber{
         if serialNumber != nil {
             pathToDownload = pathToDownload + (serialNumber ?? "INVALID-SERIAL-NUMBER")
         }
     }
+    pathToDownload = pathToDownload + "." + passStoredAs
     
     // FIREBASE Storage
     if (webStorage == "firebase"){
         print("Firebase Storage")
+        print("Searching for " + pathToDownload)
     }
     
     // AWS Storage
     if (webStorage == "aws"){
+        print("AWS S3 Storage")
+        print("Searching for " + pathToDownload)
         if (awsRegion == "INVALID"){
             call.reject("If using AWS S3 Storage, you need to provide an awsRegion value. For example, 'us-north-2' or 'af-south-1' " )
         }

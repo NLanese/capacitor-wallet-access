@@ -15,6 +15,7 @@ export interface WalletAccessPlugin {
 
     passCreationURL: string,
     passDownloadPath: string,
+    passStoredAs: string,
     passAuthorizationKey: string,
     webStorageInput: string,
     usesSerialNumberinDownload: boolean,
@@ -30,6 +31,9 @@ export interface WalletAccessPlugin {
 
     googleAppID: string,
     gcmSenderID: string,
+
+    awsRegion: string,
+    awsBucketName: string,
   }): 
     Promise<{ newPass: string}>
 
