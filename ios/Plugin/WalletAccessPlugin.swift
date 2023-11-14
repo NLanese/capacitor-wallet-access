@@ -213,62 +213,25 @@ public class WalletAccessPlugin: CAPPlugin {
                 secondaryLabelInput: secondaryLabelInput,
                 secondaryValueInput: secondaryValueInput,
                 auxiliaryLabelInput: auxiliaryLabelInput,
-                auxiliaryValueInput: auxiliaryValueInput)
-                {
-                    // We then fire the `completion` funtion which is initialized here
-                    
-                    // 'createPassResult' being the return value of the called function. Think of this like a really complicated looking `.then(createPassResult => {} ` but in Swift
-                    createPassResult in
-                    // if the result exists, do this...
-                    if (createPassResult){
-                        
-                        
-                        // IF Serial Number is in URL
-                        if (usesSerialNumberInDownloadURL){
-                            await downloadPass(
-                                passDownloadPath: passDownloadPath,
-                                webStorage: webStorageInput,
-                                usesSerialNumber: true,
-                                call: call,
-                                serialNumber: serialNumberInput,
-                                googleAppID: googleAppID,
-                                gcmSenderID: gcmSenderID,
-                                awsRegion: awsRegion,
-                                awsBucketName: awsBucketName
-                            ){
-                                downloadPassResult in
-                                if (downloadPassResult){
-                                    print("Downloaded")
-                                }
-                            }
-                        }
-                        
-                        // IF Serial Number is not in URL
-                        else{
-                            await downloadPass(
-                                passDownloadPath: passDownloadPath,
-                                webStorage: webStorageInput,
-                                usesSerialNumber: false,
-                                call: call,
-                                serialNumber: nil,
-                                googleAppID: googleAppID,
-                                gcmSenderID: gcmSenderID,
-                                awsRegion: awsRegion,
-                                awsBucketName: awsBucketName
-                            ){
-                                downloadPassResult in
-                                if (downloadPassResult){
-                                    print("Downloaded")
-                                }
-                            }
-                        }
-                    }
+                auxiliaryValueInput: auxiliaryValueInput
+            )
+            await downloadPass(
+                passDownloadPath: passDownloadPath,
+                webStorage: webStorageInput,
+                usesSerialNumber: usesSerialNumberInDownloadURL,
+                call: call,
+                serialNumber: serialNumberInput,
+                googleAppID: googleAppID,
+                gcmSenderID: gcmSenderID,
+                awsRegion: awsRegion,
+                awsBucketName: awsBucketName
+            ){
+                downloadPassResult in
+                if (downloadPassResult){
+                    print("Downloaded")
                 }
-            
-            
-            
+            }
         }
-        
         
         // If PKPassLibrary is Unavailable
         else{
@@ -296,9 +259,7 @@ func createPass(
     secondaryLabelInput: JSArray,
     secondaryValueInput: JSArray,
     auxiliaryLabelInput: JSArray,
-    auxiliaryValueInput: JSArray,
-    
-    completion: @escaping((Bool) -> () )
+    auxiliaryValueInput: JSArray
 ) async {
     
         
@@ -535,35 +496,31 @@ func createPass(
         let _ = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error: \(error)")
-                completion(false)
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse else {
                 print("Invalid response")
-                completion(false)
                 return
             }
             
             if httpResponse.statusCode != 200 {
                 print("HTTP status code: \(httpResponse.statusCode)")
-                completion(false)
                 return
             }
             
             guard let data = data else {
                 print("No data received")
-                completion(false)
                 return
             }
             
             do {
                 let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
                 let result = json["result"] as? String
-                completion(result == "SUCCESS")
+                return
             } catch {
                 print("JSON serialization error: \(error)")
-                completion(false)
+                return
             }
         }
         .resume()
@@ -585,7 +542,9 @@ func downloadPass(
     awsBucketName: String,
     
     completion: @escaping((Bool) -> () )
+    
 ) async {
+    
     print("     Entered downloadPass()")
     var pathToDownload = passDownloadPath
     if usesSerialNumber{
