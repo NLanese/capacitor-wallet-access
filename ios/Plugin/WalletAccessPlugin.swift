@@ -185,6 +185,9 @@ public class WalletAccessPlugin: CAPPlugin {
                     auxiliaryLabelInput: auxiliaryLabelInput,
                     auxiliaryValueInput: auxiliaryValueInput
                 )
+                print("Pass Creation Completed!")
+                print("Result...")
+                print(creationResult)
             }
             catch{
                 print("Error Creating the Pass!")
