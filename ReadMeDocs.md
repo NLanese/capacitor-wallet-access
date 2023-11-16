@@ -4,8 +4,15 @@ to acces a user's wallet. This will allow a few different things...
 1. We can use this plugin to see whether or not a pass already exists on a user's device
 
 # ==== TO BUILD LOCALLY ==== #
+IN THIS DIRECTORY
 1. run `npm run build`
 2. run `npm link`
+
+IN THE TARGET PROJECT
+1. npm i "../path/to/capacitor-wallet-access"
+2. npm link capacitor-wallet-access
+3. npx ionic build (if ionic project)
+4. npx cap sync
 
 # ==== REQs ==== #
 1. This plugin will be useless on Web Applications since it is not optimized for Macs
