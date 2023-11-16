@@ -143,6 +143,8 @@ public class WalletAccessPlugin: CAPPlugin {
                 // AWS Related Fields
                 let awsRegion = storageConfig.awsRegion ?? "INVALID"
                 let awsBucketName = storageConfig.awsBucketCode ?? "INVALID"
+            
+            let miscData = call.getObject("miscData")
                 
             
             // Checks Validity of Serial Number
@@ -175,7 +177,7 @@ public class WalletAccessPlugin: CAPPlugin {
                 secondaryLabelInput.count != secondaryValueInput.count ||
                 auxiliaryLabelInput.count != auxiliaryValueInput.count
             ){
-                call.reject("For every label, there must be a value! Check your LabelInput and ValueInput params!")
+                call.reject("You have submitted an invalid passObject. Your passObject should have 'headerLabels', 'headerValues' \n 'primaryLabels', 'primaryValues' \n 'secondaryLabels', 'secondaryValues' \n 'auxiliaryLabels' and 'auxiliaryValues' \n properties. These properties should all be arrays conraining Strings, and each value/label pair must be of the same length. This means to say you cannot have 'headerLabels' contain 2 elements while 'headerValues' contains only 1")
             }
             
             print("Passed all param validations...")
@@ -198,6 +200,8 @@ public class WalletAccessPlugin: CAPPlugin {
                     secondaryValueInput: secondaryValueInput,
                     auxiliaryLabelInput: auxiliaryLabelInput,
                     auxiliaryValueInput: auxiliaryValueInput
+                    
+                    miscData: miscData
                 )
                 print("Pass Creation Completed!")
                 print("Result...")
@@ -246,6 +250,8 @@ func createPass(
     _ passCreationURL: String,
     serialNumberInput: String,
     organizerNameInput: String,
+    passAuthorizationKey: String?,
+    
     
     headerLabelInput: JSArray,
     headerValueInput: JSArray,
@@ -254,7 +260,8 @@ func createPass(
     secondaryLabelInput: JSArray,
     secondaryValueInput: JSArray,
     auxiliaryLabelInput: JSArray,
-    auxiliaryValueInput: JSArray
+    auxiliaryValueInput: JSArray,
+    miscData: String
 ) async throws -> String {
     
     
@@ -268,14 +275,21 @@ func createPass(
     // REQUEST //
     //---------//
     
-    let params: [String: Any] = [
+    var params: [String: Any] = [
         "organizerName": organizerNameInput,
         "serialNumber": serialNumberInput,
+        "webServiceUrl": passCreationURL,
         "header": headers,
         "primary": primary,
         "secondary": secondary,
-        "auxiliary": auxiliary
+        "auxiliary": auxiliary,
+        "miscData": miscData
     ]
+    
+    if let authKey = passAuthorizationKey {
+        params["authenticationToken"] = authKey
+    }
+    
     print("     created full params body object")
     
     // Creates a bare request object

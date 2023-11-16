@@ -8,4 +8,6 @@ Pod::Spec.new do |s|
   s.authors = { 'Ionic Team' => 'hi@ionicframework.com' }
   s.source = { :git => 'https://github.com/ionic-team/capacitor.git', :tag => s.version.to_s }
   s.resources = ['resources/*']
+  s.dependency 'Firebase'
+  s.dependency 'Amplify'
 end

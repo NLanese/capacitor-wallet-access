@@ -21,7 +21,8 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
   async generatePass(options: {
     passConfig: object
     passObject: object,
-    storageConfig: object
+    storageConfig: object,
+    miscData: object
   }): Promise<{ newPass: string }> {
     console.log("Inside createNewPass")
     console.log("Params: ", options)
