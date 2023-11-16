@@ -14,20 +14,10 @@ export interface WalletAccessPlugin {
     organizerNameInput: string,
 
     passCreationURL: string,
-    passDownloadPath?: string,
-    passStoredAs?: string,
     passAuthorizationKey?: string,
-    webStorageInput: string,
-    usesSerialNumberinDownload: boolean,
-    
+
     passObject: object,
-
-    firebaseStorageUrl?: string,
-    googleAppID?: string,
-    gcmSenderID?: string,
-
-    awsRegion?: string,
-    awsBucketName?: string,
+    storageConfig: object
   }): 
     Promise<{ newPass: string}>
 

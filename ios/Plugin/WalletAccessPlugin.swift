@@ -105,11 +105,9 @@ public class WalletAccessPlugin: CAPPlugin {
             let organizerNameInput = call.getString("organizerNameInput") ?? "Inavlid"
             
             let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
-            let passDownloadPath = call.getString("passDownloadPath") ?? ""
-            let passStoredAs = call.getString("passStoredAs") ?? "pkpass"
+           
             let passAuthorizationKey = call.getString("passAuthorizationKey") ?? "Invalid"
-            let webStorageInput = call.getString("webStorageInput") ?? "Invalid"
-            let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberinDownload") ?? false
+            
     
             // Fields (optional)
             let passObject = call.getObject("passObject")
@@ -126,15 +124,24 @@ public class WalletAccessPlugin: CAPPlugin {
             let auxiliaryLabelsInput = passObject.auxiliaryLabels ?? [String]()
             let auxiliaryValueInput = passObject.auxiliaryValues ?? [String]()
             
-            // Firebase Related Fields
-            let firebaseStorageUrl = call.getString("firebaseStorageUrl") ?? "INVALID"
-            let googleAppID = call.getString("googleAppID") ?? "INVALID"
-            let gcmSenderID = call.getString("gcmSenderID") ?? "INVALID"
+            // Download Configuration
+            let storageConfig = call.getObject("storageConfig")
             
-            // AWS Related Fields
-            let awsRegion = call.getString("awsRegion") ?? "INVALID"
-            let awsBucketName = call.getString("awsBucketCode") ?? "INVALID"
+            let passDownloadPath = storageConfig.passDownloadPath ?? ""
+            let passStoredAs = storageConfig.passStoredAs ?? "pkpass"
+            let webStorageInput = storageConfig.webResourceUsed ?? "INVALID"
+            let usesSerialNumberInDownloadURL = storageConfig.usesSerialNumberinDownload ?? false
+
             
+                // Firebase Related Fields
+                let firebaseStorageUrl = storageConfig.firebaseStorageUrl ?? "INVALID"
+                let googleAppID = storageConfig.googleAppID ?? "INVALID"
+                let gcmSenderID = storageConfig.gcmSenderID ?? "INVALID"
+                
+                // AWS Related Fields
+                let awsRegion = storageConfig.awsRegion ?? "INVALID"
+                let awsBucketName = storageConfig.awsBucketCode ?? "INVALID"
+                
             
             // Checks Validity of Serial Number
             if (serialNumberInput == "Invalid"){
