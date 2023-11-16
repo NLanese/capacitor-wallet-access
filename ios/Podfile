@@ -17,6 +17,7 @@ target 'Plugin' do
   pod 'AWSUserPoolsSignIn'
   pod 'AWSS3'
   pod 'AWSCore'
+  pod 'Amplify'
 end
 
 target 'PluginTests' do

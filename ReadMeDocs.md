@@ -5,6 +5,7 @@ to acces a user's wallet. This will allow a few different things...
 
 # ==== TO BUILD LOCALLY ==== #
 1. run `npm run build`
+2. run `npm link`
 
 # ==== REQs ==== #
 1. This plugin will be useless on Web Applications since it is not optimized for Macs
