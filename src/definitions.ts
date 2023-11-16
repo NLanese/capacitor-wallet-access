@@ -10,16 +10,11 @@ export interface WalletAccessPlugin {
 
   // Creates a Pass
   generatePass(options: {
-    serialNumberInput: string,
-    organizerNameInput: string,
-
-    passCreationURL: string,
-    passAuthorizationKey?: string,
-
+    passConfig: object
     passObject: object,
     storageConfig: object
   }): 
-    Promise<{ newPass: string}>
+    Promise<{ newPass: string }>
 
   // // Updates a Pass
   // updatePass(options: {

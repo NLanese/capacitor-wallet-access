@@ -100,29 +100,31 @@ public class WalletAccessPlugin: CAPPlugin {
             // INPUT HANDLING //
             //----------------//
             
-            // Needed Values for PKPass Creation
-            let serialNumberInput = call.getString("serialNumberInput") ?? "Invalid"
-            let organizerNameInput = call.getString("organizerNameInput") ?? "Inavlid"
-            
-            let passCreationURL = call.getString("passCreationURL") ?? "Invalid"
-           
-            let passAuthorizationKey = call.getString("passAuthorizationKey") ?? "Invalid"
-            
+            // Values for PKPass Creation And Maintainance
+            let passConfig = call.getObject("passConfig")
+                let serialNumberInput = passConfig.serialNumber ?? "Invalid"
+                let organizerNameInput = passConfig.organizerName ?? "Inavlid"
+                let passCreationURL = passConfig.passCreationURL ?? "Invalid"
+                let passAuthorizationKey = passConfig.passAuthKey ?? "Invalid"
     
             // Fields (optional)
             let passObject = call.getObject("passObject")
             
-            let headerLabelsInput = passObject.headerLanels ?? [String]()
-            let headerValueInput = passObject.headerValues ?? [String]()
+                // Header
+                let headerLabelsInput = passObject.headerLanels ?? [String]()
+                let headerValueInput = passObject.headerValues ?? [String]()
             
-            let primaryLabelsInput = passObject.primaryLabels ?? [String]()
-            let primaryValueInput = passObject.primaryValues ?? [String]()
+                // Primary
+                let primaryLabelsInput = passObject.primaryLabels ?? [String]()
+                let primaryValueInput = passObject.primaryValues ?? [String]()
             
-            let secondaryLabelsInput = passObject.secondaryLabels ?? [String]()
-            let secondaryValueInput = passObject.secondaryValues ?? [String]()
-            
-            let auxiliaryLabelsInput = passObject.auxiliaryLabels ?? [String]()
-            let auxiliaryValueInput = passObject.auxiliaryValues ?? [String]()
+                // Secondary
+                let secondaryLabelsInput = passObject.secondaryLabels ?? [String]()
+                let secondaryValueInput = passObject.secondaryValues ?? [String]()
+                
+                // Auxiliary
+                let auxiliaryLabelsInput = passObject.auxiliaryLabels ?? [String]()
+                let auxiliaryValueInput = passObject.auxiliaryValues ?? [String]()
             
             // Download Configuration
             let storageConfig = call.getObject("storageConfig")
@@ -145,17 +147,17 @@ public class WalletAccessPlugin: CAPPlugin {
             
             // Checks Validity of Serial Number
             if (serialNumberInput == "Invalid"){
-                call.reject("Please enter a valid serialNumber")
+                call.reject("Passes need a valid passConfig Object. You appear to be missing a 'serialNumber' from your 'passConfig' parameter.")
             }
             
             // Checks Validity of Organizer Name
             if (organizerNameInput == "Invalid"){
-                call.reject("Please enter a valid organizerName")
+                call.reject("Passes need a valid passConfig Object. You appear to be missing a 'organizerName' from your 'passConfig' parameter.")
             }
             
             // Checks Validity of Pass Type Input
             if (passCreationURL == "Invalid"){
-                call.reject("passURL needs to be supplied")
+                call.reject("Passes need a valid passConfig Object. You appear to be missing a 'passCreationUrl' from your 'passConfig' parameter.")
             }
             
             // Checks Validity of Web Storage
