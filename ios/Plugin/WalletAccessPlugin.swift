@@ -112,15 +112,19 @@ public class WalletAccessPlugin: CAPPlugin {
             let usesSerialNumberInDownloadURL = call.getBool("usesSerialNumberinDownload") ?? false
     
             // Fields (optional)
-            let headerValueInput = call.getArray("headerValues") ?? [String]()
-            let primaryValueInput = call.getArray("primaryValues") ?? [String]()
-            let secondaryValueInput = call.getArray("secondaryValues") ?? [String]()
-            let auxiliaryValueInput = call.getArray("auxiliaryValues") ?? [String]()
-            let headerLabelInput = call.getArray("headerLabels") ?? [String]()
-            let primaryLabelInput = call.getArray("primaryLabels") ?? [String]()
-            let secondaryLabelInput = call.getArray("secondaryLabels") ?? [String]()
-            let auxiliaryLabelInput = call.getArray("auxiliaryLabels") ?? [String]()
+            let passObject = call.getObject("passObject")
             
+            let headerLabelsInput = passObject.headerLanels ?? [String]()
+            let headerValueInput = passObject.headerValues ?? [String]()
+            
+            let primaryLabelsInput = passObject.primaryLabels ?? [String]()
+            let primaryValueInput = passObject.primaryValues ?? [String]()
+            
+            let secondaryLabelsInput = passObject.secondaryLabels ?? [String]()
+            let secondaryValueInput = passObject.secondaryValues ?? [String]()
+            
+            let auxiliaryLabelsInput = passObject.auxiliaryLabels ?? [String]()
+            let auxiliaryValueInput = passObject.auxiliaryValues ?? [String]()
             
             // Firebase Related Fields
             let firebaseStorageUrl = call.getString("firebaseStorageUrl") ?? "INVALID"

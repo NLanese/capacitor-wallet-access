@@ -29,14 +29,7 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     webStorageInput: string,
     usesSerialNumberinDownload: boolean,
 
-    headerValues: string[],
-    headerLabels: string[],
-    primaryValues: string[],
-    primaryLabels: string[],
-    secondaryValues: string[],
-    secondaryLabels: string[],
-    auxiliaryValues: string[],
-    auxiliaryLabels: string[],
+    passObject: object,
 
     firebaseStorageUrl?: string,
     googleAppID?: string,
