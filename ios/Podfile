@@ -9,15 +9,10 @@ end
 
 target 'Plugin' do
   capacitor_pods
-  pod 'Firebase', '10.17.0'
-  pod 'Firebase/Core'
-  pod 'Firebase/Storage'
-  pod 'Firebase/Firestore'
-  pod 'AWSMobileClient'
-  pod 'AWSUserPoolsSignIn'
-  pod 'AWSS3'
-  pod 'AWSCore'
   pod 'Amplify', '1.30.4'
+  pod 'AWSS3', '2.33.4'
+  pod 'Firebase', '10.17.0'
+  pod 'Firebase/Storage', '10.17.0'
 end
 
 target 'PluginTests' do

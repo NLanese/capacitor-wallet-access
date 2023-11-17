@@ -7,12 +7,13 @@ import JavaScriptCore
 
 //import FirebaseCore
 //import FirebaseAuth
-import Firebase
-import FirebaseStorage
+//import Firebase
+//import FirebaseStorage
 
-import Amplify
-import ClientRuntime
-import AWSS3
+//import Amplify
+//import ClientRuntime
+//import AWSCore
+//import AWSS3
 
 
 
@@ -262,7 +263,7 @@ func createPass(
     secondaryValueInput: JSArray,
     auxiliaryLabelInput: JSArray,
     auxiliaryValueInput: JSArray,
-    miscData: [String]
+    miscData: JSObject?
 ) async throws -> String {
     
     
@@ -284,7 +285,7 @@ func createPass(
         "primary": primary,
         "secondary": secondary,
         "auxiliary": auxiliary,
-        "miscData": miscData
+        "miscData": miscData ?? ""
     ]
     
     if let authKey = passAuthorizationKey {
@@ -445,24 +446,25 @@ func populatePassBlock(
     awsBucketName: String,
     awsFilePath: String
  ) async{
-    
-    do { let client = try S3Client(region: awsRegion)
-    do { let s3 = try await S3Client()
-          
-        let inputObject = GetObjectInput(bucket: awsBucketName, key: awsFilePath)
-    }
-        
-    // If the Client Service Cannot be established
-    catch {
-            
-    }}
-
-
-    // If no valid awsRegion was provided
-    catch {
-        print("Error creating S3Client: \(error)")
-        capPluginCall.reject("There was an invalid awsRegion value applied. Please make sure when using aws as your webStorage to fill in all aws field. For example, this should look something like 'us-east-1'")
-    }}
+     
+//     do { let client = try S3Client(region: awsRegion)
+//         do { let s3 = try await S3Client()
+//             
+//             let inputObject = GetObjectInput(bucket: awsBucketName, key: awsFilePath)
+//         }
+//         
+//         // If the Client Service Cannot be established
+//         catch {
+//             
+//         }}
+//     
+//     
+//     // If no valid awsRegion was provided
+//     catch {
+//         print("Error creating S3Client: \(error)")
+//         capPluginCall.reject("There was an invalid awsRegion value applied. Please make sure when using aws as your webStorage to fill in all aws field. For example, this should look something like 'us-east-1'")
+//     }
+ }
  
 // Initializes Firebase Connection if Firebase is the used Storage
 func initializeFirebase(
@@ -472,12 +474,12 @@ func initializeFirebase(
     capPluginCall: CAPPluginCall
     
 ){
-    // Sets up appropriate values for finding the Firebase Storage Proejct
-    let fileopts = FirebaseOptions(googleAppID: googleAppID, gcmSenderID: gcmSenderID)
-    fileopts.storageBucket = firebaseStorageUrl
-    
-    // Sets up the Firebase Connection
-    FirebaseApp.configure(options: fileopts)
+//    // Sets up appropriate values for finding the Firebase Storage Proejct
+//    let fileopts = FirebaseOptions(googleAppID: googleAppID, gcmSenderID: gcmSenderID)
+//    fileopts.storageBucket = firebaseStorageUrl
+//    
+//    // Sets up the Firebase Connection
+//    FirebaseApp.configure(options: fileopts)
 }
 
 // Downloads Pass from Firebase
@@ -486,29 +488,29 @@ func firebaseDownloadPkPass(
     path: String
 ){
     
-    // Connects to the Storage, provided the Firebase App connected
-    let storage = Storage.storage()
-    
-    // Creates a Reference to the Storage Object, so the storage can be interacted with as a variable
-    let storageRef = storage.reference()
-    
-    // Finds the specific file
-    let fileRef = storageRef.child(path)
-    
-    // Downloads the File
-    fileRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
-        if let error = error {
-            capPluginCall.reject("Error in Downloading the File. The Pass, however, was successfully created in Firebase Storage. It will not be added to this device until installed \n \(error.localizedDescription)")
-        }
-        else {
-            if let returnData = data?.base64EncodedString(){
-                capPluginCall.resolve(["newPass": returnData])
-            }
-            else{
-                capPluginCall.reject("Issue occurred in resolving the pkpass to string for return.")
-            }
-        }
-    }
+//    // Connects to the Storage, provided the Firebase App connected
+//    let storage = Storage.storage()
+//    
+//    // Creates a Reference to the Storage Object, so the storage can be interacted with as a variable
+//    let storageRef = storage.reference()
+//    
+//    // Finds the specific file
+//    let fileRef = storageRef.child(path)
+//    
+//    // Downloads the File
+//    fileRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
+//        if let error = error {
+//            capPluginCall.reject("Error in Downloading the File. The Pass, however, was successfully created in Firebase Storage. It will not be added to this device until installed \n \(error.localizedDescription)")
+//        }
+//        else {
+//            if let returnData = data?.base64EncodedString(){
+//                capPluginCall.resolve(["newPass": returnData])
+//            }
+//            else{
+//                capPluginCall.reject("Issue occurred in resolving the pkpass to string for return.")
+//            }
+//        }
+//    }
 }
  
 
