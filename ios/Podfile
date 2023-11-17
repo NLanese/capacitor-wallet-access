@@ -9,7 +9,7 @@ end
 
 target 'Plugin' do
   capacitor_pods
-  pod 'Firebase'
+  pod 'Firebase', '10.17.0'
   pod 'Firebase/Core'
   pod 'Firebase/Storage'
   pod 'Firebase/Firestore'
@@ -17,7 +17,7 @@ target 'Plugin' do
   pod 'AWSUserPoolsSignIn'
   pod 'AWSS3'
   pod 'AWSCore'
-  pod 'Amplify'
+  pod 'Amplify', '1.30.4'
 end
 
 target 'PluginTests' do

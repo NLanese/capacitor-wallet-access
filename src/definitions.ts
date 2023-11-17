@@ -13,7 +13,7 @@ export interface WalletAccessPlugin {
     passConfig: object
     passObject: object,
     storageConfig: object,
-    miscData: object
+    miscData?: object
   }): 
     Promise<{ newPass: string }>
 

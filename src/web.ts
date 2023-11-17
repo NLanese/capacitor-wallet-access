@@ -22,7 +22,7 @@ export class WalletAccessWeb extends WebPlugin implements WalletAccessPlugin {
     passConfig: object
     passObject: object,
     storageConfig: object,
-    miscData: object
+    miscData?: object
   }): Promise<{ newPass: string }> {
     console.log("Inside createNewPass")
     console.log("Params: ", options)

@@ -7,8 +7,8 @@ import JavaScriptCore
 
 //import FirebaseCore
 //import FirebaseAuth
-import Firebase
-import FirebaseStorage
+//import Firebase
+//import FirebaseStorage
 
 import Amplify
 import ClientRuntime
@@ -102,47 +102,47 @@ public class WalletAccessPlugin: CAPPlugin {
             
             // Values for PKPass Creation And Maintainance
             let passConfig = call.getObject("passConfig")
-                let serialNumberInput = passConfig.serialNumber ?? "Invalid"
-                let organizerNameInput = passConfig.organizerName ?? "Inavlid"
-                let passCreationURL = passConfig.passCreationURL ?? "Invalid"
-                let passAuthorizationKey = passConfig.passAuthKey ?? "Invalid"
+                let serialNumberInput = passConfig?["serialNumber"] as? String ?? "Invalid"
+                let organizerNameInput = passConfig?["organizerName"] as? String ?? "Inavlid"
+                let passCreationURL = passConfig?["passCreationURL"] as? String ?? "Invalid"
+                let passAuthorizationKey = passConfig?["passAuthKey"] as? String ?? "Invalid"
     
             // Fields (optional)
             let passObject = call.getObject("passObject")
             
                 // Header
-                let headerLabelsInput = passObject.headerLanels ?? [String]()
-                let headerValueInput = passObject.headerValues ?? [String]()
+                let headerLabelsInput = passObject?["headerLanels"] as? [String] ?? [String]()
+                let headerValueInput = passObject?["headerValues"] as? [String] ?? [String]()
             
                 // Primary
-                let primaryLabelsInput = passObject.primaryLabels ?? [String]()
-                let primaryValueInput = passObject.primaryValues ?? [String]()
+                let primaryLabelsInput = passObject?["primaryLabels"] as? [String] ?? [String]()
+                let primaryValueInput = passObject?["primaryValues"] as? [String] ?? [String]()
             
                 // Secondary
-                let secondaryLabelsInput = passObject.secondaryLabels ?? [String]()
-                let secondaryValueInput = passObject.secondaryValues ?? [String]()
+                let secondaryLabelsInput = passObject?["secondaryLabels"] as? [String] ?? [String]()
+                let secondaryValueInput = passObject?["secondaryValues"] as? [String] ?? [String]()
                 
                 // Auxiliary
-                let auxiliaryLabelsInput = passObject.auxiliaryLabels ?? [String]()
-                let auxiliaryValueInput = passObject.auxiliaryValues ?? [String]()
+                let auxiliaryLabelsInput = passObject?["auxiliaryLabels"] as? [String] ?? [String]()
+                let auxiliaryValueInput = passObject?["auxiliaryValues"] as? [String] ?? [String]()
             
             // Download Configuration
             let storageConfig = call.getObject("storageConfig")
             
-            let passDownloadPath = storageConfig.passDownloadPath ?? ""
-            let passStoredAs = storageConfig.passStoredAs ?? "pkpass"
-            let webStorageInput = storageConfig.webResourceUsed ?? "INVALID"
-            let usesSerialNumberInDownloadURL = storageConfig.usesSerialNumberinDownload ?? false
+            let passDownloadPath = storageConfig?["passDownloadPath"] as? String ?? ""
+            let passStoredAs = storageConfig?["passStoredAs"] as? String ?? "pkpass"
+            let webStorageInput = storageConfig?["webResourceUsed"] as? String ?? "INVALID"
+            let usesSerialNumberInDownloadURL = storageConfig?["usesSerialNumberinDownload"] as? Bool ?? false
 
             
                 // Firebase Related Fields
-                let firebaseStorageUrl = storageConfig.firebaseStorageUrl ?? "INVALID"
-                let googleAppID = storageConfig.googleAppID ?? "INVALID"
-                let gcmSenderID = storageConfig.gcmSenderID ?? "INVALID"
+                let firebaseStorageUrl = storageConfig?["firebaseStorageUrl"] as? String ?? "INVALID"
+                let googleAppID = storageConfig?["googleAppID"] as? String ?? "INVALID"
+                let gcmSenderID = storageConfig?["gcmSenderID"] as? String ?? "INVALID"
                 
                 // AWS Related Fields
-                let awsRegion = storageConfig.awsRegion ?? "INVALID"
-                let awsBucketName = storageConfig.awsBucketCode ?? "INVALID"
+                let awsRegion = storageConfig?["awsRegion"] as? String ?? "INVALID"
+                let awsBucketName = storageConfig?["awsBucketCode"] as? String ?? "INVALID"
             
             let miscData = call.getObject("miscData")
                 
@@ -172,10 +172,10 @@ public class WalletAccessPlugin: CAPPlugin {
                         
             // Checks every Label has a corresponding Value and vice versa
             if (
-                headerLabelInput.count != headerValueInput.count ||
-                primaryLabelInput.count != primaryValueInput.count ||
-                secondaryLabelInput.count != secondaryValueInput.count ||
-                auxiliaryLabelInput.count != auxiliaryValueInput.count
+                headerLabelsInput.count != headerValueInput.count ||
+                primaryLabelsInput.count != primaryValueInput.count ||
+                secondaryLabelsInput.count != secondaryValueInput.count ||
+                auxiliaryLabelsInput.count != auxiliaryValueInput.count
             ){
                 call.reject("You have submitted an invalid passObject. Your passObject should have 'headerLabels', 'headerValues' \n 'primaryLabels', 'primaryValues' \n 'secondaryLabels', 'secondaryValues' \n 'auxiliaryLabels' and 'auxiliaryValues' \n properties. These properties should all be arrays conraining Strings, and each value/label pair must be of the same length. This means to say you cannot have 'headerLabels' contain 2 elements while 'headerValues' contains only 1")
             }
@@ -191,15 +191,16 @@ public class WalletAccessPlugin: CAPPlugin {
                     passCreationURL,
                     serialNumberInput: serialNumberInput,
                     organizerNameInput: organizerNameInput,
+                    passAuthorizationKey: passAuthorizationKey,
                     
-                    headerLabelInput: headerLabelInput,
+                    headerLabelInput: headerLabelsInput,
                     headerValueInput: headerValueInput,
-                    primaryLabelInput: primaryLabelInput,
+                    primaryLabelInput: primaryLabelsInput,
                     primaryValueInput: primaryValueInput,
-                    secondaryLabelInput: secondaryLabelInput,
+                    secondaryLabelInput: secondaryLabelsInput,
                     secondaryValueInput: secondaryValueInput,
-                    auxiliaryLabelInput: auxiliaryLabelInput,
-                    auxiliaryValueInput: auxiliaryValueInput
+                    auxiliaryLabelInput: auxiliaryLabelsInput,
+                    auxiliaryValueInput: auxiliaryValueInput,
                     
                     miscData: miscData
                 )
@@ -261,7 +262,7 @@ func createPass(
     secondaryValueInput: JSArray,
     auxiliaryLabelInput: JSArray,
     auxiliaryValueInput: JSArray,
-    miscData: String
+    miscData: [String]
 ) async throws -> String {
     
     
