@@ -7,8 +7,8 @@ import JavaScriptCore
 
 //import FirebaseCore
 //import FirebaseAuth
-//import Firebase
-//import FirebaseStorage
+import Firebase
+import FirebaseStorage
 
 import Amplify
 import ClientRuntime
