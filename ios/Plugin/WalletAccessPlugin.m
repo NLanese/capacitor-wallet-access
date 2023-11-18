@@ -6,4 +6,4 @@
 CAP_PLUGIN(WalletAccessPlugin, "WalletAccess",
            CAP_PLUGIN_METHOD(getWallet, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(generatePass, CAPPluginReturnPromise);
-)
+       );

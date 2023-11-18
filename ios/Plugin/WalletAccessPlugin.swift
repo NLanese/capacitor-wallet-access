@@ -214,24 +214,25 @@ public class WalletAccessPlugin: CAPPlugin {
                 call.reject("Error creating the pass")
             }
             
-            await downloadPass(
-                passDownloadPath: passDownloadPath,
-                passStoredAs: passStoredAs,
-                webStorage: webStorageInput,
-                usesSerialNumber: usesSerialNumberInDownloadURL,
-                call: call,
-                serialNumber: serialNumberInput,
-                firebaseStorageUrl: firebaseStorageUrl,
-                googleAppID: googleAppID,
-                gcmSenderID: gcmSenderID,
-                awsRegion: awsRegion,
-                awsBucketName: awsBucketName
-            ){
-                downloadPassResult in
-                if (downloadPassResult){
-                    print("Downloaded")
-                }
-            }
+//            await downloadPass(
+//                passDownloadPath: passDownloadPath,
+//                passStoredAs: passStoredAs,
+//                webStorage: webStorageInput,
+//                usesSerialNumber: usesSerialNumberInDownloadURL,
+//                call: call,
+//                serialNumber: serialNumberInput,
+//                firebaseStorageUrl: firebaseStorageUrl,
+//                googleAppID: googleAppID,
+//                gcmSenderID: gcmSenderID,
+//                awsRegion: awsRegion,
+//                awsBucketName: awsBucketName
+//            ){
+//                downloadPassResult in
+//                if (downloadPassResult){
+//                    print("Downloaded")
+//                }
+//            }
+            
         }
         
         // If PKPassLibrary is Unavailable

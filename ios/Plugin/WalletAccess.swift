@@ -19,4 +19,16 @@ public class WalletAccess: NSObject {
         print(userPasses)
         return userPasses
     }
+
+
+    public func generatePass(
+        passConfig: JSObject,
+        passObject: JSObject,
+        storageConfig: JSObject,
+        miscData: JSObject? = nil
+    )  {
+        
+    }
 }
+
+
