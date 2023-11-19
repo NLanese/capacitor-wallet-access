@@ -92,7 +92,7 @@ public class WalletAccessPlugin: CAPPlugin {
     }
     
     // Creates an Apple Pass using Parameters
-    @objc func generatePass(_ call: CAPPluginCall) async {
+    @objc func generatePass(_ call: CAPPluginCall) async throws {
         
         // If Pass Library is Available
         if PKPassLibrary.isPassLibraryAvailable() {
@@ -208,6 +208,7 @@ public class WalletAccessPlugin: CAPPlugin {
                 print("Pass Creation Completed!")
                 print("Result...")
                 print(creationResult)
+                call.resolve(["newPass": creationResult])
             }
             catch{
                 print("Error Creating the Pass!")
@@ -312,12 +313,12 @@ func createPass(
         }
         catch {
             print("JSON Serialization Error: \(error)")
-            throw error
+            return ("Error: \(error)")
         }
     }
     catch {
         print("Error: \(error)")
-        throw error
+        return ("Error: \(error)")
     }
 }
     
@@ -380,6 +381,8 @@ func downloadPass(
     }
     
 }
+
+
 
 
 //-----------------//
