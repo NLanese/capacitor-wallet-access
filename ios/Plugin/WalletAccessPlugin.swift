@@ -214,6 +214,7 @@ public class WalletAccessPlugin: CAPPlugin {
             ){ result, error in
                 if let error = error {
                     print("Error Creating the Pass!")
+                    print(error)
                     call.reject("Error creating the pass")
                 } else {
                     print("Pass Creation Completed!")
@@ -319,7 +320,7 @@ public class WalletAccessPlugin: CAPPlugin {
                 } else if let data = data {
                     do {
                         let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
-                        let result = json["result"] as? String
+                        let result = json["base64"] as? String
                         completion(result ?? "Error", nil)
                     } catch {
                         print("JSON Serialization Error: \(error)")
