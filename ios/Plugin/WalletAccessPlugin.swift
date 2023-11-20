@@ -92,33 +92,32 @@ public class WalletAccessPlugin: CAPPlugin {
     }
     
     // Creates an Apple Pass using Parameters
-    @objc func generatePass(_ call: CAPPluginCall) async throws {
-        
-        // If Pass Library is Available
-        if PKPassLibrary.isPassLibraryAvailable() {
-            
-            //----------------//
-            // INPUT HANDLING //
-            //----------------//
-            
-            // Values for PKPass Creation And Maintainance
-            let passConfig = call.getObject("passConfig")
+    @objc func generatePass(_ call: CAPPluginCall){
+            // If Pass Library is Available
+            if PKPassLibrary.isPassLibraryAvailable() {
+                
+                //----------------//
+                // INPUT HANDLING //
+                //----------------//
+                
+                // Values for PKPass Creation And Maintainance
+                let passConfig = call.getObject("passConfig")
                 let serialNumberInput = passConfig?["serialNumber"] as? String ?? "Invalid"
                 let organizerNameInput = passConfig?["organizerName"] as? String ?? "Inavlid"
                 let passCreationURL = passConfig?["passCreationURL"] as? String ?? "Invalid"
                 let passAuthorizationKey = passConfig?["passAuthKey"] as? String ?? "Invalid"
-    
-            // Fields (optional)
-            let passObject = call.getObject("passObject")
-            
+                
+                // Fields (optional)
+                let passObject = call.getObject("passObject")
+                
                 // Header
                 let headerLabelsInput = passObject?["headerLanels"] as? [String] ?? [String]()
                 let headerValueInput = passObject?["headerValues"] as? [String] ?? [String]()
-            
+                
                 // Primary
                 let primaryLabelsInput = passObject?["primaryLabels"] as? [String] ?? [String]()
                 let primaryValueInput = passObject?["primaryValues"] as? [String] ?? [String]()
-            
+                
                 // Secondary
                 let secondaryLabelsInput = passObject?["secondaryLabels"] as? [String] ?? [String]()
                 let secondaryValueInput = passObject?["secondaryValues"] as? [String] ?? [String]()
@@ -126,16 +125,16 @@ public class WalletAccessPlugin: CAPPlugin {
                 // Auxiliary
                 let auxiliaryLabelsInput = passObject?["auxiliaryLabels"] as? [String] ?? [String]()
                 let auxiliaryValueInput = passObject?["auxiliaryValues"] as? [String] ?? [String]()
-            
-            // Download Configuration
-            let storageConfig = call.getObject("storageConfig")
-            
-            let passDownloadPath = storageConfig?["passDownloadPath"] as? String ?? ""
-            let passStoredAs = storageConfig?["passStoredAs"] as? String ?? "pkpass"
-            let webStorageInput = storageConfig?["webResourceUsed"] as? String ?? "INVALID"
-            let usesSerialNumberInDownloadURL = storageConfig?["usesSerialNumberinDownload"] as? Bool ?? false
-
-            
+                
+                // Download Configuration
+                let storageConfig = call.getObject("storageConfig")
+                
+                let passDownloadPath = storageConfig?["passDownloadPath"] as? String ?? ""
+                let passStoredAs = storageConfig?["passStoredAs"] as? String ?? "pkpass"
+                let webStorageInput = storageConfig?["webResourceUsed"] as? String ?? "INVALID"
+                let usesSerialNumberInDownloadURL = storageConfig?["usesSerialNumberinDownload"] as? Bool ?? false
+                
+                
                 // Firebase Related Fields
                 let firebaseStorageUrl = storageConfig?["firebaseStorageUrl"] as? String ?? "INVALID"
                 let googleAppID = storageConfig?["googleAppID"] as? String ?? "INVALID"
@@ -144,103 +143,103 @@ public class WalletAccessPlugin: CAPPlugin {
                 // AWS Related Fields
                 let awsRegion = storageConfig?["awsRegion"] as? String ?? "INVALID"
                 let awsBucketName = storageConfig?["awsBucketCode"] as? String ?? "INVALID"
-            
-            let miscData = call.getObject("miscData")
                 
-            
-            // Checks Validity of Serial Number
-            if (serialNumberInput == "Invalid"){
-                call.reject("Passes need a valid passConfig Object. You appear to be missing a 'serialNumber' from your 'passConfig' parameter.")
-            }
-            
-            // Checks Validity of Organizer Name
-            if (organizerNameInput == "Invalid"){
-                call.reject("Passes need a valid passConfig Object. You appear to be missing a 'organizerName' from your 'passConfig' parameter.")
-            }
-            
-            // Checks Validity of Pass Type Input
-            if (passCreationURL == "Invalid"){
-                call.reject("Passes need a valid passConfig Object. You appear to be missing a 'passCreationUrl' from your 'passConfig' parameter.")
-            }
-            
-            // Checks Validity of Web Storage
-            if (
-                webStorageInput != "firebase" &&
-                webStorageInput != "aws"
-            ){
-                call.reject("The'webstorage' prop needs to be provided and needs to be either 'firebase' or 'aws'")
-            }
+                let miscData = call.getObject("miscData")
+                
+                
+                // Checks Validity of Serial Number
+                if (serialNumberInput == "Invalid"){
+                    call.reject("Passes need a valid passConfig Object. You appear to be missing a 'serialNumber' from your 'passConfig' parameter.")
+                }
+                
+                // Checks Validity of Organizer Name
+                if (organizerNameInput == "Invalid"){
+                    call.reject("Passes need a valid passConfig Object. You appear to be missing a 'organizerName' from your 'passConfig' parameter.")
+                }
+                
+                // Checks Validity of Pass Type Input
+                if (passCreationURL == "Invalid"){
+                    call.reject("Passes need a valid passConfig Object. You appear to be missing a 'passCreationUrl' from your 'passConfig' parameter.")
+                }
+                
+                // Checks Validity of Web Storage
+                if (
+                    webStorageInput != "firebase" &&
+                    webStorageInput != "aws"
+                ){
+                    call.reject("The'webstorage' prop needs to be provided and needs to be either 'firebase' or 'aws'")
+                }
+                
+                // Checks every Label has a corresponding Value and vice versa
+                if (
+                    headerLabelsInput.count != headerValueInput.count ||
+                    primaryLabelsInput.count != primaryValueInput.count ||
+                    secondaryLabelsInput.count != secondaryValueInput.count ||
+                    auxiliaryLabelsInput.count != auxiliaryValueInput.count
+                ){
+                    call.reject("You have submitted an invalid passObject. Your passObject should have 'headerLabels', 'headerValues' \n 'primaryLabels', 'primaryValues' \n 'secondaryLabels', 'secondaryValues' \n 'auxiliaryLabels' and 'auxiliaryValues' \n properties. These properties should all be arrays conraining Strings, and each value/label pair must be of the same length. This means to say you cannot have 'headerLabels' contain 2 elements while 'headerValues' contains only 1")
+                }
+                
+                print("Passed all param validations...")
+                
+                //-----------------------//
+                // PASS CREATION PROCESS //
+                //-----------------------//
+                
+                do {
+                    let creationResult = try createPass(
+                        passCreationURL,
+                        serialNumberInput: serialNumberInput,
+                        organizerNameInput: organizerNameInput,
+                        passAuthorizationKey: passAuthorizationKey,
                         
-            // Checks every Label has a corresponding Value and vice versa
-            if (
-                headerLabelsInput.count != headerValueInput.count ||
-                primaryLabelsInput.count != primaryValueInput.count ||
-                secondaryLabelsInput.count != secondaryValueInput.count ||
-                auxiliaryLabelsInput.count != auxiliaryValueInput.count
-            ){
-                call.reject("You have submitted an invalid passObject. Your passObject should have 'headerLabels', 'headerValues' \n 'primaryLabels', 'primaryValues' \n 'secondaryLabels', 'secondaryValues' \n 'auxiliaryLabels' and 'auxiliaryValues' \n properties. These properties should all be arrays conraining Strings, and each value/label pair must be of the same length. This means to say you cannot have 'headerLabels' contain 2 elements while 'headerValues' contains only 1")
+                        headerLabelInput: headerLabelsInput,
+                        headerValueInput: headerValueInput,
+                        primaryLabelInput: primaryLabelsInput,
+                        primaryValueInput: primaryValueInput,
+                        secondaryLabelInput: secondaryLabelsInput,
+                        secondaryValueInput: secondaryValueInput,
+                        auxiliaryLabelInput: auxiliaryLabelsInput,
+                        auxiliaryValueInput: auxiliaryValueInput,
+                        
+                        miscData: miscData
+                    )
+                    print("Pass Creation Completed!")
+                    print("Result...")
+                    print(creationResult)
+                    call.resolve(["newPass": creationResult])
+                }
+                catch{
+                    print("Error Creating the Pass!")
+                    call.reject("Error creating the pass")
+                }
+                
+                //            await downloadPass(
+                //                passDownloadPath: passDownloadPath,
+                //                passStoredAs: passStoredAs,
+                //                webStorage: webStorageInput,
+                //                usesSerialNumber: usesSerialNumberInDownloadURL,
+                //                call: call,
+                //                serialNumber: serialNumberInput,
+                //                firebaseStorageUrl: firebaseStorageUrl,
+                //                googleAppID: googleAppID,
+                //                gcmSenderID: gcmSenderID,
+                //                awsRegion: awsRegion,
+                //                awsBucketName: awsBucketName
+                //            ){
+                //                downloadPassResult in
+                //                if (downloadPassResult){
+                //                    print("Downloaded")
+                //                }
+                //            }
+                
             }
             
-            print("Passed all param validations...")
-            
-            //-----------------------//
-            // PASS CREATION PROCESS //
-            //-----------------------//
-            
-            do {
-                let creationResult = try await createPass(
-                    passCreationURL,
-                    serialNumberInput: serialNumberInput,
-                    organizerNameInput: organizerNameInput,
-                    passAuthorizationKey: passAuthorizationKey,
-                    
-                    headerLabelInput: headerLabelsInput,
-                    headerValueInput: headerValueInput,
-                    primaryLabelInput: primaryLabelsInput,
-                    primaryValueInput: primaryValueInput,
-                    secondaryLabelInput: secondaryLabelsInput,
-                    secondaryValueInput: secondaryValueInput,
-                    auxiliaryLabelInput: auxiliaryLabelsInput,
-                    auxiliaryValueInput: auxiliaryValueInput,
-                    
-                    miscData: miscData
-                )
-                print("Pass Creation Completed!")
-                print("Result...")
-                print(creationResult)
-                call.resolve(["newPass": creationResult])
+            // If PKPassLibrary is Unavailable
+            else{
+                print("No Access to Pass Library")
+                call.reject("No Access to Pass Library")
             }
-            catch{
-                print("Error Creating the Pass!")
-                call.reject("Error creating the pass")
-            }
-            
-//            await downloadPass(
-//                passDownloadPath: passDownloadPath,
-//                passStoredAs: passStoredAs,
-//                webStorage: webStorageInput,
-//                usesSerialNumber: usesSerialNumberInDownloadURL,
-//                call: call,
-//                serialNumber: serialNumberInput,
-//                firebaseStorageUrl: firebaseStorageUrl,
-//                googleAppID: googleAppID,
-//                gcmSenderID: gcmSenderID,
-//                awsRegion: awsRegion,
-//                awsBucketName: awsBucketName
-//            ){
-//                downloadPassResult in
-//                if (downloadPassResult){
-//                    print("Downloaded")
-//                }
-//            }
-            
-        }
-        
-        // If PKPassLibrary is Unavailable
-        else{
-            print("No Access to Pass Library")
-            call.reject("No Access to Pass Library")
-        }
     }
 }
 
