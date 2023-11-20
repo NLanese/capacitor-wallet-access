@@ -55,12 +55,12 @@ getWallet(options: { value: string[]; }) => Promise<{ cards: any[]; }>
 ### generatePass(...)
 
 ```typescript
-generatePass(_options: { passConfig: object; passObject: object; storageConfig: object; miscData?: object; }) => Promise<{ newPass: string; }>
+generatePass(options: { passConfig: object; passObject: object; storageConfig: object; miscData?: object; }) => Promise<{ newPass: string; }>
 ```
 
-| Param          | Type                                                                                               |
-| -------------- | -------------------------------------------------------------------------------------------------- |
-| **`_options`** | <code>{ passConfig: object; passObject: object; storageConfig: object; miscData?: object; }</code> |
+| Param         | Type                                                                                               |
+| ------------- | -------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ passConfig: object; passObject: object; storageConfig: object; miscData?: object; }</code> |
 
 **Returns:** <code>Promise&lt;{ newPass: string; }&gt;</code>
 
