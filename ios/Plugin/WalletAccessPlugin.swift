@@ -220,7 +220,15 @@ public class WalletAccessPlugin: CAPPlugin {
                     print("Pass Creation Completed!")
                     print("Result...")
                     print(result)
-                    call.resolve(["newPass": result])
+                    let addedPass = self.addToWallet(base64: result)
+                    if (addedPass == "SUCCESS"){
+                        call.resolve(["newPass": result])
+                    }
+                    else{
+                        print("Pass created but Save to Wallet failed!!")
+                        call.resolve(["newPass": result])
+                    }
+                    
                 }
                 
                 //            await downloadPass(
@@ -333,6 +341,40 @@ public class WalletAccessPlugin: CAPPlugin {
         }
     
     
+    // Adds Pass to device
+    func addToWallet(base64: String) -> String {
+        let data = base64
+       
+        if let dataPass = Data(base64Encoded: data, options: .ignoreUnknownCharacters){
+            if let pass = try? PKPass(data: dataPass){
+                if(PKPassLibrary().containsPass(pass)) {
+                    let error =
+                    """
+                    {"code": 100,"message": "Pass already added"}
+                    """
+                    return(error);
+                } else {
+                    if let vc = PKAddPassesViewController(pass: pass) {
+                        self.bridge?.viewController?.present(vc, animated: true, completion: nil);
+                        return "SUCCESS"
+                    }
+                }
+            } else {
+                let error =
+                """
+                {"code": 101,"message": "PKPASS file has invalid data"}
+                """
+                return(error);
+            }
+        } else {
+            let error =
+            """
+            {"code": 102,"message": "Error with base64 data"}
+            """
+            return(error);
+        }
+        return "INVALID INPUT"
+    }
     
     // Downloads the Pass from Firebase
     //func downloadPass(
