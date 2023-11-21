@@ -310,6 +310,7 @@ public class WalletAccessPlugin: CAPPlugin {
             }
             
             print("     created full params body object")
+            print (params)
             
             // Creates a bare request object
             // Specifies Request Method, values, and body content
@@ -327,8 +328,11 @@ public class WalletAccessPlugin: CAPPlugin {
                     completion("Error", error)
                 } else if let data = data {
                     do {
-                        let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
-                        let result = json["base64"] as? String
+//                        let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+//                        let result = json["base64"] as? String
+                        print("== RAW RETURN ==")
+                        print(data)
+                        let result = String(data: data, encoding: .utf8) // Convert binary data to a string
                         completion(result ?? "Error", nil)
                     } catch {
                         print("JSON Serialization Error: \(error)")
