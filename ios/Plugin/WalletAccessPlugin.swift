@@ -230,25 +230,6 @@ public class WalletAccessPlugin: CAPPlugin {
                     }
                     
                 }
-                
-                //            await downloadPass(
-                //                passDownloadPath: passDownloadPath,
-                //                passStoredAs: passStoredAs,
-                //                webStorage: webStorageInput,
-                //                usesSerialNumber: usesSerialNumberInDownloadURL,
-                //                call: call,
-                //                serialNumber: serialNumberInput,
-                //                firebaseStorageUrl: firebaseStorageUrl,
-                //                googleAppID: googleAppID,
-                //                gcmSenderID: gcmSenderID,
-                //                awsRegion: awsRegion,
-                //                awsBucketName: awsBucketName
-                //            ){
-                //                downloadPassResult in
-                //                if (downloadPassResult){
-                //                    print("Downloaded")
-                //                }
-                //            }
             }
         }
         
@@ -329,7 +310,10 @@ public class WalletAccessPlugin: CAPPlugin {
                 } else if let data = data {
                     let base64String = data.base64EncodedString()
                     print("Base64 String: \(base64String)")
-                    completion(base64String, nil)
+                    if let decodedData = Data(base64Encoded: base64String) {
+                        print("Decoded Data: \(decodedData)")
+                        completion(base64String, nil)
+                    }
                 } else {
                     completion("Error", NSError(domain: "UnknownErrorDomain", code: 0, userInfo: nil))
                 }
@@ -342,19 +326,25 @@ public class WalletAccessPlugin: CAPPlugin {
         let data = base64
         if let dataPass = Data(base64Encoded: data, options: .ignoreUnknownCharacters){
             if let pass = try? PKPass(data: dataPass){
+                // If Duplicate Pass
                 if(PKPassLibrary().containsPass(pass)) {
+                    print("Pass already added")
                     let error =
                     """
                     {"code": 100,"message": "Pass already added"}
                     """
                     return(error);
-                } else {
+                } 
+            
+                // If Valid New Pass
+                else {
                     if let vc = PKAddPassesViewController(pass: pass) {
                         self.bridge?.viewController?.present(vc, animated: true, completion: nil);
                         return "SUCCESS"
                     }
                 }
             } else {
+                print("PKPass Not able to be created")
                 let error =
                 """
                 {"code": 101,"message": "PKPASS file has invalid data"}
@@ -362,74 +352,16 @@ public class WalletAccessPlugin: CAPPlugin {
                 return(error);
             }
         } else {
+            print("Corrupted base64 data")
             let error =
             """
             {"code": 102,"message": "Error with base64 data"}
             """
             return(error);
         }
+        print("Invalid input somehow")
         return "INVALID INPUT"
     }
-    
-    // Downloads the Pass from Firebase
-    //func downloadPass(
-    //
-    //    passDownloadPath: String,
-    //    passStoredAs: String,
-    //    webStorage: String,
-    //    usesSerialNumber: Bool,
-    //    call: CAPPluginCall,
-    //    serialNumber: String?,
-    //
-    //    firebaseStorageUrl: String,
-    //    googleAppID: String,
-    //    gcmSenderID: String,
-    //
-    //    awsRegion: String,
-    //    awsBucketName: String,
-    //
-    //    completion: @escaping((Bool) -> () )
-    //
-    //) async {
-    //
-    //    print("     Entered downloadPass()")
-    //    var pathToDownload = passDownloadPath
-    //
-    //    if usesSerialNumber{
-    //        if serialNumber != nil {
-    //            pathToDownload = pathToDownload + (serialNumber ?? "INVALID-SERIAL-NUMBER")
-    //        }
-    //    }
-    //    pathToDownload = pathToDownload + "." + passStoredAs
-    //
-    //    // FIREBASE Storage
-    //    if (webStorage == "firebase"){
-    //        print("Firebase Storage")
-    //        print("Searching for " + pathToDownload)
-    //    }
-    //
-    //    // AWS Storage
-    //    if (webStorage == "aws"){
-    //        print("AWS S3 Storage")
-    //        print("Searching for " + pathToDownload)
-    //        if (awsRegion == "INVALID"){
-    //            call.reject("If using AWS S3 Storage, you need to provide an awsRegion value. For example, 'us-north-2' or 'af-south-1' " )
-    //        }
-    //        if (awsBucketName == "INVALID"){
-    //            call.reject("If using AWS S3 Storage, you need to provide a awsBucketNAme. This can be found in your AWS S3 List")
-    //        }
-    //
-    ////        await awsDownloadPkPass(
-    ////            capPluginCall: call,
-    ////            awsRegion: awsRegion,
-    ////            awsBucketName: awsBucketName,
-    ////            awsFilePath: pathToDownload
-    ////        )
-    //    }
-    //
-    //}
-    
-    
     
     
     //-----------------//
@@ -495,80 +427,5 @@ public class WalletAccessPlugin: CAPPlugin {
         }
     }
     
-    //------------------//
-    // DOWNLOAD HELPERS //
-    //------------------//
-    // func awsDownloadPkPass(
-    //    capPluginCall: CAPPluginCall,
-    //    awsRegion: String,
-    //    awsBucketName: String,
-    //    awsFilePath: String
-    // ) async{
-    
-    //     do { let client = try S3Client(region: awsRegion)
-    //         do { let s3 = try await S3Client()
-    //
-    //             let inputObject = GetObjectInput(bucket: awsBucketName, key: awsFilePath)
-    //         }
-    //
-    //         // If the Client Service Cannot be established
-    //         catch {
-    //
-    //         }}
-    //
-    //
-    //     // If no valid awsRegion was provided
-    //     catch {
-    //         print("Error creating S3Client: \(error)")
-    //         capPluginCall.reject("There was an invalid awsRegion value applied. Please make sure when using aws as your webStorage to fill in all aws field. For example, this should look something like 'us-east-1'")
-    //     }
-    // }
-    
-    // Initializes Firebase Connection if Firebase is the used Storage
-    //func initializeFirebase(
-    //    firebaseStorageUrl: String,         // Access URL ro Firebase
-    //    googleAppID: String,                // This can be found in the google-services.json (Android) or GoogleService-Info.plist (iOS) files
-    //    gcmSenderID: String,
-    //    capPluginCall: CAPPluginCall
-    //
-    //){
-    //    // Sets up appropriate values for finding the Firebase Storage Proejct
-    //    let fileopts = FirebaseOptions(googleAppID: googleAppID, gcmSenderID: gcmSenderID)
-    //    fileopts.storageBucket = firebaseStorageUrl
-    //
-    //    // Sets up the Firebase Connection
-    //    FirebaseApp.configure(options: fileopts)
-    //}
-    
-    // Downloads Pass from Firebase
-    //func firebaseDownloadPkPass(
-    //    capPluginCall: CAPPluginCall,
-    //    path: String
-    //){
-    //
-    //    // Connects to the Storage, provided the Firebase App connected
-    //    let storage = Storage.storage()
-    //
-    //    // Creates a Reference to the Storage Object, so the storage can be interacted with as a variable
-    //    let storageRef = storage.reference()
-    //
-    //    // Finds the specific file
-    //    let fileRef = storageRef.child(path)
-    //
-    //    // Downloads the File
-    //    fileRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
-    //        if let error = error {
-    //            capPluginCall.reject("Error in Downloading the File. The Pass, however, was successfully created in Firebase Storage. It will not be added to this device until installed \n \(error.localizedDescription)")
-    //        }
-    //        else {
-    //            if let returnData = data?.base64EncodedString(){
-    //                capPluginCall.resolve(["newPass": returnData])
-    //            }
-    //            else{
-    //                capPluginCall.reject("Issue occurred in resolving the pkpass to string for return.")
-    //            }
-    //        }
-    //    }
-    //}
-    
+
 }
