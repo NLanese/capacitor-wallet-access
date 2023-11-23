@@ -327,17 +327,9 @@ public class WalletAccessPlugin: CAPPlugin {
                     print("Error: \(error)")
                     completion("Error", error)
                 } else if let data = data {
-                    do {
-//                        let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
-//                        let result = json["base64"] as? String
-                        print("== RAW RETURN ==")
-                        print(data)
-                        let result = String(data: data, encoding: .utf8) // Convert binary data to a string
-                        completion(result ?? "Error", nil)
-                    } catch {
-                        print("JSON Serialization Error: \(error)")
-                        completion("Error", error)
-                    }
+                    let base64String = data.base64EncodedString()
+                    print("Base64 String: \(base64String)")
+                    completion(base64String, nil)
                 } else {
                     completion("Error", NSError(domain: "UnknownErrorDomain", code: 0, userInfo: nil))
                 }
@@ -348,7 +340,6 @@ public class WalletAccessPlugin: CAPPlugin {
     // Adds Pass to device
     func addToWallet(base64: String) -> String {
         let data = base64
-       
         if let dataPass = Data(base64Encoded: data, options: .ignoreUnknownCharacters){
             if let pass = try? PKPass(data: dataPass){
                 if(PKPassLibrary().containsPass(pass)) {
