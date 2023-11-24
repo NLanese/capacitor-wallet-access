@@ -308,16 +308,28 @@ public class WalletAccessPlugin: CAPPlugin {
                     print("Error: \(error)")
                     completion("Error", error)
                 } else if let data = data {
-                    let base64String = data.base64EncodedString()
-                    print("Base64 String: \(base64String)")
-                    if let decodedData = Data(base64Encoded: base64String) {
-                        print("Decoded Data: \(decodedData)")
-                        completion(base64String, nil)
+                    do {
+                        // Assuming the response is a JSON string
+                        if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                            // Convert the JSON dictionary to a string
+                            let jsonString = try JSONSerialization.data(withJSONObject: json)
+                            let jsonStringEncoded = jsonString.base64EncodedString()
+                            print("Base64 String: \(jsonStringEncoded)")
+
+                            // Continue with your logic here using jsonStringEncoded
+                            completion(jsonStringEncoded, nil)
+                        } else {
+                            completion("Error", NSError(domain: "InvalidJSONErrorDomain", code: 0, userInfo: nil))
+                        }
+                    } catch {
+                        print("Error decoding JSON: \(error)")
+                        completion("Error", error)
                     }
                 } else {
                     completion("Error", NSError(domain: "UnknownErrorDomain", code: 0, userInfo: nil))
                 }
             }.resume()
+
         }
     
     
