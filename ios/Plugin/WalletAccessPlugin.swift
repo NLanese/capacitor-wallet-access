@@ -316,6 +316,7 @@ public class WalletAccessPlugin: CAPPlugin {
 
                     // Continue with your logic here using base64String
                     print("Base64 String: \(base64String)")
+
                     completion(base64String, nil)
                 } else {
                     completion("Error", NSError(domain: "UnknownErrorDomain", code: 0, userInfo: nil))
