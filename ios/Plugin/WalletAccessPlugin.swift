@@ -300,8 +300,11 @@ public class WalletAccessPlugin: CAPPlugin {
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
             print("     request configuration complete, about to send...")
-            
-            
+            if let bodyData = request.httpBody{
+                let bodyString = String(data: bodyData, encoding: .utf8)
+                print("REQUEST BODY BEING SENT")
+                print(bodyString)
+            }
             // Asynchronous code for making HTTP request
             URLSession.shared.dataTask(with: request) { data, _, error in
                 if let error = error {
