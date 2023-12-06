@@ -336,50 +336,64 @@ public class WalletAccessPlugin: CAPPlugin {
     
     // Adds Pass to device
     func addToWallet(base64: String) -> String {
+        print("Base64 String: \(base64)")
         let data = base64
         print("Inside the addToWallet function... below is the data to be converted")
         print(data.prefix(500))
-        if let dataPass = Data(base64Encoded: data, options: .ignoreUnknownCharacters){
-            if let pass = try? PKPass(data: dataPass){
-                // If Duplicate Pass
-                if(PKPassLibrary().containsPass(pass)) {
-                    print("Pass already added")
-                    let error =
-                    """
+        validateBase64(base64String: data)
+
+        guard let dataPass = Data(base64Encoded: data, options: .ignoreUnknownCharacters) else {
+            print("Error decoding base64 data")
+            let error = """
+                {"code": 102,"message": "Error with base64 data"}
+                """
+            return error
+        }
+
+        print("Data Pass!")
+        print(dataPass)
+
+        do {
+            let pass = try PKPass(data: dataPass)
+
+            // If Duplicate Pass
+            if PKPassLibrary().containsPass(pass) {
+                print("Pass already added")
+                let error = """
                     {"code": 100,"message": "Pass already added"}
                     """
-                    return(error);
-                } 
-            
-                // If Valid New Pass
-                else {
-                    if let vc = PKAddPassesViewController(pass: pass) {
-                        self.bridge?.viewController?.present(vc, animated: true, completion: nil);
-                        return "SUCCESS"
-                    }
-                }
-            } 
-            else {
-                print("PKPass Not able to be created")
-                let error =
-                """
-                {"code": 101,"message": "PKPASS file has invalid data"}
-                """
-                return(error);
+                return error
             }
-        } 
-        else {
-            print("Corrupted base64 data")
-            let error =
-            """
-            {"code": 102,"message": "Error with base64 data"}
-            """
-            return(error);
+
+            // If Valid New Pass
+            do {
+                try PKPassLibrary().addPasses([pass])
+                if let vc = PKAddPassesViewController(pass: pass) {
+                    self.bridge?.viewController?.present(vc, animated: true, completion: nil)
+                    return "SUCCESS"
+                }
+            } catch {
+                print("Error adding pass to library: \(error)")
+                let error = """
+                    {"code": 103,"message": "Error adding pass to library"}
+                    """
+                return error
+            }
+
+        } catch {
+            print("Error creating PKPass object: \(error)")
+            let error = """
+                {"code": 101,"message": "\(error.localizedDescription)"}
+                """
+            return error
         }
+
         print("Invalid input somehow")
         return "INVALID INPUT"
     }
-    
+
+     
+
     
     //-----------------//
     // REQUEST HELPERS //
@@ -445,4 +459,18 @@ public class WalletAccessPlugin: CAPPlugin {
     }
     
 
+    func validateBase64(base64String: String){
+        // Check length
+        if base64String.count % 4 != 0 {
+            print("Base64 string length is not a multiple of 4")
+        }
+
+        // Check characters
+        let validBase64Characters = Set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=")
+        if Set(base64String).isSubset(of: validBase64Characters) {
+            print("Base64 string contains only valid characters")
+        } else {
+            print("Base64 string contains invalid characters")
+        }
+    }
 }
