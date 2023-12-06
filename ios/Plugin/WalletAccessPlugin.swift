@@ -300,27 +300,32 @@ public class WalletAccessPlugin: CAPPlugin {
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
             print("     request configuration complete, about to send...")
-            if let bodyData = request.httpBody{
-                let bodyString = String(data: bodyData, encoding: .utf8)
-                print("REQUEST BODY BEING SENT")
-                print(bodyString)
-            }
+            
             // Asynchronous code for making HTTP request
             URLSession.shared.dataTask(with: request) { data, _, error in
                 if let error = error {
                     print("Error: \(error)")
                     completion("Error", error)
                 } else if let data = data {
-                    print("RAW DATA")
-                    print(data)
+                    // Extract the String from response
+                    if let responseString = String(data: data, encoding: .utf8) {
+                        print("Response String: \(responseString)")
 
-                    // Convert the data to a base64-encoded string
-                    let base64String = data.base64EncodedString()
+                        // Convert responseString to base64
+                        if let responseStringData = responseString.data(using: .utf8) {
+                            let base64String = responseStringData.base64EncodedString()
+                            print("Base64 String: \(base64String)")
 
-                    // Continue with your logic here using base64String
-                    print("Base64 String: \(base64String)")
-
-                    completion(base64String, nil)
+                            // Continue with your logic here using base64String
+                            completion(base64String, nil)
+                        } else {
+                            print("Error converting responseString to data")
+                            completion("Error", NSError(domain: "ConversionErrorDomain", code: 0, userInfo: nil))
+                        }
+                    } else {
+                        print("Error converting data to string")
+                        completion("Error", NSError(domain: "ConversionErrorDomain", code: 0, userInfo: nil))
+                    }
                 } else {
                     completion("Error", NSError(domain: "UnknownErrorDomain", code: 0, userInfo: nil))
                 }
@@ -332,6 +337,8 @@ public class WalletAccessPlugin: CAPPlugin {
     // Adds Pass to device
     func addToWallet(base64: String) -> String {
         let data = base64
+        print("Inside the addToWallet function... below is the data to be converted")
+        print(data.prefix(500))
         if let dataPass = Data(base64Encoded: data, options: .ignoreUnknownCharacters){
             if let pass = try? PKPass(data: dataPass){
                 // If Duplicate Pass
@@ -351,7 +358,8 @@ public class WalletAccessPlugin: CAPPlugin {
                         return "SUCCESS"
                     }
                 }
-            } else {
+            } 
+            else {
                 print("PKPass Not able to be created")
                 let error =
                 """
@@ -359,7 +367,8 @@ public class WalletAccessPlugin: CAPPlugin {
                 """
                 return(error);
             }
-        } else {
+        } 
+        else {
             print("Corrupted base64 data")
             let error =
             """
