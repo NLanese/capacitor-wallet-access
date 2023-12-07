@@ -307,21 +307,12 @@ public class WalletAccessPlugin: CAPPlugin {
                     print("Error: \(error)")
                     completion("Error", error)
                 } else if let data = data {
+                    print("Raw Data")
+                    print(data)
                     // Extract the String from response
                     if let responseString = String(data: data, encoding: .utf8) {
-                        print("Response String: \(responseString)")
-
-                        // Convert responseString to base64
-                        if let responseStringData = responseString.data(using: .utf8) {
-                            let base64String = responseStringData.base64EncodedString()
-                            print("Base64 String: \(base64String)")
-
-                            // Continue with your logic here using base64String
-                            completion(base64String, nil)
-                        } else {
-                            print("Error converting responseString to data")
-                            completion("Error", NSError(domain: "ConversionErrorDomain", code: 0, userInfo: nil))
-                        }
+                        print("Response String: \(responseString.prefix(500))")
+                        completion(responseString, nil)
                     } else {
                         print("Error converting data to string")
                         completion("Error", NSError(domain: "ConversionErrorDomain", code: 0, userInfo: nil))
