@@ -5,17 +5,6 @@ import Capacitor
 import PassKit
 import JavaScriptCore
 
-//import FirebaseCore
-//import FirebaseAuth
-//import Firebase
-//import FirebaseStorage
-
-//import Amplify
-//import ClientRuntime
-//import AWSCore
-//import AWSS3
-
-
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
@@ -130,23 +119,6 @@ public class WalletAccessPlugin: CAPPlugin {
             
             // Download Configuration
             let storageConfig = call.getObject("storageConfig")
-            print("STORAGE CONFIG")
-            print(storageConfig)
-            
-            let passDownloadPath = storageConfig?["passDownloadPath"] as? String ?? ""
-            let passStoredAs = storageConfig?["passStoredAs"] as? String ?? "pkpass"
-            let webStorageInput = storageConfig?["webStorage"] as? String ?? "INVALID"
-            let usesSerialNumberInDownloadURL = storageConfig?["usesSerialNumberinDownload"] as? Bool ?? false
-            
-            
-            // Firebase Related Fields
-            let firebaseStorageUrl = storageConfig?["firebaseStorageUrl"] as? String ?? "INVALID"
-            let googleAppID = storageConfig?["googleAppID"] as? String ?? "INVALID"
-            let gcmSenderID = storageConfig?["gcmSenderID"] as? String ?? "INVALID"
-            
-            // AWS Related Fields
-            let awsRegion = storageConfig?["awsRegion"] as? String ?? "INVALID"
-            let awsBucketName = storageConfig?["awsBucketCode"] as? String ?? "INVALID"
             
             let miscData = call.getObject("miscData")
             
@@ -166,13 +138,6 @@ public class WalletAccessPlugin: CAPPlugin {
                 call.reject("Passes need a valid passConfig Object. You appear to be missing a 'passCreationUrl' from your 'passConfig' parameter.")
             }
             
-            // Checks Validity of Web Storage
-            if (
-                webStorageInput != "firebase" &&
-                webStorageInput != "aws"
-            ){
-                call.reject("The'webstorage' prop needs to be provided and needs to be either 'firebase' or 'aws'")
-            }
             
             // Checks every Label has a corresponding Value and vice versa
             print("PASS OBJECT")
@@ -218,8 +183,6 @@ public class WalletAccessPlugin: CAPPlugin {
                     call.reject("Error creating the pass")
                 } else {
                     print("Pass Creation Completed!")
-                    print("Result...")
-                    print(result)
                     let addedPass = self.addToWallet(base64: result)
                     if (addedPass == "SUCCESS"){
                         call.resolve(["newPass": result])
@@ -348,21 +311,26 @@ public class WalletAccessPlugin: CAPPlugin {
             let pass = try PKPass(data: dataPass)
 
             // If Duplicate Pass
-            if PKPassLibrary().containsPass(pass) {
-                print("Pass already added")
-                let error = """
-                    {"code": 100,"message": "Pass already added"}
-                    """
-                return error
-            }
+//            if PKPassLibrary().containsPass(pass) {
+//                print("Pass already added")
+//                let error = """
+//                    {"code": 100,"message": "Pass already added"}
+//                    """
+//                return error
+//            }
 
             // If Valid New Pass
             do {
                 try PKPassLibrary().addPasses([pass])
-                if let vc = PKAddPassesViewController(pass: pass) {
-                    self.bridge?.viewController?.present(vc, animated: true, completion: nil)
-                    return "SUCCESS"
+                
+                // Perform UI-related operations on the main thread
+                DispatchQueue.main.async {
+                    if let vc = PKAddPassesViewController(pass: pass) {
+                        self.bridge?.viewController?.present(vc, animated: true, completion: nil)
+                    }
                 }
+                
+                return "SUCCESS"
             } catch {
                 print("Error adding pass to library: \(error)")
                 let error = """
