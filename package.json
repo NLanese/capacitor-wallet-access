@@ -1,6 +1,6 @@
 {
   "name": "capacitor-wallet-access",
-  "version": "2.0.07",
+  "version": "2.0.12",
   "description": "Used to gain access to a user's wallet on their device. This allows access to the cards, passes, or tickets a user will have in their wallet, but this does NOT include the capacity to create new passes",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",

@@ -140,7 +140,7 @@ public class WalletAccessPlugin: CAPPlugin {
             
             
             // Checks every Label has a corresponding Value and vice versa
-            print("PASS OBJECT")
+            print("PASS OBJECT INPUT")
             print(headerLabelsInput , " " , headerValueInput)
             print(primaryLabelsInput , " " , primaryValueInput)
             print(secondaryLabelsInput , " " , secondaryValueInput)
@@ -233,6 +233,12 @@ public class WalletAccessPlugin: CAPPlugin {
             let primary = populatePassBlock(labelArrayJS: primaryLabelInput, valueArrayJS: primaryValueInput, keyname: "primary")
             let secondary = populatePassBlock(labelArrayJS: secondaryLabelInput, valueArrayJS: secondaryValueInput, keyname: "secondary")
             let auxiliary = populatePassBlock(labelArrayJS: auxiliaryLabelInput, valueArrayJS: auxiliaryValueInput, keyname: "auxiliary")
+            print(headers)
+            print(primary)
+            print(secondary)
+            print(auxiliary)
+            print(miscData)
+            print(passAuthorizationKey)
             
             //---------//
             // REQUEST //
@@ -253,16 +259,13 @@ public class WalletAccessPlugin: CAPPlugin {
                 params["authenticationToken"] = authKey
             }
             
-            print("     created full params body object")
-            print (params)
-            
             // Creates a bare request object
             // Specifies Request Method, values, and body content
             var request = URLRequest(url: URL(string: passCreationURL)!)
             request.httpMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
-            print("     request configuration complete, about to send...")
+            print("Sending Request to Server...")
             
             // Asynchronous code for making HTTP request
             URLSession.shared.dataTask(with: request) { data, _, error in
@@ -274,14 +277,14 @@ public class WalletAccessPlugin: CAPPlugin {
                     print(data)
                     // Extract the String from response
                     if let responseString = String(data: data, encoding: .utf8) {
-                        print("Response String: \(responseString.prefix(500))")
+                        print("Response String: \(responseString.prefix(3000))")
                         completion(responseString, nil)
                     } else {
                         print("Error converting data to string")
-                        completion("Error", NSError(domain: "ConversionErrorDomain", code: 0, userInfo: nil))
+                        completion("Error", NSError(domain: "ConversionErrorDomain", code: 0, userInfo: ["message": "Please make sure the data being sent in the response is an encoded string"]))
                     }
                 } else {
-                    completion("Error", NSError(domain: "UnknownErrorDomain", code: 0, userInfo: nil))
+                    completion("Error", NSError(domain: "UnknownErrorDomain", code: 0, userInfo: ["message": "Please make sure the passCreationUrl has been supplied and is a valid endpoint."]))
                 }
             }.resume()
 
@@ -290,10 +293,10 @@ public class WalletAccessPlugin: CAPPlugin {
     
     // Adds Pass to device
     func addToWallet(base64: String) -> String {
-        print("Base64 String: \(base64)")
+        print("Base64 String: \(base64.prefix(100))")
         let data = base64
         print("Inside the addToWallet function... below is the data to be converted")
-        print(data.prefix(500))
+        print(data.prefix(100))
         validateBase64(base64String: data)
 
         guard let dataPass = Data(base64Encoded: data, options: .ignoreUnknownCharacters) else {

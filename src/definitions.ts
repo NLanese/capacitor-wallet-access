@@ -12,7 +12,6 @@ export interface WalletAccessPlugin {
   generatePass(options: {
     passConfig: object
     passObject: object,
-    storageConfig: object,
     miscData?: object
   }): 
     Promise<{ newPass: string }>
