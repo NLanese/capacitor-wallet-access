@@ -3,23 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		29E2D995DD0A4F5995780287 /* Pods_Plugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA918EBA99CED627273D31A4 /* Pods_Plugin.framework */; };
 		2F98D68224C9AAE500613A4C /* WalletAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F98D68124C9AAE400613A4C /* WalletAccess.swift */; };
-		401DD57B2ACFCE0200185C54 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD57A2ACFCE0200185C54 /* FirebaseAuth */; };
-		401DD5812ACFCE0200185C54 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD5802ACFCE0200185C54 /* FirebaseFirestore */; };
-		401DD5832ACFCE0200185C54 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD5822ACFCE0200185C54 /* FirebasePerformance */; };
-		401DD5852ACFCE0200185C54 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD5842ACFCE0200185C54 /* FirebaseRemoteConfig */; };
-		401DD5872ACFCE0200185C54 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 401DD5862ACFCE0200185C54 /* FirebaseStorage */; };
-		40FD7E272B02869D008B82CC /* AWSAmplify in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E262B02869D008B82CC /* AWSAmplify */; };
-		40FD7E292B02869D008B82CC /* AWSS3 in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E282B02869D008B82CC /* AWSS3 */; };
-		40FD7E2B2B02869D008B82CC /* AWSS3Control in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E2A2B02869D008B82CC /* AWSS3Control */; };
-		40FD7E2D2B02869D008B82CC /* AWSS3Outposts in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E2C2B02869D008B82CC /* AWSS3Outposts */; };
-		40FD7E302B02B0AE008B82CC /* AWSDataStorePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E2F2B02B0AE008B82CC /* AWSDataStorePlugin */; };
-		40FD7E322B02B0AE008B82CC /* Amplify in Frameworks */ = {isa = PBXBuildFile; productRef = 40FD7E312B02B0AE008B82CC /* Amplify */; };
 		50ADFF92201F53D600D50D53 /* Plugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50ADFF88201F53D600D50D53 /* Plugin.framework */; };
 		50ADFF97201F53D600D50D53 /* WalletAccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ADFF96201F53D600D50D53 /* WalletAccessTests.swift */; };
 		50ADFF99201F53D600D50D53 /* WalletAccessPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ADFF8B201F53D600D50D53 /* WalletAccessPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -63,19 +52,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				401DD5832ACFCE0200185C54 /* FirebasePerformance in Frameworks */,
-				401DD5872ACFCE0200185C54 /* FirebaseStorage in Frameworks */,
-				40FD7E2D2B02869D008B82CC /* AWSS3Outposts in Frameworks */,
-				40FD7E322B02B0AE008B82CC /* Amplify in Frameworks */,
-				40FD7E302B02B0AE008B82CC /* AWSDataStorePlugin in Frameworks */,
 				50ADFFA42020D75100D50D53 /* Capacitor.framework in Frameworks */,
-				40FD7E292B02869D008B82CC /* AWSS3 in Frameworks */,
-				401DD57B2ACFCE0200185C54 /* FirebaseAuth in Frameworks */,
-				401DD5812ACFCE0200185C54 /* FirebaseFirestore in Frameworks */,
-				40FD7E2B2B02869D008B82CC /* AWSS3Control in Frameworks */,
-				401DD5852ACFCE0200185C54 /* FirebaseRemoteConfig in Frameworks */,
 				29E2D995DD0A4F5995780287 /* Pods_Plugin.framework in Frameworks */,
-				40FD7E272B02869D008B82CC /* AWSAmplify in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,17 +161,6 @@
 			);
 			name = Plugin;
 			packageProductDependencies = (
-				401DD57A2ACFCE0200185C54 /* FirebaseAuth */,
-				401DD5802ACFCE0200185C54 /* FirebaseFirestore */,
-				401DD5822ACFCE0200185C54 /* FirebasePerformance */,
-				401DD5842ACFCE0200185C54 /* FirebaseRemoteConfig */,
-				401DD5862ACFCE0200185C54 /* FirebaseStorage */,
-				40FD7E262B02869D008B82CC /* AWSAmplify */,
-				40FD7E282B02869D008B82CC /* AWSS3 */,
-				40FD7E2A2B02869D008B82CC /* AWSS3Control */,
-				40FD7E2C2B02869D008B82CC /* AWSS3Outposts */,
-				40FD7E2F2B02B0AE008B82CC /* AWSDataStorePlugin */,
-				40FD7E312B02B0AE008B82CC /* Amplify */,
 			);
 			productName = Plugin;
 			productReference = 50ADFF88201F53D600D50D53 /* Plugin.framework */;
@@ -251,9 +218,6 @@
 			);
 			mainGroup = 50ADFF7E201F53D600D50D53;
 			packageReferences = (
-				401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */,
-				40FD7E2E2B02B0AE008B82CC /* XCRemoteSwiftPackageReference "amplify-swift" */,
 			);
 			productRefGroup = 50ADFF89201F53D600D50D53 /* Products */;
 			projectDirPath = "";
@@ -497,8 +461,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -519,12 +482,7 @@
 				INFOPLIST_FILE = Plugin/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-					"$(FRAMEWORK_SEARCH_PATHS)\n$(FRAMEWORK_SEARCH_PATHS)\n$(FRAMEWORK_SEARCH_PATHS)",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(FRAMEWORK_SEARCH_PATHS)\n$(FRAMEWORK_SEARCH_PATHS)\n$(FRAMEWORK_SEARCH_PATHS)";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.getcapacitor.Plugin;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -550,12 +508,7 @@
 				INFOPLIST_FILE = Plugin/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-					"$(FRAMEWORK_SEARCH_PATHS)",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(FRAMEWORK_SEARCH_PATHS)";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.getcapacitor.Plugin;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -572,11 +525,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = PluginTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.getcapacitor.PluginTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -590,11 +539,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = PluginTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.getcapacitor.PluginTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -633,91 +578,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = exactVersion;
-				version = 10.16.0;
-			};
-		};
-		40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/awslabs/aws-sdk-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.31.0;
-			};
-		};
-		40FD7E2E2B02B0AE008B82CC /* XCRemoteSwiftPackageReference "amplify-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/aws-amplify/amplify-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		401DD57A2ACFCE0200185C54 /* FirebaseAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAuth;
-		};
-		401DD5802ACFCE0200185C54 /* FirebaseFirestore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseFirestore;
-		};
-		401DD5822ACFCE0200185C54 /* FirebasePerformance */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebasePerformance;
-		};
-		401DD5842ACFCE0200185C54 /* FirebaseRemoteConfig */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseRemoteConfig;
-		};
-		401DD5862ACFCE0200185C54 /* FirebaseStorage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 401DD5792ACFCE0200185C54 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseStorage;
-		};
-		40FD7E262B02869D008B82CC /* AWSAmplify */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
-			productName = AWSAmplify;
-		};
-		40FD7E282B02869D008B82CC /* AWSS3 */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
-			productName = AWSS3;
-		};
-		40FD7E2A2B02869D008B82CC /* AWSS3Control */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
-			productName = AWSS3Control;
-		};
-		40FD7E2C2B02869D008B82CC /* AWSS3Outposts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 40FD7E252B02869D008B82CC /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
-			productName = AWSS3Outposts;
-		};
-		40FD7E2F2B02B0AE008B82CC /* AWSDataStorePlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 40FD7E2E2B02B0AE008B82CC /* XCRemoteSwiftPackageReference "amplify-swift" */;
-			productName = AWSDataStorePlugin;
-		};
-		40FD7E312B02B0AE008B82CC /* Amplify */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 40FD7E2E2B02B0AE008B82CC /* XCRemoteSwiftPackageReference "amplify-swift" */;
-			productName = Amplify;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 50ADFF7F201F53D600D50D53 /* Project object */;
 }
