@@ -26,7 +26,7 @@ IN THE TARGET PROJECT
 # ==== SET UP FOR CAPACITOR v3.9.0 ==== #
 1. Change all Capacitor Dependency versions in the package.json to `3.9.0`
 2. In the root directory, run 
-   `npm i @type/yarg@17.0.8`
+   `npm i @types/yargs@17.0.8`
 3. Switch to the ios directory and run 
    `pod install`. If this command fails,
    enter this following command in your Computer User's root directory 
