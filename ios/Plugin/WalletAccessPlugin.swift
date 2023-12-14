@@ -21,17 +21,24 @@ public class WalletAccessPlugin: CAPPlugin {
     
     // Returns a JSON object for each Pass in the User's Wallet
     @objc func getWallet(_ call: CAPPluginCall) {
+        
+        
         // If Pass Library is Available
         if PKPassLibrary.isPassLibraryAvailable() {
+            print("Wallet available")
             
             // Creates Reference to PassLibrary (User Wallet)
             let passLibrary = PKPassLibrary()
+            
             let userPasses = passLibrary.passes()
+            print("User Passes...")
+            print(userPasses)
             
             // Creates an Array that can be converted into a JSON Object for return to JS/TS
             var passesInJSONEncodables: [[String: Any]] = []
             // iterates through all retrieved PKPasses
             for pass in userPasses{
+                print(pass)
                 // Fills in Basic Information
                 var passJSON : [String: Any] = [
                     "organization": pass.organizationName,
