@@ -318,16 +318,8 @@ public class WalletAccessPlugin: CAPPlugin {
         print(dataPass)
 
         do {
+            // Creates a PKPass Object with the provided data
             let pass = try PKPass(data: dataPass)
-
-            // If Duplicate Pass
-//            if PKPassLibrary().containsPass(pass) {
-//                print("Pass already added")
-//                let error = """
-//                    {"code": 100,"message": "Pass already added"}
-//                    """
-//                return error
-//            }
 
             // If Valid New Pass
             do {
@@ -336,12 +328,16 @@ public class WalletAccessPlugin: CAPPlugin {
                 // Perform UI-related operations on the main thread
                 DispatchQueue.main.async {
                     if let vc = PKAddPassesViewController(pass: pass) {
+                        vc.modalPresentationStyle = .formSheet
                         self.bridge?.viewController?.present(vc, animated: true, completion: nil)
                     }
                 }
                 
                 return "SUCCESS"
-            } catch {
+            } 
+            
+            // Catches Invalid New Pass
+            catch {
                 print("Error adding pass to library: \(error)")
                 let error = """
                     {"code": 103,"message": "Error adding pass to library"}
@@ -349,7 +345,10 @@ public class WalletAccessPlugin: CAPPlugin {
                 return error
             }
 
-        } catch {
+        } 
+        
+        // Pass could NOT be created
+        catch {
             print("Error creating PKPass object: \(error)")
             let error = """
                 {"code": 101,"message": "\(error.localizedDescription)"}
